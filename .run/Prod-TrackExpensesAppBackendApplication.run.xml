@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Prod-TrackExpensesAppBackendApplication" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="pl.byczazagroda.trackexpensesappbackend.TrackExpensesAppBackendApplication" />
+    <module name="track-expenses-app-backend" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=prod" />
+    <shortenClasspath name="NONE" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="pl.byczazagroda.trackexpensesappbackend.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
