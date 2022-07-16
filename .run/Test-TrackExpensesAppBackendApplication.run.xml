@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run-All-Tests" type="JUnit" factoryName="JUnit" singleton="false">
+  <configuration default="false" name="Test-TrackExpensesAppBackendApplication.run" type="JUnit" factoryName="JUnit" singleton="false">
     <module name="track-expenses-app-backend" />
     <extension name="coverage">
       <pattern>
