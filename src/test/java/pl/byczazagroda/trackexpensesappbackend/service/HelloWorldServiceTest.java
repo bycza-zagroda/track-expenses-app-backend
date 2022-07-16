@@ -28,6 +28,14 @@ class HelloWorldServiceTest {
         when(helloWorldService.sayHello()).thenReturn("Hello World!");
 
         // then
-        assertEquals(helloWorldService.sayHello(), "Hello World!");
+        assertEquals("Hello World!", helloWorldService.sayHello());
+    }
+
+    /**
+     * Should fail --> used only to test CI/CD
+     */
+    @Test
+    void shouldFail() {
+        assert false;
     }
 }
