@@ -16,6 +16,7 @@ spring:
     change-log: db/dbchangelog-dev.yaml
   #Jpa/Hibernate:
   jpa:
+    open-in-view: false
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
