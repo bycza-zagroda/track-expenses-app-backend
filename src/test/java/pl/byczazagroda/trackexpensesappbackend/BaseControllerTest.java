@@ -27,7 +27,8 @@ public abstract class BaseControllerTest {
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
             .withDatabaseName("trackexpensesapptest")
             .withUsername("root")
-            .withPassword("root");
+            .withPassword("root")
+            .withReuse(true);
 
     @DynamicPropertySource
     private static void containerConfig(DynamicPropertyRegistry registry) {
