@@ -12,26 +12,26 @@ databaseChangeLog:
         - dropTable:
             tableName: wallets
   -  changeSet:
-       id:  2
-       author:  iwona007
+       id: 2
+       author: iwona007
        runOnChange: true
        runAlways: true
        changes:
          -  createTable:
-              tableName:  wallets
+              tableName: wallets
               columns:
                 -  column:
-                     name:  id
-                     type:  bigint
+                     name: id
+                     type: bigint
 #                     autoIncrement:  true
                      constraints:
-                       primaryKey:  true
-                       nullable:  false
+                       primaryKey: true
+                       nullable: false
                 -  column:
-                     name:  firstname
-                     type:  varchar(50)
+                     name: firstname
+                     type: varchar(50)
                 -  column:
-                     name:  lastname
-                     type:  varchar(50)
+                     name: lastname
+                     type: varchar(50)
                      constraints:
-                       nullable:  false
+                       nullable: false

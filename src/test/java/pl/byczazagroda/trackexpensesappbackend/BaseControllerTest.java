@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -23,7 +24,7 @@ public abstract class BaseControllerTest {
     protected ObjectMapper objectMapper;
 
     @Container
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0")
+    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
             .withDatabaseName("trackexpensesapptest")
             .withUsername("root")
             .withPassword("root");
