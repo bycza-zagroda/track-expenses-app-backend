@@ -1,0 +1,26 @@
+application:
+  group: bycza-zagroda
+  version: 0.1
+
+#Datasource
+spring:
+  banner:
+    location: classpath:banner.txt
+  datasource:
+    url: jdbc:mysql://localhost/trackexpensesapp?useUnicode=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  liquibase:
+    change-log: db/dbchangelog-prod.yaml
+  #Jpa/Hibernate:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
+
+    show-sql: true
+
+server:
+  port: 9090

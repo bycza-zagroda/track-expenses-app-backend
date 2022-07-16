@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  track-expenses-docker:
+    container_name: track-expenses-container
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=trackexpensesapp
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3306:3306'
