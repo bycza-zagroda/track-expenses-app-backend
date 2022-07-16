@@ -7,5 +7,13 @@ services:
     environment:
       - MYSQL_DATABASE=trackexpensesapp
       - MYSQL_ROOT_PASSWORD=root
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 512M
+        reservations:
+          cpus: 0.25
+          memory: 128M
     ports:
       - '3306:3306'
