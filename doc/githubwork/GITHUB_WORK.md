@@ -1,3 +1,5 @@
+[<ins>English</ins>](GITHUB_WORK.md) - [Polish](GITHUB_WORK.pl.md)
+
 # How we work with GitHub
 
 ## Starting work with the task.

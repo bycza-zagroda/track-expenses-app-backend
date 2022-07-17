@@ -1,3 +1,5 @@
+[<ins>English</ins>](CONTRIBUTING.md) - [Polish](CONTRIBUTING.pl.md)
+
 # Introduction
 
 Thank you for your contribution to this project. You are welcome, and we are happy to work with you:).

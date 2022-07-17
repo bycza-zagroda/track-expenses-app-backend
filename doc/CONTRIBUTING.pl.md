@@ -1,3 +1,5 @@
+[Angielski](CONTRIBUTING.md) - [<ins>Polski</ins>](CONTRIBUTING.pl.md)
+
 # Słowem wstępu...
 
 Dziękujemy, że zdecydowaliście się na uczestnictwo w projekcie i za

@@ -1,3 +1,5 @@
+[Angielski](GITHUB_WORK.md) - [<ins>Polski</ins>](GITHUB_WORK.pl.md)
+
 # Jak pracujemy z GitHub'em
 
 ## Rozpoczęcie pracy nad zadaniem

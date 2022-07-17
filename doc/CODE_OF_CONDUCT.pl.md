@@ -1,3 +1,4 @@
+[Angielski](CODE_OF_CONDUCT.md) - [<ins>Polski</ins>](CODE_OF_CONDUCT.pl.md)
 
 # Kodeks postępowania współtwórców
 
