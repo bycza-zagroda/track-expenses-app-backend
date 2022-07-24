@@ -1,5 +1,17 @@
 [<ins>English</ins>](README.md) - [Polish](README.pl.md)
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](doc/LICENSE)
+[![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+<br>
+[![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
+[![](https://img.shields.io/discord/787788929898250260?logoColor=%237289da)](https://discord.gg/5xmrnugs)
+
+# track-expenses-backend
+
+<p align="center">
+  <img src="https://via.placeholder.com/150" alt="Track Expenses App Logo" />
+</p>
+
 * [About project](#about-project)
 * [Initial assumptions of the application](#initial-assumptions-of-the-application)
 * [Prerequisites](#prerequisites)
@@ -13,14 +25,14 @@
 * [Authors](#authors)
 * [License](#license)
 
-# About project
+## About project
 This project is created by [_Bycza Zagroda_](https://github.com/bycza-zagroda) community.
 The main aim for this project is for it to allow a user to track their own expenses.
 The code for the Track Expenses App is separated for [back-end](https://github.com/bycza-zagroda/track-expenses-app-backend) and [front-end](https://github.com/bycza-zagroda/track-expenses-app-frontend) with
 their own GitHub repository. In the application the [_REST_](https://pl.wikipedia.org/wiki/Representational_state_transfer) architecture and [_Minimum
 Viable Product (MVP)_](https://www.parp.gov.pl/component/content/article/52414:minimum-viable-product) model is used.
 
-### Initial assumptions of the application
+## Initial assumptions of the application
 - this is a small project in order to build and release with the best code practise.
 - the base of the application is able to execute the most basic actions such as:
   _create_, _read_, _update_, _delete_, aka [CRUD](https://pl.wikipedia.org/wiki/CRUD)

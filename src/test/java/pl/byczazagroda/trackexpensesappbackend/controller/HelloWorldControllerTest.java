@@ -22,7 +22,7 @@ class HelloWorldControllerTest extends BaseControllerTest {
 
         // when
         String result = mockMvc.perform(get("/api/hello")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
                 .getResponse()
