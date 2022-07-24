@@ -2,13 +2,18 @@
 
 # How we work with GitHub
 
-## Starting work with the task.
+* [Starting work with the task](#starting-work-with-the-task)
+  - [Git](#git)
+  - [IntelliJ IDEA](#intellij-idea)
+* [Code Review](#code-review)
+* [Completing work with the task](#completing-work-with-the-task)
 
-1. Go to [our repository](https://github.com/bycza-zagroda/), select backend or frontend and create new fork.
+
+## Starting work with the task
+
+1. Go to [our repository](https://github.com/bycza-zagroda/track-expenses-app-backend), and select fork.
 
 ![create fork](images/img001_create_fork.png)
-
-You can leave displayed repository name.
 
 ---
 
@@ -18,11 +23,14 @@ You can leave displayed repository name.
 
 ---
 
-3. Click button **_New branch_** and fill form as below with the name of the branch for your task. Use pattern **_feature/task-name_**, **_bugfix/task-name_**.
+3. Create new branch **_New branch_** and fill form as below with the name of the branch for your task. Use pattern ↓
+
+- **_feature/task-name_** - for new feature
+- **_bugfix/task-name_** - for bugfixes
 
 ![create branch](images/img003_create_branch.png)
 
-Enter a name of new branch and select **_develop_** as a branch source.
+⚠ Make sure you choose **_develop_** as source branch
 
 ## Local repository
 
@@ -49,7 +57,7 @@ git push
 
 ---
 
-3. Back to your repository on GitHub, click **_Pull requests_** and **_New pull request_** button. 
+3. Back to [your repository on GitHub](https://github.com/bycza-zagroda/track-expenses-app-backend), click **_Pull requests_** and **_New pull request_** button. 
 
 ![new pull request](images/img004_new_pull_request.png)
 
@@ -79,7 +87,7 @@ Go to project page and open **_Pull requests_** page. Find yours on the list and
 
 ![ready for review](images/img007_ready_for_review.png)
 
-## Completing work with the task.
+## Completing work with the task
 
 After completing work with the task give an information to the leader that you ask for code review. 
 Then Leader assign reviewer for your task and that you are waiting for checking. 

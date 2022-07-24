@@ -2,6 +2,12 @@
 
 # Jak pracujemy z GitHub'em
 
+* [Rozpoczęcie pracy nad zadaniem](#rozpoczecie-pracy-nad-zadaniem)
+  - [Gita](#gita)
+  - [IntelliJ IDEA](#intellij-idea)
+* [Code review](#code-review)
+* [Ukończenie zadania](#ukoczenie-zadania)
+
 ## Rozpoczęcie pracy nad zadaniem
 
 1. Przejdź do [strony z repozytorium](https://github.com/bycza-zagroda/track-expenses-app-backend) i wybierz **fork**
@@ -12,7 +18,7 @@
 
 2. Rozwiń listę dostępnych branchy i wybierz **View all branches**
 
-![view all branchesz](images/img002_switch_branch.png)
+![view all branches](images/img002_switch_branch.png)
 
 ---
 
@@ -62,11 +68,13 @@ git push
 
 ![create draft pull request](images/img005_create_pull_request.png)
 
+5. 
+
 ![create draft pull request](images/img006_draft_pull_request.png)
 
 ---
 
-Od teraz możesz zacząć pracę z zadaniem!
+Od teraz możesz zacząć pracę nad zadaniem!
 
 ## Code review
 
