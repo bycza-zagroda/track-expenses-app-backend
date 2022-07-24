@@ -14,10 +14,23 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
+.idea_modules/
 *.iws
 *.iml
 *.ipr
+
+### Eclipse ###
+.settings/
+bin/
+tmp/
+.metadata
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,8 +44,12 @@ build/
 
 ### VS Code ###
 .vscode/
+.code-workspace
 
 ### MVN ###
 mvnw
 mvnw.cmd
 .mvn
+
+### OS X ###
+.DS_Store

@@ -1,3 +1,5 @@
+[<ins>English</ins>](CODE_OF_CONDUCT.md) - [Polish](CODE_OF_CONDUCT.pl.md)
+
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
