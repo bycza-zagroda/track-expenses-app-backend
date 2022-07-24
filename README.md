@@ -1,16 +1,16 @@
 [<ins>English</ins>](README.md) - [Polish](README.pl.md)
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](doc/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](docs/LICENSE)
 [![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
 <br>
 [![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
-[![](https://img.shields.io/discord/787788929898250260?logoColor=%237289da)](https://discord.gg/5xmrnugs)
+[![Follow us!](https://img.shields.io/badge/DISCORD-Bycza%20Zagroda-9cf)](https://discord.gg/5xmrnugs)
 
 # track-expenses-backend
 
-<p align="center">
-  <img src="https://via.placeholder.com/150" alt="Track Expenses App Logo" />
-</p>
+<div align="center">
+  <img src="docs/images/placeholder-150.png" alt="Track Expenses app logo" />
+</div>
 
 * [About project](#about-project)
 * [Initial assumptions of the application](#initial-assumptions-of-the-application)
@@ -74,13 +74,13 @@ Please clone the repository for back-end and front-end by https or ssh.
 - [Test Containers](https://www.testcontainers.org/)
 
 ## Code of Conduct
-More info in [Code Of Conduct](doc/CODE_OF_CONDUCT.md) section
+More info in [Code Of Conduct](docs/CODE_OF_CONDUCT.md) section
 
 ## Contributing
-Please read the file [CONTRIBUTING.md](doc/CONTRIBUTING.md)
+Please read the file [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Authors
 Created with ❤ by [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) community
 
 ## License
-The project is covered by [_Apache License Version 2.0, January 2004_](doc/LICENSE)
+The project is covered by [_Apache License Version 2.0, January 2004_](docs/LICENSE)

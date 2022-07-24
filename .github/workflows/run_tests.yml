@@ -1,6 +1,6 @@
 name: Run tests
 
-on: [ push, fork ]
+on: [ push ]
 
 jobs:
   run_tests:

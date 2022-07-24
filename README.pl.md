@@ -1,6 +1,6 @@
 [Angielski](README.md) - [<ins>Polski</ins>](README.pl.md)
 
-[![License](https://img.shields.io/badge/Licencja-Apache%202.0-blue.svg)](doc/LICENSE)
+[![License](https://img.shields.io/badge/Licencja-Apache%202.0-blue.svg)](docs/LICENSE)
 [![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
 <br>
 [![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
@@ -8,9 +8,9 @@
 
 # track-expenses-backend
 
-<p align="center">
-  <img src="https://via.placeholder.com/150" alt="Track Expenses App Logo" />
-</p>
+<div align="center">
+  <img src="docs/images/placeholder-150.png" alt="Logo aplikacji track-expenses-backend" />
+</div>
 
 * [O Projekcie](#o-projekcie)
 * [Początkowe założenia aplikacji](#pocztkowe-zaoenia-aplikacji)
@@ -74,13 +74,13 @@ Należy sklonować repozytorium backend i frontend przez https lub ssh.
 - [Test Containers](https://www.testcontainers.org/)
 
 ## Kodeks postępowania współtwórców (CoC)
-Więcej informacji znajdziesz w sekcji [Kodeks postępowania współtwórców](doc/CODE_OF_CONDUCT.pl.md)
+Więcej informacji znajdziesz w sekcji [Kodeks postępowania współtwórców](docs/CODE_OF_CONDUCT.pl.md)
 
 ## Twój wkład
-Proszę przeczytać [CONTRIBUTING.md](doc/CONTRIBUTING.md)
+Proszę przeczytać [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Autorzy
 Społeczność [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) ❤
 
 ## Licencja
-Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](doc/LICENSE)
+Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](docs/LICENSE)
