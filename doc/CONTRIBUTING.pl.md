@@ -7,7 +7,6 @@ wniesienie waszego wkładu tutaj :).
 Jest to mały projekt, ale za to z najlepszymi praktykami.
 
 ## Co rozumiemy przez najlepsze praktyki
-
 - wspólnie rozwiązujemy pojawiające się problemy
 - przestrzegamy zasad zawartych w [Code of Conduct](CODE_OF_CONDUCT.pl.md)
 

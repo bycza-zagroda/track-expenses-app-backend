@@ -25,7 +25,7 @@
 * [Autorzy](#autorzy)
 * [Licencja](#licencja)
 
-## O Projekcie
+# O Projekcie
 Projekt tworzony przy współpracy społeczności "Bycza zagroda".
 Projektem jest aplikacja do śledzenia wydatków osobistych. Aplikacja jest podzielona na
 backend i frontend z osobnymi repozytoriami na GitHub. Aplikacja jest oparta na architekturze [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)
