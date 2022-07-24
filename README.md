@@ -1,5 +1,17 @@
 [<ins>English</ins>](README.md) - [Polish](README.pl.md)
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](docs/LICENSE)
+[![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+<br>
+[![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
+[![Follow us!](https://img.shields.io/badge/DISCORD-Bycza%20Zagroda-9cf)](https://discord.gg/5xmrnugs)
+
+# track-expenses-backend
+
+<div align="center">
+  <img src="docs/images/placeholder-150.png" alt="Track Expenses app logo" />
+</div>
+
 * [About project](#about-project)
 * [Initial assumptions of the application](#initial-assumptions-of-the-application)
 * [Prerequisites](#prerequisites)
@@ -13,14 +25,14 @@
 * [Authors](#authors)
 * [License](#license)
 
-# About project
+## About project
 This project is created by [_Bycza Zagroda_](https://github.com/bycza-zagroda) community.
 The main aim for this project is for it to allow a user to track their own expenses.
 The code for the Track Expenses App is separated for [back-end](https://github.com/bycza-zagroda/track-expenses-app-backend) and [front-end](https://github.com/bycza-zagroda/track-expenses-app-frontend) with
 their own GitHub repository. In the application the [_REST_](https://pl.wikipedia.org/wiki/Representational_state_transfer) architecture and [_Minimum
 Viable Product (MVP)_](https://www.parp.gov.pl/component/content/article/52414:minimum-viable-product) model is used.
 
-### Initial assumptions of the application
+## Initial assumptions of the application
 - this is a small project in order to build and release with the best code practise.
 - the base of the application is able to execute the most basic actions such as:
   _create_, _read_, _update_, _delete_, aka [CRUD](https://pl.wikipedia.org/wiki/CRUD)
@@ -62,13 +74,13 @@ Please clone the repository for back-end and front-end by https or ssh.
 - [Test Containers](https://www.testcontainers.org/)
 
 ## Code of Conduct
-More info in [Code Of Conduct](doc/CODE_OF_CONDUCT.md) section
+More info in [Code Of Conduct](docs/CODE_OF_CONDUCT.md) section
 
 ## Contributing
-Please read the file [CONTRIBUTING.md](doc/CONTRIBUTING.md)
+Please read the file [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Authors
 Created with ❤ by [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) community
 
 ## License
-The project is covered by [_Apache License Version 2.0, January 2004_](doc/LICENSE)
+The project is covered by [_Apache License Version 2.0, January 2004_](docs/LICENSE)

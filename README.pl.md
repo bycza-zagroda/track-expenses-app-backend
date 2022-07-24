@@ -1,15 +1,27 @@
 [Angielski](README.md) - [<ins>Polski</ins>](README.pl.md)
 
+[![License](https://img.shields.io/badge/Licencja-Apache%202.0-blue.svg)](docs/LICENSE)
+[![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+<br>
+[![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
+[![](https://img.shields.io/discord/787788929898250260?logoColor=%237289da)](https://discord.gg/5xmrnugs)
+
+# track-expenses-backend
+
+<div align="center">
+  <img src="docs/images/placeholder-150.png" alt="Logo aplikacji track-expenses-backend" />
+</div>
+
 * [O Projekcie](#o-projekcie)
-* [Początkowe założenia aplikacji](#zalozenia)
+* [Początkowe założenia aplikacji](#pocztkowe-zaoenia-aplikacji)
 * [Wymagane aplikacje/narzędzia](#wymagane-aplikacje-narzedzia)
 * [Jak zacząć](#jak-zaczacz)
   - [Repozytorium backend](#repozytorium-backend)
 * [Stack technologiczny](#stack-technologiczny)
   - [Development](#development)
   - [Testy](#testy)
-* [Kodeks postępowania współtwórców (CoC)](#kodeks-post-powania-wsp--tw-rc-w--coc-)
-* [Twój wkład](#tw-j-wk-ad)
+* [Kodeks postępowania współtwórców (CoC)](#kodeks-postpowania-wsptwrcw-coc)
+* [Twój wkład](#twj-wkad)
 * [Autorzy](#autorzy)
 * [Licencja](#licencja)
 
@@ -19,7 +31,7 @@ Projektem jest aplikacja do śledzenia wydatków osobistych. Aplikacja jest podz
 backend i frontend z osobnymi repozytoriami na GitHub. Aplikacja jest oparta na architekturze [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)
 i modelu [Minimum Viable Product (MVP)](https://en.wikipedia.org/wiki/Minimum_viable_product).
 
-### Początkowe założenia aplikacji
+## Początkowe założenia aplikacji
 - jest to mały projekt, aby można było go ukończyć z najlepszymi praktykami,
 - zbudowanie rdzenia aplikacji, która wykonuje podstawowe operacje jak: dodaj, znajdź, zmodyfikuj, usuń wydatek/przychód,
 - jest to projekt, w którym możemy wspólnie popracować i uczyć się od siebie nawzajem, poszerzać umiejętności lub
@@ -41,7 +53,7 @@ Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
 ## Jak zacząć
 Należy sklonować repozytorium backend i frontend przez https lub ssh.
 
-#### Repozytorium backend
+### Repozytorium backend
 - git clone: https://github.com/bycza-zagroda/track-expenses-app-backend.git
 
 ## Stack technologiczny
@@ -62,13 +74,13 @@ Należy sklonować repozytorium backend i frontend przez https lub ssh.
 - [Test Containers](https://www.testcontainers.org/)
 
 ## Kodeks postępowania współtwórców (CoC)
-Więcej informacji znajdziesz w sekcji [Kodeks postępowania współtwórców](doc/CODE_OF_CONDUCT.pl.md)
+Więcej informacji znajdziesz w sekcji [Kodeks postępowania współtwórców](docs/CODE_OF_CONDUCT.pl.md)
 
 ## Twój wkład
-Proszę przeczytać [CONTRIBUTING.md](doc/CONTRIBUTING.md)
+Proszę przeczytać [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Autorzy
 Społeczność [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) ❤
 
 ## Licencja
-Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](doc/LICENSE)
+Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](docs/LICENSE)
