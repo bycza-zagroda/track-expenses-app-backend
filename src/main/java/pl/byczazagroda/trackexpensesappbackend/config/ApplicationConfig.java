@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.context.config;
+package pl.byczazagroda.trackexpensesappbackend.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
