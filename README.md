@@ -79,6 +79,12 @@ More info in [Code Of Conduct](docs/CODE_OF_CONDUCT.md) section
 ## Contributing
 Please read the file [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
+## Definition of Ready
+Please read the file [DEFINITION_OF_READY.md](docs/definition/DEFINITION_OF_READY.md)
+
+## Definition of Done
+Please read the file [DEFINITION_OF_DONE.md](docs/definition/DEFINITION_OF_DONE.md)
+
 ## Authors
 Created with ❤ by [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) community
 

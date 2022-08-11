@@ -79,6 +79,12 @@ Więcej informacji znajdziesz w sekcji [Kodeks postępowania współtwórców](d
 ## Twój wkład
 Proszę przeczytać [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
+## Definition of Ready
+Proszę przeczytać [DEFINITION_OF_READY.pl.md](docs/definition/DEFINITION_OF_READY.pl.md)
+
+## Definition of Done
+Proszę przeczytać [DEFINITION_OF_DONE.pl.md](docs/definition/DEFINITION_OF_DONE.pl.md)
+
 ## Autorzy
 Społeczność [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) ❤
 
