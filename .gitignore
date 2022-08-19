@@ -46,10 +46,5 @@ build/
 .vscode/
 .code-workspace
 
-### MVN ###
-mvnw
-mvnw.cmd
-.mvn
-
 ### OS X ###
 .DS_Store
