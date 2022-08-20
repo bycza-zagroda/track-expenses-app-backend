@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/Licencja-Apache%202.0-blue.svg)](docs/LICENSE)
 [![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+[![codecov](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend/branch/develop/graph/badge.svg?token=WMXYJX2FWH)](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bycza-zagroda_track-expenses-app-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bycza-zagroda_track-expenses-app-backend)
 <br>
 [![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
 [![](https://img.shields.io/discord/787788929898250260?logoColor=%237289da)](https://discord.gg/5xmrnugs)
