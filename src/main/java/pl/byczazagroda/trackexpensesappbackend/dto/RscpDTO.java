@@ -1,6 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.dto;
 
 import org.hibernate.annotations.Immutable;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import pl.byczazagroda.trackexpensesappbackend.rscp.RscpStatus;
 
@@ -13,5 +14,5 @@ import pl.byczazagroda.trackexpensesappbackend.rscp.RscpStatus;
  * @param body    the response body
  */
 @Immutable
-public record RscpDTO<T>(RscpStatus status, @Nullable String message, @Nullable T body) {
+public record RscpDTO<T>(@NonNull RscpStatus status, @Nullable String message, @Nullable T body) {
 }
