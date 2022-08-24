@@ -1,138 +1,94 @@
-# Projekt Open Source: Track Expenses App Backend
-Projekt tworzony przy współpracy społeczności "Bycza zagroda".
-Projektem jest aplikacja do śledzenia wydatków osobistych. Aplikacja jest podzielona na
-backend i frontend z osobnymi repozytoriami na GitHub. Aplikacja jest oparta na architekturze REST
-i modelu Minimum Viable Product (MVP).
+[<ins>English</ins>](README.md) - [Polish](README.pl.md)
 
-## Prerequisites:
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](docs/LICENSE)
+[![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+[![codecov](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend/branch/develop/graph/badge.svg?token=WMXYJX2FWH)](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bycza-zagroda_track-expenses-app-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bycza-zagroda_track-expenses-app-backend)
+<br>
+[![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
+[![Follow us!](https://img.shields.io/badge/DISCORD-Bycza%20Zagroda-9cf)](https://discord.gg/5xmrnugs)
 
-Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
-- IntelliJ IDEA / VSC/ Eclipse,
-- Java 17 LTS,
-- MySql Workbench/DBeaver,
-- Git Bash,
-- Maven 3.x,
-- Postman,
-- [Docker](https://docs.docker.com/get-docker/). Inslacja docker'a zalezy od systemu operacyjnego.
-  Baza danych jest uruchamiana w kontenerze dockera. Nie jest to jednak obowiązkowe i do versji 1.0 można
-- korzystać z bazy lokalnie
-  bez docker'a
+# track-expenses-backend
 
-## Jak zacząć:
-Należy sklonować repozytorium backend i frontend przez https lub ssh.
-#### Repozytorium backend
-- git clone: https://github.com/bycza-zagroda/track-expenses-app-backend.git  lub
-- git clone: git@github.com:bycza-zagroda/track-expenses-app-backend.git
+<div align="center">
+  <img src="docs/images/placeholder-150.png" alt="Track Expenses app logo" />
+</div>
 
-#### Repozytorium frontend (w terminie późniejszym)
+* [About project](#about-project)
+* [Initial assumptions of the application](#initial-assumptions-of-the-application)
+* [Prerequisites](#prerequisites)
+* [How to start](#how-to-start)
+  - [Back-end repository](#back-end-repository)
+* [Tech stack](#tech-stack)
+  - [Development](#development)
+  - [Testing](#testing)
+* [Code of Conduct](#code-of-conduct)
+* [Contributing](#contributing)
+* [Authors](#authors)
+* [License](#license)
 
-Po sklonowaniu, aby uruchomić aplikację, należy wejść na http://localhost:8080
+## About project
+This project is created by [_Bycza Zagroda_](https://github.com/bycza-zagroda) community.
+The main aim for this project is for it to allow a user to track their own expenses.
+The code for the Track Expenses App is separated for [back-end](https://github.com/bycza-zagroda/track-expenses-app-backend) and [front-end](https://github.com/bycza-zagroda/track-expenses-app-frontend) with
+their own GitHub repository. In the application the [_REST_](https://pl.wikipedia.org/wiki/Representational_state_transfer) architecture and [_Minimum
+Viable Product (MVP)_](https://www.parp.gov.pl/component/content/article/52414:minimum-viable-product) model is used.
 
-## Stack technologiczny - backend:
-- Java 17 LTS,
-- Spring Boot 2,
-- Spring Data,
-- Spring Security,
-- Swagger,
-- MySql (docker),
-- Liquibase,
-- Maven 3.x.
+## Initial assumptions of the application
+- this is a small project in order to build and release with the best code practise.
+- the base of the application is able to execute the most basic actions such as:
+  _create_, _read_, _update_, _delete_, aka [CRUD](https://pl.wikipedia.org/wiki/CRUD)
+- in this project we can work together, learn from each other and enlarge our skills
+  or even develop them. Everything depends on which level knowledge of Spring Boot 2
+  you have.
 
-## Testy backend:
-- JUnit5,
-- Mockito,
-- Test Containers
-
-## Stack technologiczny - frontend:
-- Typescript,
-- Angular,
-- Sass/SCSS,
-- NgRX,
-- Material,
-- Yarn.
-
-## Contributing:
-Proszę przeczytać [CONTRIBUTING.md](doc/CONTRIBUTING.md) na temat "Kodeksu Postępowania dotyczący Współtwórców".
-
-## Authors:
-Work in progress.
-
-## License:
-Projekt jest objęty licencją Apache License Version 2.0, January 2004 - [LICENSE](doc/LICENSE)
-
-### Początkowe założenia aplikacji:
-- jest to mały projekt, aby można było go ukończyć z najlepszymi praktykami,
-- zbudowanie rdzenia aplikacji, która wykonuje podstawowe operacje jak: dodaj, znajdź, zmodyfikuj, usuń wydatek/przychód,
-- jest to projekt, w którym możemy wspólnie popracować i uczyć się od siebie nawzajem, poszerzać umiejętności lub
-  też je utrwalać. Wszystko zależy od tego, na jakim etapie nauki Spring Boot 2 jesteście.
-
-  
-- --
-### English version of README.md
-
-# Project Open Source: Track Expenses App Back-end
-This project is created by “Bycza Zagroda” community. The main aim for this project is for it to allow a user to track 
-their own expenses. The code for the Track Expenses App is separated for back-end and front-end with their own Github 
-repository. In the application the REST architecture and Minimum Viable Product (MVP) model is used.
-
-## Prerequisites:
+## Prerequisites
 The following tools are required to start the application:
-- IntelliJ IDEA/ VSC/ Eclipse,
-- Java 17 LTS,
-- MySql Workbench/ DBeaver,
-- Git Bash,
-- Maven 3.x,
-- Postman,
-- [Docker](https://docs.docker.com/get-docker/). How to set up the Docker depends on your operating system. For now, 
-- the database is booted on the docker. However, it is not required until the 1.0 version and it is allowed to use 
-- a local database.
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/) / [VSC](https://code.visualstudio.com/) / [Eclipse](https://www.eclipse.org/)
+- [Java 17 LTS](https://openjdk.org/projects/jdk/17/)
+- [MySql Workbench](https://www.mysql.com/products/workbench/) / [DBeaver](https://dbeaver.io/)
+- [Git Bash](https://git-scm.com/downloads)
+- [Maven 3.x](https://maven.apache.org/download.cgi)
+- [Postman](https://www.postman.com/)
+- [Docker](https://docs.docker.com/get-docker/) - please refer to [Setting up Docker]()
 
-## How to start:
+## How to start
 Please clone the repository for back-end and front-end by https or ssh.
 
-#### Back-end repository.
-- git clone: https://github.com/bycza-zagroda/track-expenses-app-backend.git or
-- git clone: git@github.com:bycza-zagroda/track-expenses-app-backend.git 
- After that please go to the: http://localhost:8080
+#### Back-end repository
+- git clone: https://github.com/bycza-zagroda/track-expenses-app-backend.git
 
-#### Front-end repository.
-This repository will be in the near feature
+## Tech stack
 
-## Technology Stack-back-end:
-- Java 17 LTS,
-- Spring Boot 2,
-- Spring Data,
-- Spring Security,
-- Swagger,
-- MySql (docker),
-- Liquibase,
-- Maven 3.x.
+### Development
+- [Java 17 LTS](https://openjdk.org/projects/jdk/17/)
+- [Spring Boot 2](https://spring.io/projects/spring-boot)
+- [Spring Data](https://spring.io/projects/spring-data)
+- [Spring Security](https://spring.io/projects/spring-security)
+- [Swagger / OpenAPI](https://swagger.io/specification/)
+- [MySql (docker)](https://www.mysql.com/)
+- [Liquibase](https://www.liquibase.org/)
+- [Maven 3.x](https://maven.apache.org/)
 
-## Tests for back-end:
-- JUnit5,
-- Mockito,
-- Test Containers
+### Testing
+- [JUnit5](https://junit.org/junit5/)
+- [Mockito](https://site.mockito.org/)
+- [Test Containers](https://www.testcontainers.org/)
 
-## Technology Stack-front-end:
-- Typescript,
-- Angular,
-- Sass/SCSS,
-- NgRX,
-- Material,
-- Yarn.
+## Code of Conduct
+More info in [Code Of Conduct](docs/CODE_OF_CONDUCT.md) section
 
-## Contributing and Code of Conduct:
-Please read the file: [CONTRIBUTING.md](doc/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](doc/CODE_OF_CONDUCT.md)
+## Contributing
+Please read the file [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
-## Authors:
-Work in progress.
+## Definition of Ready
+Please read the file [DEFINITION_OF_READY.md](docs/definition/DEFINITION_OF_READY.md)
 
-## License:
-The project is covered by Apache License Version 2.0, January 2004 - [LICENSE](doc/LICENSE)
+## Definition of Done
+Please read the file [DEFINITION_OF_DONE.md](docs/definition/DEFINITION_OF_DONE.md)
 
-### Initial assumptions of the application:
-- this is a small project in order to build and release with the best code practise.
-- the base of the application is to be able to execute the most valid actions such as: 
- add-, find-, change, delete-element
-- in this project we can work together, learn from each other and enlarge our skills or even develop them. 
- Everything depends on which level knowledge of Spring Boot 2 you have.
+## Authors
+Created with ❤ by [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) community
+
+## License
+The project is covered by [_Apache License Version 2.0, January 2004_](docs/LICENSE)

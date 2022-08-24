@@ -1,20 +1,19 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test-TrackExpensesAppBackendApplication" type="Application" factoryName="Application" singleton="false">
-    <option name="MAIN_CLASS_NAME" value="pl.byczazagroda.trackexpensesappbackend.TrackExpensesAppBackendApplication" />
+  <configuration default="false" name="Test-TrackExpensesAppBackendApplication.run" type="JUnit" factoryName="JUnit" singleton="false">
     <module name="track-expenses-app-backend" />
-    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=test" />
-    <shortenClasspath name="NONE" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="pl.byczazagroda.trackexpensesappbackend.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
-      <option name="credential" />
-      <option name="region" />
-      <option name="useCurrentConnection" value="false" />
-    </extension>
+    <option name="PACKAGE_NAME" value="pl.byczazagroda.trackexpensesappbackend" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <envs>
+      <env name="--spring.profiles.active" value="test" />
+    </envs>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
