@@ -1,0 +1,20 @@
+databaseChangeLog:
+   - changeSet:
+      id:  createTable-example
+      author:  rpajdak
+      changes:
+        -  createTable:
+             tableName:  wallet
+             columns:
+               -  column:
+                    name:  id
+                    type:  BIGINT
+               -  column:
+                    name: walletId
+                    type: uuid
+               -  column:
+                    name: walletName
+                    type: VARCHAR(80)
+               -  column:
+                    name: created_at
+                    type: TIMESTAMP
