@@ -18,8 +18,6 @@ public class WalletServiceImpl implements WalletService {
 
   @Override
   public WalletDto createWallet(CreateWalletDto createWalletDto) {
-    Wallet wallet = new Wallet(UUID.randomUUID(), "Test");
-    walletRepository.save(wallet);
     return WalletDto.builder()
         .build();
   }
