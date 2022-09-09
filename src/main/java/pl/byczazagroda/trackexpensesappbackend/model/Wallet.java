@@ -4,7 +4,6 @@ package pl.byczazagroda.trackexpensesappbackend.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,18 +16,29 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
+/**
+ * Entity class for money wallet.
+ *
+ * @author DawidStuzynski
+ * @version 1.0
+ * @since track-expenses-app-backend 2.0
+ */
+
 @Entity
 @Getter
 @NoArgsConstructor
 public class Wallet implements Serializable {
 
-    //class version 100010
+    /**
+     * Class version 1.0 -> 100010L
+     */
     @Serial
     private static final long serialVersionUID = 100010L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Setter
     @NotBlank
     @Size(max = 20)
