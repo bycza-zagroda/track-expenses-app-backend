@@ -9,5 +9,4 @@ import java.time.Instant;
  * @param creationDate is a date and hour when wallet has been created
  */
 public record WalletDTO(Long id, String name, Instant creationDate) {
-
 }

@@ -14,5 +14,4 @@ import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 public class WalletController {
 
     private final WalletService walletService;
-
 }

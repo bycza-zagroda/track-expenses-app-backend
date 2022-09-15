@@ -8,5 +8,4 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
  * @Since 0.2.0
  */
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
-
 }
