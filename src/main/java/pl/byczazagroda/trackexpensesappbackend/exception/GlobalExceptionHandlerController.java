@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppException;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 
+/**
+ * GlobalExceptionHandlerController exception handler for all application
+ */
 @Slf4j
 @RestControllerAdvice
 class GlobalExceptionHandlerController {
@@ -32,5 +35,4 @@ class GlobalExceptionHandlerController {
         log.error("AppRuntimeException", e);
         return e.getMessage();
     }
-
 }

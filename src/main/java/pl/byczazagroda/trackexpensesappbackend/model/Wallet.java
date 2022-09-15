@@ -20,8 +20,7 @@ import java.time.Instant;
  * Entity class for money wallet.
  *
  * @author DawidStuzynski
- * @version 1.0
- * @since track-expenses-app-backend 2.0
+ * @version 0.2.0
  */
 
 @Entity
@@ -30,7 +29,7 @@ import java.time.Instant;
 public class Wallet implements Serializable {
 
     /**
-     * Class version 1.0 -> 100010L
+     * Class version 0.1.0.  SerialVersionUID needs to be updated with any change
      */
     @Serial
     private static final long serialVersionUID = 100010L;

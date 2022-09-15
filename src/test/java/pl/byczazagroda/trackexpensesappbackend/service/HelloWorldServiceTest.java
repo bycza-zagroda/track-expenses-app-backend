@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+//todo this Mock Class Test. It should be deleted before release 1.0.0
 class HelloWorldServiceTest {
 
     @Mock

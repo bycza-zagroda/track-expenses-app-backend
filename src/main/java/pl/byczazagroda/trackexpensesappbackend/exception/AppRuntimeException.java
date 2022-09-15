@@ -1,5 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
+/**
+ * AppRuntimeException business exception {@link RuntimeException}
+ */
 public class AppRuntimeException extends RuntimeException {
 
     public AppRuntimeException(String message) {
