@@ -9,7 +9,7 @@ import pl.byczazagroda.trackexpensesappbackend.exception.AppException;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 
 /**
- * GlobalExceptionHandlerController exception handler for all application
+ * GlobalExceptionHandlerController exception handler for all application.
  */
 @Slf4j
 @RestControllerAdvice

@@ -19,7 +19,6 @@ import java.time.Instant;
 /**
  * Entity class for money wallet.
  *
- * @author DawidStuzynski
  * @version 0.2.0
  */
 

@@ -1,7 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
 /**
- * AppRuntimeException business exception {@link RuntimeException}
+ * AppRuntimeException business exception {@code RuntimeException}
  */
 public class AppRuntimeException extends RuntimeException {
 
