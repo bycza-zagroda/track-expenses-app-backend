@@ -28,7 +28,7 @@ import java.time.Instant;
 public class Wallet implements Serializable {
 
     /**
-     * Class version 0.1.0.  SerialVersionUID needs to be updated with any change
+     * Class version 0.1.0.  SerialVersionUID needs to be updated with any change.
      */
     @Serial
     private static final long serialVersionUID = 100010L;
