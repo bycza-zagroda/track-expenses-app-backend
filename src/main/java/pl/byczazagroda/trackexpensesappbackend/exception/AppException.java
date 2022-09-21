@@ -1,5 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
+/**
+ * AppException business exception {@code Exception}.
+ */
 public class AppException extends Exception {
 
     public AppException(String message) {
