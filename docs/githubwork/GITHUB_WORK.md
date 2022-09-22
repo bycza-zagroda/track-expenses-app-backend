@@ -25,8 +25,8 @@
 
 3. Create new branch **_New branch_** and fill form as below with the name of the branch for your task. Use pattern ↓
 
-- **_feature/task-name_** - for new feature
-- **_bugfix/task-name_** - for bugfixes
+- **_feature/numberOfIssue-name-Of-Issue_** for new feature. For example: feature/22-Domain-structure-of-money-wallet
+- **_bugfix/numberOfIssue-name-Of-Issue_** - for bugfixes. For example: bugfix/22-Domain-structure-of-money-walle
 
 ![create branch](images/img003_create_branch.png)
 
@@ -79,6 +79,13 @@ that you selected **_Create draft pull request_** and click on button **_Draft p
 ---
 
 Now you can start working with the task. 
+
+## Commits
+Commit should be done according to the image below:
+for example for new feature: "feat: add new image: img009_commits_message.png to the documentation"
+![commits](images/img009_commits_message.png)
+
+Additionally, If this is code review, commit should start: "code review: message"
 
 ## Code review
 
