@@ -28,7 +28,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     private final WalletDtoMapper mapper;
 
-    //TODO: czy walidacja w serwisie też potrzebna? jeśli tak gto co z @ExceptionHandler?
+    //TODO: czy walidacja w serwisie też potrzebna? jeśli tak to co z @ExceptionHandler?
     //TODO: czy rzucanie tutaj wyjątku WalletNotFoundException jest OK? czy trzeba koniecznie do kontrolera?
     //TODO: czy mapowanie z użyciem MapStruct jest OK?
     @Transactional
