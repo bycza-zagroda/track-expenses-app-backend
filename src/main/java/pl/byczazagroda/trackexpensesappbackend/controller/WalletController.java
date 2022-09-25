@@ -31,6 +31,9 @@ public class WalletController {
 
     private final WalletService walletService;
 
+    //TODO: szczegółowy mapping dla tej metody?
+    //TODO: w jaki sposób mają być przekazywane parametry do metody?
+    //TODO: walidacja parametrów metody - czy jest OK?
     @PatchMapping
     public ResponseEntity<WalletDTO> updateWallet(@NotNull @Min(value = 1) long id,
                                                   @NotNull @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name) {
@@ -39,6 +42,7 @@ public class WalletController {
         return ResponseEntity.ok(walletDTO);
     }
 
+    //TODO: czy przenieść tą metodę do GlobalExceptionHandlerController?
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     Map<String, String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {

@@ -28,6 +28,9 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     private final WalletDtoMapper mapper;
 
+    //TODO: czy walidacja w serwisie też potrzebna? jeśli tak gto co z @ExceptionHandler?
+    //TODO: czy rzucanie tutaj wyjątku WalletNotFoundException jest OK? czy trzeba koniecznie do kontrolera?
+    //TODO: czy mapowanie z użyciem MapStruct jest OK?
     @Transactional
     public WalletDTO updateWallet(@NotNull @Min(value = 1) long id,
                                   @NotNull @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name){
@@ -37,6 +40,8 @@ public class WalletServiceImpl implements WalletService {
         });
 
         wallet.setName(name);
+        //TODO: czy potrzebujemy tutaj zapisywać encję?
+        walletRepository.save(wallet);
 
         return mapper.toDto(wallet);
     }
