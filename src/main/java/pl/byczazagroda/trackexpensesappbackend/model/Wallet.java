@@ -45,8 +45,8 @@ public class Wallet implements Serializable {
 
     private Instant creationDate;
 
-    public Wallet(String name) {
+    public Wallet(String name, Instant creationDate) {
         this.name = name;
-        this.creationDate = Instant.now();
+        this.creationDate = creationDate;
     }
 }
