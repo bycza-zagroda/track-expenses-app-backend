@@ -95,4 +95,6 @@ Code Review zaczynamy od otworzenia **_draft pull request_** i oznaczając je ja
 
 ## Ukończenie zadania
 
-Po sprawdzeniu twoich kodów przez lidera zespołu i/lub innych developerów, twój kod będzie zmergowany przez lidera.
+Twój kod zostanie sprawdzony przez innego developera i lidera zespołu. Jeżeli zostaną zgłoszone uwagi co do kodu, 
+implementujący zadanie developer je poprawia. Kod zostanie zmergowany, dopiero gdy wszystkie gitAction są zakończone pomyślnie
+kod można zmergować.
