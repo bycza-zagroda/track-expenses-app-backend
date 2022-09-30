@@ -21,7 +21,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper mapper;
 
     @Transactional
-    public WalletDTO updateWallet(EditWalletDto walletToEdit) {
+    public WalletDTO updateWallet(EditWalletDto walletToEdit) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findById(walletToEdit.id()).orElseThrow(() ->
         {
             throw new WalletNotFoundException(String.format("Wallet with given ID: %s does not exist", walletToEdit.id()));

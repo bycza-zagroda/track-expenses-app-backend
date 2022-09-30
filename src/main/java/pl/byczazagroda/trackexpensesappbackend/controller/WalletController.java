@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.byczazagroda.trackexpensesappbackend.dto.EditWalletDto;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
@@ -31,18 +32,13 @@ public class WalletController {
 
     private final WalletService walletService;
 
-    //TODO: szczegółowy mapping dla tej metody?
-    //TODO: w jaki sposób mają być przekazywane parametry do metody?
-    //TODO: walidacja parametrów metody - czy jest OK?
-    @PatchMapping
-    public ResponseEntity<WalletDTO> updateWallet(@NotNull @Min(value = 1) long id,
-                                                  @NotNull @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name) {
-        WalletDTO walletDTO = walletService.updateWallet(id, name);
-
+    @PatchMapping("/edit")
+    public ResponseEntity<WalletDTO> editWallet(EditWalletDto editWalletDto) {
+        WalletDTO walletDTO = walletService.updateWallet(editWalletDto);
         return ResponseEntity.ok(walletDTO);
     }
 
-    //TODO: czy przenieść tą metodę do GlobalExceptionHandlerController?
+    //TODO: shouldn't this method be moved to GlobalExceptionHandlerController class??
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     Map<String, String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
