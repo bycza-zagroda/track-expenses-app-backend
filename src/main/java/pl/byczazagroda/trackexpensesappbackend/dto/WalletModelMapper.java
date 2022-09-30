@@ -4,9 +4,7 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 
-//TODO: czy MapStruct jest OK? SPRAWDZIć PLIK POM!
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface WalletDtoMapper {
+public interface WalletModelMapper {
 
-    WalletDTO toDto(Wallet wallet);
-}
+    WalletDTO mapWalletEntityToWalletDTO(Wallet wallet);}
