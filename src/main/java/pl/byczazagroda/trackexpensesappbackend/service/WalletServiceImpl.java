@@ -20,6 +20,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     private final WalletModelMapper mapper;
 
+    @Override
     @Transactional
     public WalletDTO updateWallet(EditWalletDto walletToEdit) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findById(walletToEdit.id()).orElseThrow(() ->
