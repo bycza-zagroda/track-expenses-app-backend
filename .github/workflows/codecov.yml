@@ -1,6 +1,10 @@
 name: codecov
 
-on: [ workflow_dispatch]
+on:
+  push:
+    branches: 
+      - develop
+  workflow_dispatch:
 
 jobs:
   run_tests:
