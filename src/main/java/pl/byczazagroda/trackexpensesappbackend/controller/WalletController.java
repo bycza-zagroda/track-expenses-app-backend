@@ -14,11 +14,6 @@ import pl.byczazagroda.trackexpensesappbackend.dto.EditWalletDto;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.Map;
 import java.util.stream.Collectors;
 
