@@ -33,18 +33,4 @@ public class WalletController {
 
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
     }
-
-    @ExceptionHandler(WalletNotSavedException.class)
-    public ResponseEntity<AppRuntimeException> walletNotSavedHandler(WalletNotSavedException exception) {
-
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        return new ResponseEntity<>(exception, httpStatus);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 }
