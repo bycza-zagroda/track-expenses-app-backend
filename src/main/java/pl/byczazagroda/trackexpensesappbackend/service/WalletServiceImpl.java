@@ -3,7 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import pl.byczazagroda.trackexpensesappbackend.dto.EditWalletDto;
+import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDto;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
@@ -22,7 +22,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(EditWalletDto walletToEdit) throws WalletNotFoundException {
+    public WalletDTO updateWallet(UpdateWalletDto walletToEdit) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findById(walletToEdit.id()).orElseThrow(() ->
         {
             throw new WalletNotFoundException(String.format("Wallet with given ID: %s does not exist", walletToEdit.id()));

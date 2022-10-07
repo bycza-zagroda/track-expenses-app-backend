@@ -7,5 +7,5 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public record EditWalletDto(@NotNull @NotEmpty @Min(value = 1) long id, @NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name) {
+public record UpdateWalletDto(@NotNull @NotEmpty @Min(value = 1) Long id, @NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name) {
 }

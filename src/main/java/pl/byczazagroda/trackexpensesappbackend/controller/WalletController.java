@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.byczazagroda.trackexpensesappbackend.dto.EditWalletDto;
+import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDto;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
@@ -27,9 +27,9 @@ public class WalletController {
 
     private final WalletService walletService;
 
-    @PatchMapping("/edit")
-    public ResponseEntity<WalletDTO> editWallet(EditWalletDto editWalletDto) {
-        WalletDTO walletDTO = walletService.updateWallet(editWalletDto);
+    @PutMapping("/update")
+    public ResponseEntity<WalletDTO> updateWallet(UpdateWalletDto updateWalletDto) {
+        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
         return ResponseEntity.ok(walletDTO);
     }
 
