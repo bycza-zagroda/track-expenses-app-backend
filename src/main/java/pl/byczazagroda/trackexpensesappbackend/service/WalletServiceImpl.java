@@ -11,7 +11,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.Valid;
-import java.time.Instant;
 
 @Service
 @Validated
@@ -25,8 +24,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO) {
         String walletName = createWalletDTO.name();
-        Instant creationTime = createWalletDTO.creationTime();
-        Wallet wallet = new Wallet(walletName, creationTime);
+        Wallet wallet = new Wallet(walletName);
         Wallet savedWallet = walletRepository.save(wallet);
         boolean isWalletExists = walletRepository.existsById(savedWallet.getId());
 
