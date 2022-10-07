@@ -27,15 +27,10 @@ class WalletControllerTest extends BaseControllerTest {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("");
         given(walletService.createWallet(createWalletDTO))
-                .willReturn(
-                        new WalletDTO(
-                                1L,
-                                "",
-                                Instant.now()
-                        )
-                );
+                .willReturn(new WalletDTO(1L, "", Instant.now()));
+
         // when
-        ResultActions result = mockMvc.perform(post("/api/wallet/create")
+        ResultActions result = mockMvc.perform(post("/api/wallet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
@@ -47,15 +42,10 @@ class WalletControllerTest extends BaseControllerTest {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
         given(walletService.createWallet(createWalletDTO))
-                .willReturn(
-                        new WalletDTO(
-                                1L,
-                                null,
-                                Instant.now()
-                        )
-                );
+                .willReturn(new WalletDTO(1L, null, Instant.now()));
+
         // when
-        ResultActions result = mockMvc.perform(post("/api/wallet/create")
+        ResultActions result = mockMvc.perform(post("/api/wallet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
@@ -65,17 +55,14 @@ class WalletControllerTest extends BaseControllerTest {
     @Test
     void shouldThrowAnExceptionWhenNameIsTooLong() throws Exception {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO("kahkjsdhafksahfkahekjycuiciysajkhfdcxu");
+        String walletName = "This wallet name is too long, it contains over 20 characters";
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
         given(walletService.createWallet(createWalletDTO))
                 .willReturn(
-                        new WalletDTO(
-                                1L,
-                                "kahkjsdhafksahfkahekjycuiciysajkhfdcxu",
-                                Instant.now()
-                        )
-                );
+                        new WalletDTO(1L,walletName, Instant.now()));
+
         // when
-        ResultActions result = mockMvc.perform(post("/api/wallet/create")
+        ResultActions result = mockMvc.perform(post("/api/wallet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
@@ -87,15 +74,10 @@ class WalletControllerTest extends BaseControllerTest {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("#$@");
         given(walletService.createWallet(createWalletDTO))
-                .willReturn(
-                        new WalletDTO(
-                                1L,
-                                "#$@",
-                                Instant.now()
-                        )
-                );
+                .willReturn(new WalletDTO(1L, "#$@", Instant.now()));
+
         // when
-        ResultActions result = mockMvc.perform(post("/api/wallet/create")
+        ResultActions result = mockMvc.perform(post("/api/wallet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
