@@ -1,18 +1,19 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class WalletExceptionHandler {
 
     @ExceptionHandler(WalletNotSavedException.class)
-    public ResponseEntity<AppRuntimeException> walletNotSavedHandler(WalletNotSavedException exception) {
-
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        return new ResponseEntity<>(exception, httpStatus);
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String walletNotSavedHandler(WalletNotSavedException e) {
+        log.error("WalletNotSavedException", e);
+        return e.getMessage();
     }
 }
