@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDto;
+import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
@@ -38,7 +38,7 @@ class WalletServiceImplTest {
     @Test
     void itShouldUpdateWalletName() {
         //GIVEN
-        UpdateWalletDto updateWalletDto = returnEditWalletDto();
+        UpdateWalletDTO updateWalletDto = returnEditWalletDto();
 
         given(walletRepository.findById(updateWalletDto.id()))
                 .willReturn(Optional.of(new Wallet("anyName")));
@@ -58,7 +58,7 @@ class WalletServiceImplTest {
                 .isInstanceOf(WalletNotFoundException.class);
     }
 
-    UpdateWalletDto returnEditWalletDto() {
-        return new UpdateWalletDto(1L, "walletName");
+    UpdateWalletDTO returnEditWalletDto() {
+        return new UpdateWalletDTO(1L, "walletName");
     }
 }

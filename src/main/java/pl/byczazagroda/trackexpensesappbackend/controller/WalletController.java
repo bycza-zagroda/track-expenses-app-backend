@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDto;
+import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
@@ -28,7 +28,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @PutMapping("/update")
-    public ResponseEntity<WalletDTO> updateWallet(UpdateWalletDto updateWalletDto) {
+    public ResponseEntity<WalletDTO> updateWallet(UpdateWalletDTO updateWalletDto) {
         WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
         return ResponseEntity.ok(walletDTO);
     }
