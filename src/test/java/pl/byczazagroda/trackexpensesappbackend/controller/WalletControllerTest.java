@@ -1,12 +1,18 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.byczazagroda.trackexpensesappbackend.BaseControllerTest;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
 
 import java.time.Instant;
@@ -16,10 +22,21 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class WalletControllerTest extends BaseControllerTest {
 
-    @Mock
+@WebMvcTest(controllers = WalletController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                WalletModelMapper.class}))
+class WalletControllerTest {
+
+    @MockBean
     private WalletServiceImpl walletService;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @Test
@@ -59,7 +76,7 @@ class WalletControllerTest extends BaseControllerTest {
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
         given(walletService.createWallet(createWalletDTO))
                 .willReturn(
-                        new WalletDTO(1L,walletName, Instant.now()));
+                        new WalletDTO(1L, walletName, Instant.now()));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/wallet")

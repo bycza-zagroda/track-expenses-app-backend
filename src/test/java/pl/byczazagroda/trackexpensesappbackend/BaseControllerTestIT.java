@@ -19,7 +19,7 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 @ActiveProfiles("test")
 @DirtiesContext
-public abstract class BaseControllerTest {
+public abstract class BaseControllerTestIT {
 
     @Autowired
     protected MockMvc mockMvc;
