@@ -38,7 +38,16 @@ class GlobalExceptionHandlerController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException", e);
+        e.getBindingResult().getFieldErrors().forEach(m -> {
+            log.error(String.format("%s %s", m.getField(), m.getDefaultMessage()));
+        });
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ResourceNotSavedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String resourceNotSavedHandler(ResourceNotSavedException e) {
+        log.error(String.format("ResourceNotSavedException: %s" ,  e.getMessage()));
         return e.getMessage();
     }
 }
