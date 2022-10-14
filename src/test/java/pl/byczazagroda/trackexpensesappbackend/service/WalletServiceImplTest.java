@@ -53,6 +53,7 @@ class WalletServiceImplTest {
 //        when
         when(walletRepository.save(any(Wallet.class))).thenReturn(wallet);
         when(walletRepository.existsById(id)).thenReturn(true);
+
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(walletDTO);
         WalletDTO returnedWallet = walletService.createWallet(createWalletDTO);
 
@@ -145,3 +146,4 @@ class WalletServiceImplTest {
         Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
     }
 }
+

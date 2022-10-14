@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
                 WalletModelMapper.class}))
 class WalletControllerTest {
+
 
     @MockBean
     private WalletService walletService;

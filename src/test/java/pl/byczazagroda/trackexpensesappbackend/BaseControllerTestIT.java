@@ -21,6 +21,7 @@ import org.testcontainers.utility.DockerImageName;
 @DirtiesContext
 public abstract class BaseControllerTestIT {
 
+
     @Autowired
     protected MockMvc mockMvc;
 

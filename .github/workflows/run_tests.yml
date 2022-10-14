@@ -1,7 +1,8 @@
 name: Run tests
 
-on: [ push ]
-
+on: 
+  pull_request:
+      branches: [ "develop" ]
 jobs:
   run_tests:
     if: github.event.pull_request.draft == false
