@@ -35,15 +35,15 @@ public class WalletController {
     @GetMapping()
     ResponseEntity<List<WalletDTO>> getWallets() {
 
-        List<WalletDTO> allWallets = walletService.getAllWallets();
+        List<WalletDTO> walletsDTO = walletService.getWallets();
         HttpHeaders headers =  new HttpHeaders();
 
-        if (!allWallets.isEmpty()) {
+        if (!walletsDTO.isEmpty()) {
             headers.add("message", "The list of wallets has been successfully retrieved.");
         } else {
             headers.add("message", "There are no available wallets to view.");
         }
 
-        return new ResponseEntity<>(allWallets, headers, HttpStatus.OK);
+        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
     }
 }
