@@ -19,8 +19,8 @@ import java.util.List;
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
-    private final WalletModelMapper walletModelMapper;
 
+    private final WalletModelMapper walletModelMapper;
 
     @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
@@ -36,14 +36,15 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDTO> getAllWallets() {
+    public List<WalletDTO> getWallets() {
+        List<WalletDTO> walletsDTO;
         try {
-            return walletRepository.findAll()
-                    .stream()
+            walletsDTO = walletRepository.findAll().stream()
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
         } catch (RuntimeException e) {
             throw new ResourceNotFoundException("An error occurred while retrieving the list of wallets");
         }
+        return walletsDTO;
     }
 }

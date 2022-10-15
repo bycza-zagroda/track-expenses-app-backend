@@ -9,5 +9,5 @@ import java.util.List;
 public interface WalletService {
     WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
 
-    List<WalletDTO> getAllWallets();
+    List<WalletDTO> getWallets();
 }
