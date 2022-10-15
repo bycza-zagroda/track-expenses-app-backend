@@ -7,4 +7,5 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface WalletModelMapper {
 
-    WalletDTO mapWalletEntityToWalletDTO(Wallet wallet);}
+    WalletDTO mapWalletEntityToWalletDTO(Wallet wallet);
+}
