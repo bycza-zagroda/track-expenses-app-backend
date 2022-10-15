@@ -35,8 +35,11 @@ import static org.junit.Assert.assertThrows;
 class WalletServiceImplTest {
 
     private static final String NAME_OF_WALLET = "nameOfWallet";
+
     private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
+
     private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
+
     public static final String WALLETS_LIST_EXCEPTION_MESSAGE = "An error occurred while retrieving the list of wallets";
 
     @MockBean

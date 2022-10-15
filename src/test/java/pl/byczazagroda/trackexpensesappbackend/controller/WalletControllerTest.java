@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +22,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +58,10 @@ class WalletControllerTest {
     private static final Instant CREATION_DATE_OF_WALLET_2 = Instant.parse("2022-09-25T17:10:39.684145Z");
 
     private static final Instant CREATION_DATE_OF_WALLET_3 = Instant.parse("2022-09-26T18:11:49.132454Z");
+
+    private static final String LIST_OF_WALLETS_HEADER_MSG = "The list of wallets has been successfully retrieved.";
+
+    private static final String EMPTY_LIST_OF_WALLETS_HEADER_MSG = "There are no available wallets to view.";
 
     @MockBean
     private WalletService walletService;
@@ -140,9 +146,9 @@ class WalletControllerTest {
                 .getResponse();
 
         // then
-        assertThat(result.getStatus()).isEqualTo(200);
-        assertThat(result.getContentAsString()).isEqualTo("[]");
-        assertThat(result.getHeader("message")).isEqualTo("There are no available wallets to view.");
+        assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(result.getContentAsString()).isEqualTo(Collections.emptyList().toString());
+        assertThat(result.getHeader("message")).isEqualTo(EMPTY_LIST_OF_WALLETS_HEADER_MSG);
     }
 
     @Test
@@ -150,14 +156,14 @@ class WalletControllerTest {
     void shouldReturnListOfAllWallets() throws Exception {
         // given
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
-        given(walletService.getAllWallets()).willReturn(listOfWalletsDTO);
+        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
 
         // then
         mockMvc.perform(get("/api/wallet")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(header().string("message", "The list of wallets has been successfully retrieved."))
+                .andExpect(header().string("message", LIST_OF_WALLETS_HEADER_MSG))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(ID_OF_WALLET_1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(NAME_OF_WALLET_1))
