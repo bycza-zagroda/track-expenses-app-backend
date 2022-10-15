@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,7 @@ class WalletServiceImplTest {
     private static final String NAME_OF_WALLET = "nameOfWallet";
     private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
     private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
+    public static final String WALLETS_LIST_EXCEPTION_MESSAGE = "An error occurred while retrieving the list of wallets";
 
     @MockBean
     private WalletRepository walletRepository;
@@ -157,24 +157,16 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldReturnListOfWalletDTO() {
+    void shouldReturnListOfWalletDTOWithProperSize() {
         // given
         List<Wallet> walletList = createListOfWallets();
 
-        when(walletRepository.findAll()).thenReturn(walletList);
-        when(walletModelMapper.mapWalletEntityToWalletDTO(any())).thenReturn(walletModelMapper.mapWalletEntityToWalletDTO(any()));
-
         // when
-        List<WalletDTO> allWallets = walletService.getAllWallets();
+        when(walletRepository.findAll()).thenReturn(walletList);
+        List<WalletDTO> allWallets = walletService.getWallets();
 
         // then
-        assertThat(allWallets, hasSize(3));
-        assertThat(allWallets.get(0).name()).isEqualTo(NAME_OF_WALLET);
-        assertThat(allWallets.get(0).creationDate()).isEqualTo(walletList.get(0).getCreationDate());
-        assertThat(allWallets.get(1).name()).isEqualTo(NAME_OF_WALLET_1);
-        assertThat(allWallets.get(1).creationDate()).isEqualTo(walletList.get(1).getCreationDate());
-        assertThat(allWallets.get(2).name()).isEqualTo(NAME_OF_WALLET_2);
-        assertThat(allWallets.get(2).creationDate()).isEqualTo(walletList.get(2).getCreationDate());
+        assertThat(allWallets, hasSize(walletList.size()));
     }
 
     @Test
@@ -183,12 +175,12 @@ class WalletServiceImplTest {
         Mockito.when(walletRepository.findAll()).thenThrow(RuntimeException.class);
 
         // when
-        Exception exception = assertThrows(RuntimeException.class, () -> walletService.getAllWallets());
+        Exception exception = assertThrows(RuntimeException.class, () -> walletService.getWallets());
 
         // then
         assertThat(exception)
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("An error occurred while retrieving the list of wallets");
+                .hasMessage(WALLETS_LIST_EXCEPTION_MESSAGE);
     }
 
     private List<Wallet> createListOfWallets() {
