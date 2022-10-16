@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
@@ -22,13 +22,13 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(UpdateWalletDTO walletToUpdate) throws WalletNotFoundException {
-        Wallet wallet = walletRepository.findById(walletToUpdate.id()).orElseThrow(() ->
+    public WalletDTO updateWallet(UpdateWalletDTO dto) throws ResourceNotFoundException {
+        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() ->
         {
-            throw new WalletNotFoundException(String.format("Wallet with given ID: %s does not exist", walletToUpdate.id()));
+            throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
         });
 
-        wallet.setName(walletToUpdate.name());
+        wallet.setName(dto.name());
 
         return mapper.mapWalletEntityToWalletDTO(wallet);
     }

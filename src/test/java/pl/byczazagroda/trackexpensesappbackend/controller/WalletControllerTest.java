@@ -61,7 +61,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet/edit")
+                patch("/api/wallet/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -111,7 +111,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet/edit")
+                patch("/api/wallet/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );

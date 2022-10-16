@@ -11,11 +11,10 @@ import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
-import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,10 +40,10 @@ class WalletServiceImplTest {
     @Test
     void itShouldUpdateWalletName() {
         //GIVEN
-        UpdateWalletDTO updateWalletDto = returnEditWalletDto();
+        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(1L, "walletName");
 
         given(walletRepository.findById(updateWalletDto.id()))
-                .willReturn(Optional.of(new Wallet("anyName", Instant.now())));
+                .willReturn(Optional.of(new Wallet("anyName")));
         //WHEN
         WalletDTO walletDTO = underTest.updateWallet(updateWalletDto);
         //THEN
@@ -58,10 +57,6 @@ class WalletServiceImplTest {
         //WHEN
         //THEN
         assertThatThrownBy(() -> underTest.updateWallet(Mockito.any()))
-                .isInstanceOf(WalletNotFoundException.class);
-    }
-
-    UpdateWalletDTO returnEditWalletDto() {
-        return new UpdateWalletDTO(1L, "walletName");
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }

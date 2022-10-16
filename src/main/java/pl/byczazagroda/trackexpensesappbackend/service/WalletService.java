@@ -5,5 +5,5 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 public interface WalletService {
 
-    WalletDTO updateWallet(UpdateWalletDTO walletToEdit);
+    WalletDTO updateWallet(UpdateWalletDTO walletToUpdate);
 }
