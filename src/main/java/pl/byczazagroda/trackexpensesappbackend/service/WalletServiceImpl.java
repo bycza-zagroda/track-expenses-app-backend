@@ -9,6 +9,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotSavedException;
+import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
+import java.util.Optional;
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class WalletServiceImpl implements WalletService {
         if (isWalletExists) {
             return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
         }
-        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet was not saved. Please contact with administrator.");
+        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet is not saved. Contact administrator.");
     }
 
     @Override
@@ -71,5 +73,13 @@ public class WalletServiceImpl implements WalletService {
         } else {
             throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
         }
+    }
+    @Override
+    public WalletDTO findById(Long id) {
+        Optional<Wallet> foundedWallet = walletRepository.findById(id);
+        if (foundedWallet.isPresent()) {
+            return walletModelMapper.mapWalletEntityToWalletDTO(foundedWallet.get());
+        }
+        throw new WalletNotFoundException("Wallet with that id doesn't exist");
     }
 }

@@ -66,4 +66,9 @@ public class WalletController {
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<WalletDTO> findWalletById(@RequestParam long id) {
+        WalletDTO walletDTO = walletService.findById(id);
+        return new ResponseEntity<>(walletDTO, HttpStatus.ACCEPTED);
+    }
 }
