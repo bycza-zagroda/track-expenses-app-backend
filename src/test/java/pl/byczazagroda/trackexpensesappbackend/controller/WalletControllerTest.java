@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
@@ -31,10 +32,13 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -364,5 +368,30 @@ class WalletControllerTest {
 
         //then
         result.andExpect(status().isNoContent());
+    }
+    @Test
+    void shouldFindWalletById() throws Exception {
+        // given
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
+        // when
+        when(walletService.findById(1L)).thenReturn(wallet);
+        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
+                .contentType(MediaType.APPLICATION_JSON));
+        // then
+        result.andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value(""));
+    }
+
+    @Test
+    void shouldThrowWalletNotFoundException() throws Exception {
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
+        // when
+        when(walletService.findById(1L)).thenThrow(WalletNotFoundException.class);
+        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
+                .contentType(MediaType.APPLICATION_JSON));
+        // then
+        result.andExpect(status().isBadRequest());
     }
 }
