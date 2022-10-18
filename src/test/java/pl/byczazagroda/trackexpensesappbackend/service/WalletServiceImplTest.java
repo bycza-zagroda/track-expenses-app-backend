@@ -10,14 +10,12 @@ import org.springframework.context.annotation.FilterType;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -147,30 +145,4 @@ class WalletServiceImplTest {
 //        then
         Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
     }
-
-    @Test
-    void shouldFindWalletProperly() {
-        //given
-        Instant creationTime = Instant.now();
-        Wallet wallet = new Wallet(NAME_OF_WALLET);
-        long id = 1L;
-        wallet.setId(id);
-        wallet.setCreationDate(creationTime);
-        WalletDTO expectedWallet = new WalletDTO(id, NAME_OF_WALLET, creationTime);
-        //when
-        when(walletRepository.findById(1L)).thenReturn(Optional.of(wallet));
-        when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(expectedWallet);
-        //then
-        WalletDTO actualWallet = walletService.findById(1L);
-
-        Assertions.assertEquals(expectedWallet, actualWallet);
-    }
-
-    @Test
-    void shouldThrowNoSuchElementException() {
-        long id = 1L;
-
-        Assertions.assertThrows(WalletNotFoundException.class, () -> walletService.findById(id));
-    }
 }
-

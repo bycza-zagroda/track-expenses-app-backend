@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
@@ -113,10 +113,12 @@ class WalletControllerTest {
         // given
         Instant creationDate = Instant.now();
         WalletDTO wallet = new WalletDTO(1L, "", creationDate);
+
         // when
         when(walletService.findById(1L)).thenReturn(wallet);
         ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
                 .contentType(MediaType.APPLICATION_JSON));
+
         // then
         result.andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value(""));
@@ -127,9 +129,11 @@ class WalletControllerTest {
         Instant creationDate = Instant.now();
         WalletDTO wallet = new WalletDTO(1L, "", creationDate);
         // when
-        when(walletService.findById(1L)).thenThrow(WalletNotFoundException.class);
+
+        when(walletService.findById(1L)).thenThrow(ResourceNotFoundException.class);
         ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
                 .contentType(MediaType.APPLICATION_JSON));
+
         // then
         result.andExpect(status().isBadRequest());
     }
