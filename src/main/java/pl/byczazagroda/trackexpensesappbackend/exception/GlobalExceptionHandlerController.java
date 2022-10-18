@@ -74,9 +74,9 @@ class GlobalExceptionHandlerController {
         return e.getMessage();
     }
 
-    @ExceptionHandler(WalletNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String walletNotFoundHandler(WalletNotFoundException e) {
+    public String walletNotFoundHandler(ResourceNotFoundException e) {
         log.error(String.format("WalletNotFoundException: %s", e.getMessage()));
         return e.getMessage();
     }
