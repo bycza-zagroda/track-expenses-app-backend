@@ -167,7 +167,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowNoSuchElementException() {
+    void shouldThrowResourceNotFoundException() {
         long id = 1L;
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> walletService.findById(id));
