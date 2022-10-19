@@ -35,7 +35,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletDTO findById(Long id) {
+    public WalletDTO findById(long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
         if (wallet.isPresent()) {
             return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());

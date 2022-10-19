@@ -107,34 +107,4 @@ class WalletControllerTest {
         // then
         result.andExpect(status().isBadRequest());
     }
-
-    @Test
-    void shouldFindWalletById() throws Exception {
-        // given
-        Instant creationDate = Instant.now();
-        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
-
-        // when
-        when(walletService.findById(1L)).thenReturn(wallet);
-        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        result.andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value(""));
-    }
-
-    @Test
-    void shouldThrowWalletNotFoundException() throws Exception {
-        Instant creationDate = Instant.now();
-        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
-        // when
-
-        when(walletService.findById(1L)).thenThrow(ResourceNotFoundException.class);
-        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        result.andExpect(status().isBadRequest());
-    }
 }
