@@ -15,6 +15,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -23,6 +24,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -260,6 +262,32 @@ class WalletServiceImplTest {
                 .isThrownBy(()->walletService.deleteWalletById(5L))
                 .withMessage("Value does not exist in the database, please change your request");
     }
+
+    @Test
+    void shouldFindWalletProperly() {
+        //given
+        Instant creationTime = Instant.now();
+        Wallet wallet = new Wallet(NAME_OF_WALLET);
+        long id = 1L;
+        wallet.setId(id);
+        wallet.setCreationDate(creationTime);
+        WalletDTO expectedWallet = new WalletDTO(id, NAME_OF_WALLET, creationTime);
+        //when
+        when(walletRepository.findById(1L)).thenReturn(Optional.of(wallet));
+        when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(expectedWallet);
+        //then
+        WalletDTO actualWallet = walletService.findById(1L);
+
+        Assertions.assertEquals(expectedWallet, actualWallet);
+    }
+
+    @Test
+    void shouldThrowNoSuchElementException() {
+        long id = 1L;
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> walletService.findById(id));
+    }
+}
 
     private List<Wallet> createListOfWallets() {
         Wallet wallet1 = new Wallet(NAME_OF_WALLET);
