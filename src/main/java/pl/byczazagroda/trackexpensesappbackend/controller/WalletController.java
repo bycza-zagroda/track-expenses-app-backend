@@ -30,7 +30,7 @@ public class WalletController {
 
     private final WalletService walletService;
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<WalletDTO> updateWallet(@RequestBody @Valid UpdateWalletDTO updateWalletDto) {
 
         WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
