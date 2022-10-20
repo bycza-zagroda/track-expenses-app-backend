@@ -8,5 +8,5 @@ import javax.validation.Valid;
 public interface WalletService {
     WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
 
-    WalletDTO findById(@Valid long id);
+    WalletDTO findById(long id);
 }

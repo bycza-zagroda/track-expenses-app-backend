@@ -31,7 +31,7 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
     }
     @GetMapping(value = "/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@RequestParam long id) {
+    public ResponseEntity<WalletDTO> findWalletById(@PathVariable long id) {
         WalletDTO walletDTO = walletService.findById(id);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
