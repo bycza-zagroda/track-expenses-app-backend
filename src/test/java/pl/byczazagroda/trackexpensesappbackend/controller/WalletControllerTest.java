@@ -186,6 +186,29 @@ class WalletControllerTest {
         editResultActions.andExpect(status().isBadRequest());
     }
 
+    @Test
+    void itShouldReturnBadRequestWhenIdIsNegative() throws Exception {
+        //GIVEN
+        TestEditWalletDto editWalletDto = returnTestEditWalletDtoWithIdNegative();
+        given(walletService.updateWallet(Mockito.any())).willReturn(
+                new WalletDTO(
+                        Mockito.anyLong(),
+                        Mockito.anyString(),
+                        Instant.now()
+                )
+        );
+
+        //WHEN
+        ResultActions editResultActions = mockMvc.perform(
+                patch("/api/wallet")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(objectToJson(editWalletDto)))
+        );
+
+        //THEN
+        editResultActions.andExpect(status().isBadRequest());
+    }
+
     private TestEditWalletDto returnTestCorrectEditWalletDto() {
         return new TestEditWalletDto(1L, "correctEditWalletDto");
     }
@@ -213,6 +236,13 @@ class WalletControllerTest {
     private TestEditWalletDto returnTestEditWalletDtoWithIdZero() {
         TestEditWalletDto testWallet = new TestEditWalletDto();
         testWallet.setId(0L);
+        testWallet.setName("correctName");
+        return testWallet;
+    }
+
+    private TestEditWalletDto returnTestEditWalletDtoWithIdNegative() {
+        TestEditWalletDto testWallet = new TestEditWalletDto();
+        testWallet.setId(-1L);
         testWallet.setName("correctName");
         return testWallet;
     }
