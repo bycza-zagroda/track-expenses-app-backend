@@ -27,6 +27,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,7 +59,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -85,7 +86,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -108,7 +109,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -131,7 +132,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -154,7 +155,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -177,7 +178,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
@@ -200,7 +201,7 @@ class WalletControllerTest {
 
         //WHEN
         ResultActions editResultActions = mockMvc.perform(
-                patch("/api/wallet")
+                put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectToJson(editWalletDto)))
         );
