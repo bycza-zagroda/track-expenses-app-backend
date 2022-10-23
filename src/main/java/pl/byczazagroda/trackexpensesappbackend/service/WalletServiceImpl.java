@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
@@ -12,7 +11,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 
-@Primary
 @Service
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService {

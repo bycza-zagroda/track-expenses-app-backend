@@ -2,11 +2,10 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppException;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 
 /**
  * GlobalExceptionHandlerController exception handler for all application exceptions.
@@ -33,6 +32,22 @@ class GlobalExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String catchAppRuntimeException(AppRuntimeException e) {
         log.error("AppRuntimeException", e);
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        e.getBindingResult().getFieldErrors().forEach(m -> {
+            log.error(String.format("%s %s", m.getField(), m.getDefaultMessage()));
+        });
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String resourceNotSavedHandler(ResourceNotFoundException e) {
+        log.error(String.format("ResourceNotFoundException: %s" ,  e.getMessage()));
         return e.getMessage();
     }
 }

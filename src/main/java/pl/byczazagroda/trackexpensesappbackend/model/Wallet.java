@@ -24,6 +24,7 @@ import java.time.Instant;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Wallet implements Serializable {
 
@@ -37,7 +38,7 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
+
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "[a-z A-Z]+")
