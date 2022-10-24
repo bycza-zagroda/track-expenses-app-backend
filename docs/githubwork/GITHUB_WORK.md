@@ -110,12 +110,12 @@ After that you can see in IntelliJ that you have setting up upstream.
 git fetch upstream
 ```
 
-3. Checkout to you fork's local branch - in this case, we use feature/1-feature-name
+3. Checkout to your fork's local branch - in this case, we use feature/1-feature-name
 ```shell
 git checkout feature/1-feature-name
 ```
 
-4. Merget the changes from the upstream develop branch into your local feature/1-feature-name branch. 
+4. Merge the changes from the upstream develop branch into your local feature/1-feature-name branch. 
 ```shell
 git merge upstream/develop
 ```
