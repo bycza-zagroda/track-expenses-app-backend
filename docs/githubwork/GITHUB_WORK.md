@@ -128,6 +128,7 @@ Złóż swoje zmiany lub dodaj do schowka zanim je scalisz.
 Przerywanie
 ```
 5. Resolve conflicts using IntelliJ
+
 In IntelliJ you can see conflict files in Project window are displayed in red. When you open that file, you see which lines needs resolving conflicts.
 
 ![conflicts in IntelliJ](images/img011_resolve_conflicts_intellij.png)
@@ -137,15 +138,15 @@ Click the right mouse button on the file with conflict, in menu select Git-> Res
 
 ![merge conflicts files](images/img012_conflicts.png)
 
-Click Merget button and you see editor
+Click Merge button and you see editor
 
 ![merge revision](images/img013_merge_revision.png)
 
-You have there three panels: left shows your version of the file, right shows the upstream version of the file.
-In the middle you have final version. Decide if you want to keep only your brnach's changes, keep only the upstream changes,
+You have three panels here: the left one shows your version of the file, the right one shows the version of the file from upstream.
+In the middle you have final version. Decide if you want to keep only your branch's changes, keep only the upstream changes,
 or make a brand new change, which may incorporate changes from both branches. Delete the conflict markers `<<<<<<<`, `=======`, `>>>>>>>`
-and make the changes you want int the final merge. 
-After resolve all conflict you can click Applay button. 
+and make the changes you want int the final merge.
+After resolve all conflict you can click Applay button.
 
 ![finish merging](images/img014_merge_revision_finish.png)
 
