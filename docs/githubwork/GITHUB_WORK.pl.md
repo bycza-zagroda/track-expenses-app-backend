@@ -24,8 +24,10 @@
 
 3. Stwórz nowy branch o nazwie odpowiadającej poniższemu nazewnictwu ↓
 
-- **_feature/task-name_** - dla zadań dodających nowe funkcjonalności
-- **_bugfix/task-name_** - dla zadań, które naprawiają błędy
+- **_feature/numberOfIssue-name-Of-Issue_** dla zadań dodających nowe funkcjonalności. Na przykład:
+   feature/22-Domain-structure-of-money-wallet
+- **_bugfix/numberOfIssue-name-Of-Issue_** -  dla zadań, które naprawiają błędy. Na przykład: 
+    bugfix/22-Domain-structure-of-money-walle
 
 ![create branch](images/img003_create_branch.png)
 
@@ -76,6 +78,15 @@ git push
 
 Od teraz możesz zacząć pracę nad zadaniem!
 
+## Komity
+Wiadomości w komitach powinny być pisane zgodnie z poniższym rysunkiem. 
+Na przykład komit dla nowej funkcjonalności powinien być w j. angielskim i przypominać: "add new image: 
+img009_commits_message.png to the documentation.
+
+![commits](images/img009_commits_message.png)
+
+Dodatkowo, jeśli to code review zaczynamy od: "code review: message for code review"
+
 ## Code review
 
 Code Review zaczynamy od otworzenia **_draft pull request_** i oznaczając je jako **_Ready for review_**
@@ -84,4 +95,5 @@ Code Review zaczynamy od otworzenia **_draft pull request_** i oznaczając je ja
 
 ## Ukończenie zadania
 
-Po sprawdzeniu twoich kodów przez lidera zespołu i/lub innych developerów, twój kod będzie zmergowany przez lidera.
+Twój kod zostanie sprawdzony przez innego developera i lidera zespołu. Jeżeli zostaną zgłoszone uwagi co do kodu, 
+implementujący zadanie developer je poprawia. Kod zostanie zmergowany, dopiero gdy wszystkie gitAction są zakończone pomyślnie.

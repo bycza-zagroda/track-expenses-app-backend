@@ -44,10 +44,18 @@ class GlobalExceptionHandlerController {
         return e.getMessage();
     }
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String resourceNotSavedHandler(ResourceNotFoundException e) {
+    public String resourceNotFoundHandler(ResourceNotFoundException e) {
         log.error(String.format("ResourceNotFoundException: %s" ,  e.getMessage()));
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ResourceNotSavedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String resourceNotSavedHandler(ResourceNotSavedException e) {
+        log.error(String.format("ResourceNotSavedException: %s" ,  e.getMessage()));
         return e.getMessage();
     }
 }
