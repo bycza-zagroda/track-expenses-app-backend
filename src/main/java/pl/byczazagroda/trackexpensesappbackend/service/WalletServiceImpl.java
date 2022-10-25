@@ -25,11 +25,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletDTO updateWallet(UpdateWalletDTO dto) throws ResourceNotFoundException {
-        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() ->
-        {
+        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() -> {
             throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
         });
-
         wallet.setName(dto.name());
 
         return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
@@ -45,6 +43,6 @@ public class WalletServiceImpl implements WalletService {
         if (isWalletExists) {
             return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
         }
-        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet is not saved. Contact administrator.");
+        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet was not saved. Please contact with administrator.");
     }
 }
