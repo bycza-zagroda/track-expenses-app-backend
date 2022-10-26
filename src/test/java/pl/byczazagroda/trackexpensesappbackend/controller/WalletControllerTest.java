@@ -47,9 +47,8 @@ class WalletControllerTest {
 
     @Test
     void itShouldReturnStatusOKAndCorrectResponseBody() throws Exception {
-        //GIVEN
+        // given
         Instant timeCreated = Instant.now();
-
         UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(1L, "anyName");
         given(walletService.updateWallet(Mockito.any())).willReturn(
                 new WalletDTO(
@@ -59,14 +58,14 @@ class WalletControllerTest {
                 )
         );
 
-        //WHEN
+        // when
         ResultActions editResultActions = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDto)))
         );
 
-        //THEN
+        // then
         editResultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", Matchers.equalTo(updateWalletDto.id().intValue())))
                 .andExpect(jsonPath("$.name", Matchers.equalTo(updateWalletDto.name())));
@@ -95,7 +94,6 @@ class WalletControllerTest {
     void itShouldReturnBadRequestWhenNameIsTooLong() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "Too long name - more than 20 letters.");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
@@ -222,7 +220,6 @@ class WalletControllerTest {
     void itShouldReturnBadRequestWhenIdIsNegative() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(-1L, "@#$%^&");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(-1L, "", timeCreated));

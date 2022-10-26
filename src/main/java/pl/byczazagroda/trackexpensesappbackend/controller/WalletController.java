@@ -28,7 +28,7 @@ public class WalletController {
 
 
     @PutMapping
-    public ResponseEntity<WalletDTO> updateWallet(@RequestBody @Valid UpdateWalletDTO updateWalletDto) {
+    public ResponseEntity<WalletDTO> updateWallet(@Valid @RequestBody UpdateWalletDTO updateWalletDto) {
 
         WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
         HttpHeaders headers = new HttpHeaders();

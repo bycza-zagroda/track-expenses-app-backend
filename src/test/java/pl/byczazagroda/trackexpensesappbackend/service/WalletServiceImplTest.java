@@ -54,7 +54,6 @@ class WalletServiceImplTest {
         wallet.setId(1L);
         Instant time = Instant.now();
         wallet.setCreationDate(Instant.now());
-
         WalletDTO newWallet = new WalletDTO(1L, "walletName", time);
         given(walletRepository.findById(updateWalletDto.id()))
                 .willReturn(Optional.of(wallet));
