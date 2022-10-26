@@ -74,7 +74,7 @@ class WalletControllerTest {
 
     @Test
     void itShouldReturnBadRequestWhenNameIsEmpty() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "");
         given(walletService.updateWallet(updateWalletDTO))
@@ -87,27 +87,27 @@ class WalletControllerTest {
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
     @Test
     void itShouldReturnBadRequestWhenNameIsTooLong() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "Too long name - more than 20 letters.");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
@@ -128,21 +128,21 @@ class WalletControllerTest {
 
     @Test
     void itShouldReturnBadRequestWhenNameContainsIllegalLetters() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "@#$%^&");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
@@ -163,21 +163,21 @@ class WalletControllerTest {
 
     @Test
     void itShouldReturnBadRequestWhenIdIsNull() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(null, "@#$%^&");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(null, "", timeCreated));
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
@@ -200,41 +200,41 @@ class WalletControllerTest {
 
     @Test
     void itShouldReturnBadRequestWhenIdIsZero() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(0L, "@#$%^&");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(0L, "", timeCreated));
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
     @Test
     void itShouldReturnBadRequestWhenIdIsNegative() throws Exception {
-        //given
+        // given
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(-1L, "@#$%^&");
         given(walletService.updateWallet(updateWalletDTO))
                 .willReturn(new WalletDTO(-1L, "", timeCreated));
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(
                 put("/api/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        //then
+        // then
         result.andExpect(status().isBadRequest());
     }
 
