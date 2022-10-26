@@ -26,6 +26,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThrows;
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 @WebMvcTest
         (controllers = WalletController.class,
@@ -39,8 +40,6 @@ class WalletServiceImplTest {
     private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
 
     private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
-
-    public static final String WALLETS_LIST_EXCEPTION_MESSAGE = "An error occurred while retrieving the list of wallets";
 
     @MockBean
     private WalletRepository walletRepository;
@@ -183,7 +182,7 @@ class WalletServiceImplTest {
         // then
         assertThat(exception)
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage(WALLETS_LIST_EXCEPTION_MESSAGE);
+                .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
     }
 
     private List<Wallet> createListOfWallets() {

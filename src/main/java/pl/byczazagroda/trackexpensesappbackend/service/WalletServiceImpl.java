@@ -13,6 +13,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.util.List;
 
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -43,7 +45,7 @@ public class WalletServiceImpl implements WalletService {
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
         } catch (RuntimeException e) {
-            throw new ResourceNotFoundException("An error occurred while retrieving the list of wallets");
+            throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
         }
         return walletsDTO;
     }
