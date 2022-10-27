@@ -91,35 +91,43 @@ Additionally, If this is code review, commit should start: "code review: message
 ## Resolving conflicts
 [based on github docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork)
 
-Before start code review you should check that there isn't exists any conflicts between your and bycza-zagroda repository. 
-
-![conflict file](images/img015_conflict_file.png)
-
-You can resolve conflicts in the following way (using command line). 
-1. Syncing a fork
+### For developers
+Before commit your changes you should resolve conflicts with upstream develop if any.
+1. Check if you have set up upstream.
 ```shell
- git remote add upstream https://github.com/mirekgab1/upstream-repository.git
+mirek@dom:/tmp/fork-upstream-repository$ git remote -v
+origin  git@github.com:mirekgab/fork-upstream-repository.git (fetch)
+origin  git@github.com:mirekgab/fork-upstream-repository.git (push)
+upstream        https://github.com/mirekgab1/upstream-repository.git (fetch)
+upstream        https://github.com/mirekgab1/upstream-repository.git (push)
 ```
-
-After that you can see in IntelliJ that you have setting up upstream.
-
-![upstream branch](images/img010_upstream.png)
-
-2. Fetch the branches from the upstream repository
+If you don't see the upstream repository execute the following command (you have to use bycza-zagroda repository.):
+```shell
+git remote add upstream https://github.com/mirekgab1/upstream-repository.git
+```
+2. Fetch upstream branch.
 ```shell
 git fetch upstream
 ```
-
-3. Checkout to your fork's local branch - in this case, we use feature/1-feature-name
+3. Checkout to your fork's develop branch.
 ```shell
-git checkout feature/1-feature-name
+git checkout develop
 ```
-
-4. Merge the changes from the upstream develop branch into your local feature/1-feature-name branch. 
+4. Merge upstream/develop into your local develop.
 ```shell
 git merge upstream/develop
 ```
-If there is any conflicts you see information like to this below
+5. Checkout to your fork's local branch - in this case, we use `feature/1-feature-name`
+```shell
+git checkout feature/1-feature-name
+```
+6. Merge the changes from the upstream develop branch into your local `feature/1-feature-name branch`.
+```shell
+git merge develop
+```
+If you don't see any error, you can push your `feature/1-feature-name` and `develop` branch to your repository.
+
+If there are any existing conflicts, you'll see the following message:
 ```shell
 Aktualizowanie b73c31c..ceeb96d
 error: Scalenie nadpisałoby zmiany w następujących plikach:
@@ -127,14 +135,20 @@ error: Scalenie nadpisałoby zmiany w następujących plikach:
 Złóż swoje zmiany lub dodaj do schowka zanim je scalisz.
 Przerywanie
 ```
-5. Resolve conflicts using IntelliJ
+In this case, you should resolve this conflicts before push your code to your repository. 
+
+#### Resolve conflicts using IntelliJ
 
 In IntelliJ you can see conflict files in Project window are displayed in red. When you open that file, you see which lines needs resolving conflicts.
 
 ![conflicts in IntelliJ](images/img011_resolve_conflicts_intellij.png)
 
-You can use IntelliJ editor to merge this changes and resolve conflicts. 
-Click the right mouse button on the file with conflict, in menu select Git-> Resolve Conflicts. You see this window.
+You can use IntelliJ editor to merge this changes and resolve conflicts.
+
+Click the right mouse button on the file with conflict and in menu select Resolve Conflicts
+![conflict menu](images/img016_resolve_conflict_menu.png)
+
+When you click Resolve Conflicts IntelliJ will open Conflicts window
 
 ![merge conflicts files](images/img012_conflicts.png)
 
