@@ -4,17 +4,19 @@ package pl.byczazagroda.trackexpensesappbackend.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.DATE_TIME;
 
 /**
  * Entity class for money wallet.
@@ -38,16 +40,15 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @NotBlank
     @Size(max = 20)
-    @Pattern(regexp = "[a-z A-Z]+")
+    @Pattern(regexp = "[a-z A-Z]+", message = "invalide input. Name should contains only latin litters")
     private String name;
-
-    private Instant creationDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     public Wallet(String name) {
         this.name = name;
-        this.creationDate = Instant.now();
+        this.creationDate = LocalDateTime.now();
     }
 }

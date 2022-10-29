@@ -7,10 +7,10 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - tableExists:
-            tableName: wallets
+            tableName: wallet
       changes:
         - dropTable:
-            tableName: wallets
+            tableName: wallet
   -  changeSet:
        id: 2
        author: iwona007
@@ -18,20 +18,20 @@ databaseChangeLog:
        runAlways: true
        changes:
          -  createTable:
-              tableName: wallets
+              tableName: wallet
               columns:
                 -  column:
                      name: id
                      type: bigint
-#                     autoIncrement:  true
+                     autoIncrement:  true
                      constraints:
                        primaryKey: true
                        nullable: false
                 -  column:
-                     name: firstname
+                     name: name
                      type: varchar(50)
                 -  column:
-                     name: lastname
-                     type: varchar(50)
+                     name: creation_date
+                     type: timestamp
                      constraints:
                        nullable: false
