@@ -1,0 +1,20 @@
+databaseChangeLog:
+  -  changeSet:
+       id: loaddata-example
+       author: iwona007
+       changes:
+         - loadData:
+             file: db/changelog/data/data.csv
+             tableName: wallet
+             separator: ','
+             encoding: UTF-8
+             columns:
+               - column:
+                   name: id
+                   type: bigint
+               - column:
+                   name: name
+                   type: varchar(50)
+               - column:
+                   name: creation_date
+                   type: timestamp

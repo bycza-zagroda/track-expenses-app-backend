@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: mirekgab
+      runOnChange: true
+      runAlways: true
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: wallet
+      changes:
+        - dropTable:
+            tableName: wallet
+  -  changeSet:
+       id: 2
+       author: iwona007
+       runOnChange: true
+       runAlways: true
+       changes:
+         -  createTable:
+              tableName: wallet
+              columns:
+                -  column:
+                     name: id
+                     type: bigint
+                     autoIncrement:  true
+                     constraints:
+                       primaryKey: true
+                       nullable: false
+                -  column:
+                     name: name
+                     type: varchar(50)
+                -  column:
+                     name: creation_date
+                     type: timestamp
+                     constraints:
+                       nullable: false
