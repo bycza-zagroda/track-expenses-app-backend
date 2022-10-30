@@ -9,7 +9,9 @@ import javax.validation.Valid;
 
 public interface WalletService {
 
-    WalletDTO updateWallet(UpdateWalletDTO walletToUpdate);
-
     WalletDTO createWallet(CreateWalletDTO createWalletDTO);
+
+    WalletDTO findOne(@Valid Long id);
+
+    WalletDTO updateWallet(UpdateWalletDTO walletToUpdate);
 }
