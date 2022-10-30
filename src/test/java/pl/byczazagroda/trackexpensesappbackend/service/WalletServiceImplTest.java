@@ -1,6 +1,5 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,20 +12,26 @@ import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThrows;
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 @WebMvcTest
         (controllers = WalletController.class,
@@ -36,6 +41,10 @@ import static org.mockito.Mockito.when;
 class WalletServiceImplTest {
 
     private static final String NAME_OF_WALLET = "nameOfWallet";
+
+    private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
+
+    private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
 
     @MockBean
     private WalletRepository walletRepository;
@@ -183,6 +192,40 @@ class WalletServiceImplTest {
 
         // then
         Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+    }
+
+    @Test
+    void shouldReturnListOfWalletDTOWithProperSize() {
+        // given
+        List<Wallet> walletList = createListOfWallets();
+
+        // when
+        when(walletRepository.findAll()).thenReturn(walletList);
+        List<WalletDTO> allWallets = walletService.getWallets();
+
+        // then
+        assertThat(allWallets, hasSize(walletList.size()));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenListOfWalletsNotFound() {
+        // given
+        Mockito.when(walletRepository.findAll()).thenThrow(RuntimeException.class);
+
+        // when
+        Exception exception = assertThrows(RuntimeException.class, () -> walletService.getWallets());
+
+        // then
+        assertThat(exception)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
+    }
+
+    private List<Wallet> createListOfWallets() {
+        Wallet wallet1 = new Wallet(NAME_OF_WALLET);
+        Wallet wallet2 = new Wallet(NAME_OF_WALLET_1);
+        Wallet wallet3 = new Wallet(NAME_OF_WALLET_2);
+        return List.of(wallet1, wallet2, wallet3);
     }
 }
 
