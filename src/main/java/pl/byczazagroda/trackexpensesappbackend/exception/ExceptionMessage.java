@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 public class ExceptionMessage {
 
     //business Errors
-    public static final String I001 = "INCOME_NOT_FOUND";
-    public static final String W001 ="WALLET_NOT_FOUND";
+//    public static final String I001 = "INCOME_NOT_FOUND";
+//    public static final String W001 ="WALLET_RETRIEVING_ERROR";
 
     public static final int CODE_NOT_FOUND =404;
-    public static final int CODE_NOT_FOUND_2 =400;
     public static final int CODE_BAD_REQUEST = 400;
+    public static final int CODE_SERVER_ERROR = 500;
 
     private Integer code;
     private String status;

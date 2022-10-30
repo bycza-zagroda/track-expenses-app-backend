@@ -18,8 +18,8 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.I001;
-import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.W001;
+import static pl.byczazagroda.trackexpensesappbackend.exception.BusinessError.W001;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.*;
 
 /**
  * GlobalExceptionHandlerController exception handler for all application exceptions.
@@ -29,14 +29,16 @@ import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage
 class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex,
-                                                                  WebRequest webRequest) {
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         log.error("message: {}, object: {}", ex.getMessage(), ex.obj);
-        return new ResponseEntity <>(new ApiException(ExceptionMessage.W001,
-                mapExceptionMessageCodeToHttpStatus(ExceptionMessage.W001),
-                LocalDateTime.now()),
-                HttpStatus.NOT_FOUND);
+
+
+
+        return new ResponseEntity<>(new ApiException(W001.getBusinessStatus(), W001.getBusinessMessage(), CODE_NOT_FOUND ),
+                mapExceptionMessageCodeToHttpStatus(CODE_NOT_FOUND));
     }
+
+    //    public ApiException(String businessStatus, String businessMessage, Integer businessstatusCode) {
 //to jest gdy nie istnieje taki controlller, taki endpoint
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
@@ -45,9 +47,10 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
                                                                    WebRequest request) {
         log.error("message: {}, headers: {},  httpMethod: {}, request Url{}",
                 ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
-        return new ResponseEntity <>
-                (new ApiException(ex.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now()),
-                        status);
+        return new ResponseEntity<>
+                (new ApiException(ex.getMessage(), ex.getHttpMethod(), CODE_NOT_FOUND
+                       ),
+                        mapExceptionMessageCodeToHttpStatus(CODE_NOT_FOUND));
     }
 
     @Override
@@ -55,9 +58,12 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         ex.getBindingResult().getFieldErrors().forEach(m ->
-                log.error("error: field: {}, default message:{}, agruments:{}, rejected value{}", m.getField(), m.getDefaultMessage(),
-                        m.getArguments(), m.getRejectedValue()));
-        return new ResponseEntity<>(new ApiException(ex.getMessage(), status, LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+                log.error("error: field: {}, default message:{}, rejected value{}", m.getField(), m.getDefaultMessage(),
+                        m.getRejectedValue()));
+        return new ResponseEntity<>(new ApiException(ex.getMessage(), ex.getObjectName()
+                , ex.getErrorCount()
+        ),
+                HttpStatus.BAD_REQUEST);
     }
 
     //    @ExceptionHandler(Throwable.class)
@@ -115,11 +121,20 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
 //    }
 
 
-
-    private HttpStatus mapExceptionMessageCodeToHttpStatus(String status) {
-        return switch (status) {
-            case ExceptionMessage.I001, ExceptionMessage.W001 -> HttpStatus.NOT_FOUND;
+    //    private HttpStatus mapExceptionMessageCodeToHttpStatus(String status) {
+//        return switch (status) {
+//            case ExceptionMessage.I001, ExceptionMessage.W001 -> HttpStatus.NOT_FOUND;
+//            default -> HttpStatus.OK;
+//        };
+//    }
+    private HttpStatus mapExceptionMessageCodeToHttpStatus(int code) {
+        return switch (code) {
+            case ExceptionMessage.CODE_BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+            case ExceptionMessage.CODE_NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case ExceptionMessage.CODE_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
             default -> HttpStatus.OK;
         };
     }
+
+
 }
