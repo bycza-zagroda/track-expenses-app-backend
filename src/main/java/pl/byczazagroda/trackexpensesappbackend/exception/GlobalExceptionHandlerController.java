@@ -50,4 +50,11 @@ class GlobalExceptionHandlerController {
         log.error(String.format("ResourceNotSavedException: %s" ,  e.getMessage()));
         return e.getMessage();
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String resourceNotSavedHandler(ResourceNotFoundException e) {
+        log.error(String.format("ResourceNotFoundException: %s" ,  e.getMessage()));
+        return e.getMessage();
+    }
 }
