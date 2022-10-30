@@ -12,6 +12,13 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+#to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
   liquibase:
     change-log: db/dbchangelog-dev.yaml
   #Jpa/Hibernate:
@@ -19,9 +26,19 @@ spring:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
+    ### temprar logging for debuging
+    properties:
+      hibernate:
+        format_sql: true
 
     show-sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        format_sql: true
+
 
 server:
   port: 8080
@@ -34,3 +51,5 @@ springdoc:
   swagger-ui:
     path: /docs/swagger
     enabled: true
+
+    ### temprar logging for debuging

@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Sql(scripts = {
-        "classpath:db/insert_into_wallets.sql"
+        "classpath:db/insert_into_wallet.sql"
 })
 class HelloWorldControllerTestIT extends BaseControllerTestIT {
 
