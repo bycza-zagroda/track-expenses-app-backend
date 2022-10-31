@@ -12,6 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -24,8 +25,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -218,6 +221,42 @@ class WalletServiceImplTest {
         assertThat(exception)
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
+    }
+
+    @Test
+    void shouldDeletedWalletProperly() {
+        //given
+        Wallet wallet = new Wallet(NAME_OF_WALLET);
+        Long id = 1L;
+        Instant creationTime = Instant.now();
+        wallet.setId(id);
+        wallet.setCreationDate(creationTime);
+
+        //when
+        when(walletRepository.existsById(id)).thenReturn(true);
+        walletService.deleteWalletById(id);
+
+        //then
+        verify(walletRepository).deleteById(wallet.getId());
+    }
+
+    @Test
+    void shouldThrowAnExceptionWhenWalletWithIdDoesNotExist() throws Exception {
+        Wallet wallet = new Wallet(NAME_OF_WALLET);
+        Long id = 1L;
+        Instant creationTime = Instant.now();
+        wallet.setId(id);
+        wallet.setCreationDate(creationTime);
+
+        //when
+        given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> walletService.deleteWalletById(5L))
+                .isInstanceOf(ResourceNotDeletedException.class);
+        assertThatExceptionOfType(ResourceNotDeletedException.class)
+                .isThrownBy(()->walletService.deleteWalletById(5L))
+                .withMessage("Value does not exist in the database, please change your request");
     }
 
     private List<Wallet> createListOfWallets() {
