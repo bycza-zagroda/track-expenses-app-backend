@@ -1,14 +1,16 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 public interface WalletService {
 
     WalletDTO updateWallet(@Valid UpdateWalletDTO walletToUpdate);
@@ -17,6 +19,6 @@ public interface WalletService {
 
     List<WalletDTO> getWallets();
 
-    void deleteWalletById(@NotBlank(message = "Wallet id has to be greater than 0")
+    void deleteWalletById(@Min(value = 1, message = "Wallet id has to be greater than 0")
                           Long id);
 }
