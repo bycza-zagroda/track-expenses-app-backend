@@ -17,6 +17,6 @@ public interface WalletService {
 
     List<WalletDTO> getWallets();
 
-    void deleteWalletById(@NotBlank(message = "Wallet id has to be present")
+    void deleteWalletById(@NotBlank(message = "Wallet id has to be greater than 0")
                           Long id);
 }
