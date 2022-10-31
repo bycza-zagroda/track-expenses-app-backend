@@ -62,4 +62,13 @@ public class WalletServiceImpl implements WalletService {
         }
         return walletsDTO;
     }
+
+    @Override
+    public void deleteWalletById(Long id) {
+        if (walletRepository.existsById(id)) {
+            walletRepository.deleteById(id);
+        } else {
+            throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
+        }
+    }
 }
