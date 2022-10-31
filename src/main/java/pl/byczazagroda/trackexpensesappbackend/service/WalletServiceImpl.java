@@ -8,11 +8,15 @@ import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotSavedException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-
 import javax.transaction.Transactional;
+import javax.transaction.Transactional;
+import java.util.List;
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 @Slf4j
 @Service
@@ -55,5 +59,18 @@ public class WalletServiceImpl implements WalletService {
         wallet.setName(dto.name());
 
         return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
+    }
+
+    @Override
+    public List<WalletDTO> getWallets() {
+        List<WalletDTO> walletsDTO;
+        try {
+            walletsDTO = walletRepository.findAll().stream()
+                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
+                    .toList();
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
+        }
+        return walletsDTO;
     }
 }
