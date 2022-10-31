@@ -21,7 +21,7 @@ public class WalletExceptionHandler {
     @ExceptionHandler(WalletNotDeletedException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String walletNotDeletedHandler(WalletNotDeletedException e) {
-        log.error("WalletNotDeletedException: %s", e.getMessage());
+        log.error("WalletNotDeletedException: {}", e.getMessage());
         return e.getMessage();
     }
 }
