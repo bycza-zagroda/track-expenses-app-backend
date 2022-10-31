@@ -66,4 +66,11 @@ class GlobalExceptionHandlerController {
         log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
         return e.getMessage();
     }
+
+    @ExceptionHandler(ResourceNotDeletedException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String resourceNotDeletedHandler(ResourceNotDeletedException e) {
+        log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
+        return e.getMessage();
+    }
 }
