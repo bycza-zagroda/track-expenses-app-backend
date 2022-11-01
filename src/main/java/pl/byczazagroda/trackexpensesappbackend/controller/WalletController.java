@@ -47,7 +47,7 @@ public class WalletController {
     ResponseEntity<List<WalletDTO>> getWallets() {
 
         List<WalletDTO> walletsDTO = walletService.getWallets();
-        HttpHeaders headers =  new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
 
         if (!walletsDTO.isEmpty()) {
             headers.add("message", "The list of wallets has been successfully retrieved.");
@@ -66,9 +66,13 @@ public class WalletController {
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@PathVariable long id) {
+
+    @GetMapping("/{id}")
+    public ResponseEntity<WalletDTO> findWalletById(@Valid @Min(1) @PathVariable Long id) {
         WalletDTO walletDTO = walletService.findById(id);
-        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "The wallet has been successfully retrieved.");
+
+        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 }
