@@ -22,5 +22,5 @@ public interface WalletService {
     void deleteWalletById(@Min(value = 1, message = "Wallet id has to be greater than 0")
                           Long id);
 
-    WalletDTO findById(@Valid Long id);
+    WalletDTO findById(@Valid long id);
 }

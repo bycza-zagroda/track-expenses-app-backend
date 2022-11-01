@@ -14,8 +14,6 @@ import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
-import pl.byczazagroda.trackexpensesappbackend.exception.WalletNotFoundException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -287,38 +285,12 @@ class WalletServiceImplTest {
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> walletService.findById(id));
     }
-}
 
     private List<Wallet> createListOfWallets() {
         Wallet wallet1 = new Wallet(NAME_OF_WALLET);
         Wallet wallet2 = new Wallet(NAME_OF_WALLET_1);
         Wallet wallet3 = new Wallet(NAME_OF_WALLET_2);
         return List.of(wallet1, wallet2, wallet3);
-    }
-
-    @Test
-    void shouldFindWalletProperly() {
-        //given
-        Instant creationTime = Instant.now();
-        Wallet wallet = new Wallet(NAME_OF_WALLET);
-        long id = 1L;
-        wallet.setId(id);
-        wallet.setCreationDate(creationTime);
-        WalletDTO expectedWallet = new WalletDTO(id, NAME_OF_WALLET, creationTime);
-        //when
-        when(walletRepository.findById(1L)).thenReturn(Optional.of(wallet));
-        when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(expectedWallet);
-        //then
-        WalletDTO actualWallet = walletService.findById(1L);
-
-        Assertions.assertEquals(expectedWallet, actualWallet);
-    }
-
-    @Test
-    void shouldThrowNoSuchElementException() {
-        long id = 1L;
-
-        Assertions.assertThrows(WalletNotFoundException.class, () -> walletService.findById(id));
     }
 }
 
