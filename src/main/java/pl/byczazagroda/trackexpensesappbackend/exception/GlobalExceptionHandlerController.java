@@ -73,11 +73,4 @@ class GlobalExceptionHandlerController {
         log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
         return e.getMessage();
     }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String walletNotFoundHandler(ResourceNotFoundException e) {
-        log.error(String.format("WalletNotFoundException: %s", e.getMessage()));
-        return e.getMessage();
-    }
 }
