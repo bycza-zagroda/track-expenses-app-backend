@@ -13,9 +13,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.logging.Logger;
 
 @Slf4j
 @Service
@@ -27,31 +24,33 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper walletModelMapper;
 
     @Override
-    public WalletDTO createWallet( CreateWalletDTO createWalletDTO) {
+    public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
         String walletName = createWalletDTO.name();
         Wallet wallet = new Wallet(walletName);
         Wallet savedWallet = walletRepository.save(wallet);
 
 //       if(walletRepository.existsById(savedWallet.getId())) { debug tutaj i tak nie chwodzi
-           return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
+        return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
 //       }
 
 //       throw new ResourceNotFoundException("Wallet was not saved", savedWallet);
     }
 
     @Override
-    public WalletDTO findOne( Long id) {
-      return  walletRepository
+    public WalletDTO findOne(Long id) {
+        return walletRepository
                 .findById(id)
+//                .findOne(id)
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Wallet with id: %s not found", id), id));
     }
+
     @Override
     @Transactional
-    public WalletDTO updateWallet( UpdateWalletDTO dto) {
+    public WalletDTO updateWallet(UpdateWalletDTO dto) {
         Wallet wallet = walletRepository.findById(dto.id())
                 .orElseThrow(() -> {
-                    throw new ResourceNotFoundException("Wallet with given ID: {} does not exist "+ dto.id());
+                    throw new ResourceNotFoundException("Wallet with given ID: {} does not exist " + dto.id());
                 });
         wallet.setName(dto.name());
 

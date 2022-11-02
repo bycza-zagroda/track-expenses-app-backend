@@ -27,8 +27,18 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: none
+    ### temprar logging for debuging
+    properties:
+      hibernate:
+        format_sql: true
 
     show-sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        format_sql: true
+
 
 server:
   port: 8080
@@ -41,3 +51,5 @@ springdoc:
   swagger-ui:
     path: /docs/swagger
     enabled: true
+
+    ### temprar logging for debuging

@@ -1,3 +1,0 @@
--- delete from wallet;
--- insert into wallet (id, name, creation_date)
--- values (1, 'Name_Test', 'Last_Name_Test');
