@@ -9,7 +9,6 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotSavedException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -21,6 +20,7 @@ import java.util.List;
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 import java.util.Optional;
+
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -74,12 +74,14 @@ public class WalletServiceImpl implements WalletService {
             throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
         }
     }
+
     @Override
-    public WalletDTO findById(long id) {
+    public WalletDTO findById(Long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
         if (wallet.isPresent()) {
             return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());
+        } else {
+            throw new ResourceNotFoundException("Wallet with that id doesn't exist");
         }
-        throw new ResourceNotFoundException("Wallet with that id doesn't exist");
     }
 }
