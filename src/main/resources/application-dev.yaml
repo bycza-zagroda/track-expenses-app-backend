@@ -27,7 +27,7 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: none
-    ### temprar logging for debuging
+    ### temporary logging for debugging
     properties:
       hibernate:
         format_sql: true
