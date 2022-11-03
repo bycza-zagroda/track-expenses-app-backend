@@ -354,7 +354,6 @@ class WalletControllerTest {
         result.andExpect(status().isOk());
     }
 
-
     @Test
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
@@ -369,33 +368,68 @@ class WalletControllerTest {
         //then
         result.andExpect(status().isNoContent());
     }
+
     @Test
-    void shouldFindWalletById() throws Exception {
+    void shouldReturnStatusOkWhenFindWalletByIdCorrectly() throws Exception {
         // given
         Instant creationDate = Instant.now();
-        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
+        WalletDTO wallet = new WalletDTO(1L, "Default", creationDate);
 
         // when
         when(walletService.findById(1L)).thenReturn(wallet);
-        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
-                .contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
 
         // then
-        result.andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value(""));
+        result.andExpect(status().isOk());
     }
 
     @Test
-    void shouldThrowWalletNotFoundException() throws Exception {
+    void shouldReturnCorrectnessOfDataInFoundWalletWhenFindWalletById() throws Exception {
+        // given
         Instant creationDate = Instant.now();
-        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
-        // when
+        WalletDTO wallet = new WalletDTO(1L, "Default", creationDate);
 
-        when(walletService.findById(1L)).thenThrow(ResourceNotFoundException.class);
-        ResultActions result = mockMvc.perform(get("/api/wallet/wallet?id=1")
-                .contentType(MediaType.APPLICATION_JSON));
+        // when
+        when(walletService.findById(1L)).thenReturn(wallet);
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
 
         // then
-        result.andExpect(status().isBadRequest());
+        result.andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Default"))
+                .andExpect(jsonPath("$.creationDate").value(creationDate.toString()));
+    }
+
+    @Test
+    void shouldThrowWalletNotFoundExceptionWhenWalletByIdDoesNotExist() throws Exception {
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(1L, "", creationDate);
+        doThrow(ResourceNotFoundException.class).when(walletService).findById(100L);
+        // when
+
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 100L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+
+        // then
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldThrowAnExceptionWhenFindWalletByIdAndIdEqualsZero() throws Exception {
+        //given
+        WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
+        doThrow(ConstraintViolationException.class).when(walletService).findById(0L);
+
+        //when
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 0L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+
+        //then
+        result.andExpect(status().isNoContent());
     }
 }
