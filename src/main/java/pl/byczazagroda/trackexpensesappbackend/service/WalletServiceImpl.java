@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -71,5 +72,14 @@ public class WalletServiceImpl implements WalletService {
             throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
         }
         return walletsDTO;
+    }
+
+    @Override
+    public void deleteWalletById(Long id) {
+        if (walletRepository.existsById(id)) {
+            walletRepository.deleteById(id);
+        } else {
+            throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
+        }
     }
 }

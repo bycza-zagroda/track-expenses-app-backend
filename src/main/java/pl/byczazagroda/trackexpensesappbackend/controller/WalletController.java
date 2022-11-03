@@ -11,6 +11,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
@@ -63,5 +64,14 @@ public class WalletController {
         }
 
         return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<WalletDTO> deleteWalletById(@Valid @Min(1) @PathVariable Long id) {
+        walletService.deleteWalletById(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "You have successfully completed the delete of a Wallet!");
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 }

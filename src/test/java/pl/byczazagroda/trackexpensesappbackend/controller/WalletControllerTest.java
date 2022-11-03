@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.hamcrest.Matchers;
 import org.hamcrest.Matchers;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +35,8 @@ import java.util.Objects;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -289,7 +292,7 @@ class WalletControllerTest {
     void shouldReturnEmptyList() throws Exception {
         // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/wallet")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
                 .getResponse();
@@ -309,7 +312,7 @@ class WalletControllerTest {
 
         // then
         mockMvc.perform(get("/api/wallet")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("message", LIST_OF_WALLETS_HEADER_MSG))
@@ -333,5 +336,35 @@ class WalletControllerTest {
         WalletDTO walletDTO2 = new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2);
         WalletDTO walletDTO3 = new WalletDTO(ID_OF_WALLET_3, NAME_OF_WALLET_3, CREATION_DATE_OF_WALLET_3);
         return List.of(walletDTO1, walletDTO2, walletDTO3);
+    }
+
+    @Test
+    void shouldReturnStatusOkWhenDeleteWalletCorrectly() throws Exception {
+        //given
+        WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
+
+        //when
+        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+
+        //then
+        result.andExpect(status().isOk());
+    }
+
+
+    @Test
+    void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
+        //given
+        WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
+        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(0L);
+
+        //when
+        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 0L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+
+        //then
+        result.andExpect(status().isNoContent());
     }
 }

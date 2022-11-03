@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -136,5 +137,17 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
         };
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String handleConstraintViolationException(ConstraintViolationException e) {
+        log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
+        return e.getMessage();
+    }
 
+    @ExceptionHandler(ResourceNotDeletedException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String resourceNotDeletedHandler(ResourceNotDeletedException e) {
+        log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
+        return e.getMessage();
+    }
 }
