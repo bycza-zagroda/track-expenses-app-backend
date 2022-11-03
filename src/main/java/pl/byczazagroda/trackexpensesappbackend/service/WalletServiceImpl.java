@@ -84,4 +84,9 @@ public class WalletServiceImpl implements WalletService {
             throw new ResourceNotFoundException("Wallet with that id doesn't exist");
         }
     }
+
+    @Override
+    public List<WalletDTO> getWalletsByName(String name) {
+        return getWallets().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
+    }
 }
