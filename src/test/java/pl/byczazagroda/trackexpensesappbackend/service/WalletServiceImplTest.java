@@ -22,8 +22,6 @@ import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.List;
-import java.util.Optional;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -257,33 +255,46 @@ class WalletServiceImplTest {
         assertThatThrownBy(() -> walletService.deleteWalletById(5L))
                 .isInstanceOf(ResourceNotDeletedException.class);
         assertThatExceptionOfType(ResourceNotDeletedException.class)
-                .isThrownBy(()->walletService.deleteWalletById(5L))
+                .isThrownBy(() -> walletService.deleteWalletById(5L))
                 .withMessage("Value does not exist in the database, please change your request");
     }
 
     @Test
     void shouldFindWalletProperly() {
         //given
-        Instant creationTime = Instant.now();
         Wallet wallet = new Wallet(NAME_OF_WALLET);
-        long id = 1L;
+        Instant creationTime = Instant.now();
+        Long id = 1L;
         wallet.setId(id);
         wallet.setCreationDate(creationTime);
         WalletDTO expectedWallet = new WalletDTO(id, NAME_OF_WALLET, creationTime);
+
         //when
         when(walletRepository.findById(1L)).thenReturn(Optional.of(wallet));
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(expectedWallet);
-        //then
         WalletDTO actualWallet = walletService.findById(1L);
 
+        //then
         Assertions.assertEquals(expectedWallet, actualWallet);
     }
 
     @Test
-    void shouldThrowResourceNotFoundException() {
-        long id = 1L;
+    void shouldThrowExceptionWhenWalletByIdNotFound() {
+        Wallet wallet = new Wallet(NAME_OF_WALLET);
+        Long id = 1L;
+        Instant creationTime = Instant.now();
+        wallet.setId(id);
+        wallet.setCreationDate(creationTime);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> walletService.findById(id));
+        //when
+        given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> walletService.findById(5L))
+                .isInstanceOf(ResourceNotFoundException.class);
+        assertThatExceptionOfType(ResourceNotFoundException.class)
+                .isThrownBy(() -> walletService.findById(5L))
+                .withMessage("Wallet with that id doesn't exist");
     }
 
     private List<Wallet> createListOfWallets() {
@@ -293,4 +304,3 @@ class WalletServiceImplTest {
         return List.of(wallet1, wallet2, wallet3);
     }
 }
-
