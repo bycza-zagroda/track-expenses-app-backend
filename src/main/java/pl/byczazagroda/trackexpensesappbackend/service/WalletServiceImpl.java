@@ -50,7 +50,7 @@ public class WalletServiceImpl implements WalletService {
         if (isWalletExists) {
             return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
         }
-        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet is not saved. Contact administrator.");
+        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet was not saved. Please contact with administrator.");
     }
 
     @Override
