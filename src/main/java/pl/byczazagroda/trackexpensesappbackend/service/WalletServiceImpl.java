@@ -72,4 +72,9 @@ public class WalletServiceImpl implements WalletService {
             throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
         }
     }
+
+    @Override
+    public List<WalletDTO> getWalletsByName(String name) {
+        return getWallets().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
+    }
 }
