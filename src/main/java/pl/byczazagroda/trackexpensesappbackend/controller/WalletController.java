@@ -11,6 +11,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Controller for Wallet application.
@@ -21,7 +22,6 @@ import javax.validation.Valid;
 public class WalletController {
 
     private final WalletService walletService;
-
 
     @PostMapping()
     public ResponseEntity<WalletDTO> createWallet(@Valid @RequestBody CreateWalletDTO createWalletDTO) {
@@ -50,5 +50,18 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
+    @GetMapping()
+    ResponseEntity<List<WalletDTO>> getWallets() {
 
+        List<WalletDTO> walletsDTO = walletService.getWallets();
+        HttpHeaders headers =  new HttpHeaders();
+
+        if (!walletsDTO.isEmpty()) {
+            headers.add("message", "The list of wallets has been successfully retrieved.");
+        } else {
+            headers.add("message", "There are no available wallets to view.");
+        }
+
+        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
+    }
 }
