@@ -368,7 +368,7 @@ class WalletControllerTest {
     }
 
     @Test
-    void shouldReturnStatusOkWhenFindWalletByIdCorrectly() throws Exception {
+    void shouldReturnStatusOkWhenWalletHasBeenFound() throws Exception {
         // given
         Instant creationDate = Instant.now();
         WalletDTO wallet = new WalletDTO(1L, "Default", creationDate);
