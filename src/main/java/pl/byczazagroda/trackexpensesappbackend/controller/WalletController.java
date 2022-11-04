@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
@@ -12,6 +13,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/wallet")
 @RequiredArgsConstructor
+@Validated
 public class WalletController {
 
     private final WalletService walletService;
@@ -59,7 +62,7 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WalletDTO> deleteWalletById(@Valid @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> deleteWalletById(@NotNull @Min(1) @PathVariable Long id) {
         walletService.deleteWalletById(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "You have successfully completed the delete of a Wallet!");
@@ -68,7 +71,7 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@Valid @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> findWalletById(@NotNull @Min(1) @PathVariable Long id) {
         WalletDTO walletDTO = walletService.findById(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "The wallet has been successfully retrieved.");
