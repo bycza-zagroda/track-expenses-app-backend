@@ -2,17 +2,16 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.CODE_BAD_REQUEST;
 import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.CODE_NOT_FOUND;
 
 /**
@@ -20,43 +19,40 @@ import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage
  */
 @Slf4j
 @RestControllerAdvice
-class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
+class GlobalExceptionHandlerController {
+
+    @Value("${spring.profiles.active}")
+    private String profileName;
 
     @ExceptionHandler(AppRuntimeException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(AppRuntimeException ex) {
-        log.error("message: {}, object: {}", ex.getBusinessMessage(), ex.getObj());
 
-        ApiException apiException = new ApiException(ex.getBusinessStatus(), ex.getBusinessMessage(),
-                ex.getBusinessDescription(), ex.getBusinessstatusCode());
+        log.error("message: {}, object: {}", ex.getBusinessMessage(), ex.getBusinessDescription());
 
-        return new ResponseEntity<>(apiException,
+        return new ResponseEntity<>( mapAppRuntimeExceptionToApiException(ex),
                 mapExceptionMessageCodeToHttpStatus(ex.getBusinessstatusCode()));
     }
 
-    @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
-                                                                   HttpHeaders headers,
-                                                                   HttpStatus status,
-                                                                   WebRequest request) {
-        log.error("message: {}, headers: {},  httpMethod: {}, request Url{}",
-                ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
+   @ExceptionHandler(NoHandlerFoundException.class)
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, AppRuntimeException e) {
+
+       log.error("message: {}, headers: {},  httpMethod: {}, request Url{}",
+               ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
+
         return new ResponseEntity<>
-                (new ApiException(ex.getMessage(), ex.getHttpMethod(), CODE_NOT_FOUND
-                       ),
-                        mapExceptionMessageCodeToHttpStatus(CODE_NOT_FOUND));
+                (mapAppRuntimeExceptionToApiException(e), mapExceptionMessageCodeToHttpStatus(CODE_NOT_FOUND));
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         ex.getBindingResult().getFieldErrors().forEach(m ->
                 log.error("error: field: {}, default message:{}, rejected value{}", m.getField(), m.getDefaultMessage(),
                         m.getRejectedValue()));
-        return new ResponseEntity<>(new ApiException(ex.getMessage(), ex.getObjectName()
+
+        return new ResponseEntity<>(new ApiException(this.profileName, ex.getMessage(), ex.getObjectName()
                 , ex.getErrorCount()
         ),
-                HttpStatus.BAD_REQUEST);
+                mapExceptionMessageCodeToHttpStatus(CODE_BAD_REQUEST));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -72,7 +68,21 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
         log.error(String.format("ResourceNotDeletedException: %s", e.getMessage()));
         return e.getMessage();
     }
-    //    @ExceptionHandler(Throwable.class)
+
+    private ApiException mapAppRuntimeExceptionToApiException(AppRuntimeException e) {
+        return new ApiException(this.profileName, e.getBusinessStatus(),
+                e.getBusinessMessage(), e.getBusinessDescription() , e.getBusinessstatusCode());
+    }
+    private HttpStatus mapExceptionMessageCodeToHttpStatus(int code) {
+        return switch (code) {
+            case CODE_BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+            case ExceptionMessage.CODE_NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case ExceptionMessage.CODE_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+            default -> HttpStatus.OK;
+        };
+    }
+    
+//    @ExceptionHandler(Throwable.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    public String catchThrowableException(Throwable e) {
 //        log.error("Throwable", e);
@@ -134,12 +144,5 @@ class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
 //        };
 //    }
 
-    private HttpStatus mapExceptionMessageCodeToHttpStatus(int code) {
-        return switch (code) {
-            case ExceptionMessage.CODE_BAD_REQUEST -> HttpStatus.BAD_REQUEST;
-            case ExceptionMessage.CODE_NOT_FOUND -> HttpStatus.NOT_FOUND;
-            case ExceptionMessage.CODE_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
-            default -> HttpStatus.OK;
-        };
-    }
+
 }

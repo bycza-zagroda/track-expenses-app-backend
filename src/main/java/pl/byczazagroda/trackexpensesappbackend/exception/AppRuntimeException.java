@@ -6,17 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Wallet not found")
-
 @Getter
 @Setter
 public class AppRuntimeException extends RuntimeException {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AppRuntimeException.class);
-    Object obj;
+    private Object obj;
 
     private String businessStatus; // "W001",
     private String businessMessage; //  "WALLETS_RETRIEVING_ERROR",
-
     private String businessDescription; //  "Wallet with id: is not found in the database",
     private Integer businessstatusCode; //  404,
 

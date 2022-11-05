@@ -12,7 +12,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-#to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
+  #to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -33,12 +33,6 @@ spring:
         format_sql: true
 
     show-sql: true
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        format_sql: true
-
 
 server:
   port: 8080
