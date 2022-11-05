@@ -11,6 +11,7 @@ public class ExceptionMessage {
 //    public static final String I001 = "INCOME_NOT_FOUND";
 //    public static final String W001 ="WALLET_RETRIEVING_ERROR";
 
+    public static final String WALLETS_LIST_NOT_FOUND_EXC_MSG = "An error occurred while retrieving the list of wallets";
     public static final int CODE_NOT_FOUND =404;
     public static final int CODE_BAD_REQUEST = 400;
     public static final int CODE_SERVER_ERROR = 500;

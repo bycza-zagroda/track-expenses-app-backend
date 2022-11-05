@@ -1,8 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,14 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
-import static pl.byczazagroda.trackexpensesappbackend.exception.BusinessError.W001;
-import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.*;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.CODE_NOT_FOUND;
 
 /**
  * GlobalExceptionHandlerController exception handler for all application exceptions.
@@ -29,18 +22,17 @@ import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage
 @RestControllerAdvice
 class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        log.error("message: {}, object: {}", ex.getMessage(), ex.obj);
+    @ExceptionHandler(AppRuntimeException.class)
+    public ResponseEntity<Object> handleResourceNotFoundException(AppRuntimeException ex) {
+        log.error("message: {}, object: {}", ex.getBusinessMessage(), ex.getObj());
 
+        ApiException apiException = new ApiException(ex.getBusinessStatus(), ex.getBusinessMessage(),
+                ex.getBusinessDescription(), ex.getBusinessstatusCode());
 
-
-        return new ResponseEntity<>(new ApiException(W001.getBusinessStatus(), W001.getBusinessMessage(), CODE_NOT_FOUND ),
-                mapExceptionMessageCodeToHttpStatus(CODE_NOT_FOUND));
+        return new ResponseEntity<>(apiException,
+                mapExceptionMessageCodeToHttpStatus(ex.getBusinessstatusCode()));
     }
 
-    //    public ApiException(String businessStatus, String businessMessage, Integer businessstatusCode) {
-//to jest gdy nie istnieje taki controlller, taki endpoint
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
                                                                    HttpHeaders headers,

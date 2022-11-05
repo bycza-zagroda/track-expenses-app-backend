@@ -14,7 +14,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -35,9 +35,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 @WebMvcTest
         (controllers = WalletController.class,
@@ -90,7 +88,7 @@ class WalletServiceImplTest {
         // when
         // then
         assertThatThrownBy(() -> walletService.updateWallet(updateWalletDto))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(AppRuntimeException.class);
     }
 
     @Test
@@ -223,7 +221,7 @@ class WalletServiceImplTest {
 
         // then
         assertThat(exception)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(AppRuntimeException.class)
                 .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
     }
 

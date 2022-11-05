@@ -7,8 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
+import pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -16,7 +18,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+
 
 @Slf4j
 @Service
@@ -46,7 +49,9 @@ public class WalletServiceImpl implements WalletService {
                 .findById(id)
 //                .findOne(id)
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Wallet with id: %s not found", id), id));
+                .orElseThrow(() -> new AppRuntimeException(BusinessError.W001.getBusinessStatus(),
+                        BusinessError.W001.getBusinessMessage(), String.format("Wallet with id: %s not found", id),
+                        ExceptionMessage.CODE_NOT_FOUND));
     }
 
     @Override
@@ -54,7 +59,7 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO updateWallet(UpdateWalletDTO dto) {
         Wallet wallet = walletRepository.findById(dto.id())
                 .orElseThrow(() -> {
-                    throw new ResourceNotFoundException("Wallet with given ID: {} does not exist " + dto.id());
+                    throw new AppRuntimeException("Wallet with given ID: {} does not exist " + dto.id());
                 });
         wallet.setName(dto.name());
 
@@ -69,7 +74,7 @@ public class WalletServiceImpl implements WalletService {
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
         } catch (RuntimeException e) {
-            throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
+            throw new AppRuntimeException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
         }
         return walletsDTO;
     }
