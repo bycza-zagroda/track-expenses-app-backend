@@ -16,7 +16,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ExceptionMessage.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+
 
 @Slf4j
 @Service

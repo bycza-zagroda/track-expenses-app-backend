@@ -13,5 +13,5 @@ import java.util.Optional;
  */
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
-    Optional<Wallet> findOne(@Valid Long id);
+//    Optional<Wallet> findOne(@Valid Long id);
 }
