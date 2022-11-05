@@ -28,10 +28,10 @@ databaseChangeLog:
                        primaryKey: true
                        nullable: false
                 -  column:
-                     name: firstname
+                     name: name
                      type: varchar(50)
                 -  column:
-                     name: lastname
-                     type: varchar(50)
+                     name: create_date
+                     type: datetime(6)
                      constraints:
                        nullable: false

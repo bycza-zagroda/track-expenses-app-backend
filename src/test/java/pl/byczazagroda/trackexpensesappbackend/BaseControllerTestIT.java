@@ -32,7 +32,8 @@ public abstract class BaseControllerTestIT {
             .withDatabaseName("trackexpensesapptest")
             .withUsername("root")
             .withPassword("root")
-            .withReuse(true);
+            .withReuse(true)
+            .withFileSystemBind("/tmp/mysql", "/var/lib/mysql");
 
     @DynamicPropertySource
     private static void containerConfig(DynamicPropertyRegistry registry) {

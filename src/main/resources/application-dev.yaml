@@ -14,12 +14,13 @@ spring:
 
   liquibase:
     change-log: db/dbchangelog-dev.yaml
+    drop-first: true
   #Jpa/Hibernate:
   jpa:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
 
     show-sql: true
 

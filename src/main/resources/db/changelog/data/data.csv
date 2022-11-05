@@ -1,5 +1,3 @@
-id,firstname,lastname
-1,Iwona,Adamkiewicz
-2,Przemek,Bykowski
-3,Marcin,Piwko
-4,Jaroslaw,Ksiezuk
+id,name,create_date
+1,wallet 1,2022-10-01 00:00:00
+2,wallet 2,2022-10-01 00:00:00
