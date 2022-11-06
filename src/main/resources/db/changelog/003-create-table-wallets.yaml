@@ -7,10 +7,10 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - tableExists:
-            tableName: wallet
+            tableName: wallets
       changes:
         - dropTable:
-            tableName: wallet
+            tableName: wallets
   -  changeSet:
        id: 2
        author: pyanik
@@ -18,7 +18,7 @@ databaseChangeLog:
        runAlways: true
        changes:
          -  createTable:
-              tableName: wallet
+              tableName: wallets
               columns:
                 -  column:
                      name: id

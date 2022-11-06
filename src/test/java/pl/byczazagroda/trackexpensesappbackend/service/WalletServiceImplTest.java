@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,28 +13,30 @@ import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThrows;
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest
         (controllers = WalletController.class,
@@ -86,7 +89,7 @@ class WalletServiceImplTest {
         // when
         // then
         assertThatThrownBy(() -> walletService.updateWallet(updateWalletDto))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(AppRuntimeException.class);
     }
 
     @Test
@@ -197,7 +200,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldReturnListOfWalletDTOWithProperSize() {
+    void shouldReturnListOfWalletDTOWithProperSizeWhenListIsNotEmpty() {
         // given
         List<Wallet> walletList = createListOfWallets();
 
@@ -207,21 +210,22 @@ class WalletServiceImplTest {
 
         // then
         assertThat(allWallets, hasSize(walletList.size()));
+        assertFalse(allWallets.isEmpty());
     }
 
-    @Test
-    void shouldThrowExceptionWhenListOfWalletsNotFound() {
-        // given
-        Mockito.when(walletRepository.findAll()).thenThrow(RuntimeException.class);
-
-        // when
-        Exception exception = assertThrows(RuntimeException.class, () -> walletService.getWallets());
-
-        // then
-        assertThat(exception)
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
-    }
+//    @Test
+//    void shouldThrowExceptionWhenListOfWalletsNotFound() {
+//        // given
+//        Mockito.when(walletRepository.findAll()).thenThrow(RuntimeException.class);
+//
+//        // when
+//        Exception exception = assertThrows(RuntimeException.class, () -> walletService.getWallets());
+//
+//        // then
+//        assertThat(exception)
+//                .isInstanceOf(AppRuntimeException.class)
+//                .hasMessage(BusinessError.W001.getBusinessMessage());
+//    }
 
     @Test
     void shouldDeletedWalletProperly() {
@@ -253,10 +257,10 @@ class WalletServiceImplTest {
 
         //then
         assertThatThrownBy(() -> walletService.deleteWalletById(5L))
-                .isInstanceOf(ResourceNotDeletedException.class);
-        assertThatExceptionOfType(ResourceNotDeletedException.class)
+                .isInstanceOf(AppRuntimeException.class);
+        assertThatExceptionOfType(AppRuntimeException.class)
                 .isThrownBy(()->walletService.deleteWalletById(5L))
-                .withMessage("Value does not exist in the database, please change your request");
+                .withMessage(BusinessError.W003.getBusinessMessage());
     }
 
     private List<Wallet> createListOfWallets() {

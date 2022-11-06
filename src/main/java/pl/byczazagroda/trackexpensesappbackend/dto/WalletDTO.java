@@ -1,6 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.dto;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Wallet Data Transfer Object class.

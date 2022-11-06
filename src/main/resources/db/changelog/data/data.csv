@@ -1,3 +1,5 @@
-id,name,create_date
-1,wallet 1,2022-10-01 00:00:00
-2,wallet 2,2022-10-01 00:00:00
+id,name,creation_date
+1,Wallet one,2022-10-22T09:47:52.595721658
+2,Wallet two,2021-02-19T09:47:52.595721658
+3,Wallet three,2021-09-21T09:47:52.595721658
+4,Wallet four,2020-05-20T09:47:52.595721658

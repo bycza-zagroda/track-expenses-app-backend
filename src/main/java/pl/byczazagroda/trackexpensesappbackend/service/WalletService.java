@@ -13,9 +13,14 @@ import java.util.List;
 @Validated
 public interface WalletService {
 
-    WalletDTO updateWallet(@Valid UpdateWalletDTO walletToUpdate);
 
-    WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
+
+    WalletDTO createWallet(CreateWalletDTO createWalletDTO);
+
+    //metoda do testów
+    WalletDTO findOne(@Valid Long id);
+
+    WalletDTO updateWallet(UpdateWalletDTO walletToUpdate);
 
     List<WalletDTO> getWallets();
 
