@@ -24,6 +24,22 @@ class GlobalExceptionHandlerController {
     @Value("${spring.profiles.active}")
     private String profileName;
 
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> catchThrowableException(Throwable ex) {
+        log.error("message: {}", ex.getMessage());
+
+        return new ResponseEntity<>(
+                new ApiException(
+                        this.profileName,
+                        BusinessError.TEA001.getBusinessStatus(),
+                        BusinessError.TEA001.getBusinessMessage(),
+                        String.format("Throwable exception %s", ex.getMessage()),
+                        BusinessError.TEA001.getBusinessStatusCode()),
+                HttpStatus.valueOf(BusinessError.TEA001.getBusinessStatusCode())
+        );
+    }
+
     @ExceptionHandler(AppRuntimeException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(AppRuntimeException ex) {
 
@@ -116,12 +132,7 @@ class GlobalExceptionHandlerController {
 //        };
 //    }
 
-//    @ExceptionHandler(Throwable.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public String catchThrowableException(Throwable e) {
-//        log.error("Throwable", e);
-//        return e.getMessage();
-//    }
+
 
 //    @ExceptionHandler(AppRuntimeException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

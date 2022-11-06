@@ -4,11 +4,13 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
@@ -183,20 +185,29 @@ class WalletServiceImplTest {
         // given
         Instant creationTime = Instant.now();
         String illegalLettersName = "@#$";
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(illegalLettersName);
+
         Wallet wallet = new Wallet(illegalLettersName);
-        long id = 1L;
-        wallet.setId(id);
+        wallet.setId(1L);
         wallet.setCreationDate(creationTime);
-        WalletDTO walletDTO = new WalletDTO(id, illegalLettersName, creationTime);
+
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO(illegalLettersName);
+        WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
 
         // when
-        when(walletRepository.save(any(Wallet.class))).thenReturn(wallet);
-        when(walletRepository.existsById(id)).thenReturn(true);
+        when(walletRepository.save(any(Wallet.class)))
+                .thenThrow(new AppRuntimeException(BusinessError.TEA003,BusinessError.TEA003.getBusinessMessage() ));
+        when(walletRepository.existsById(wallet.getId())).thenReturn(true);
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(walletDTO);
+        Exception exception = assertThrows(AppRuntimeException.class, () -> walletService.createWallet(createWalletDTO));
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        assertThat(exception)
+                .isInstanceOf(AppRuntimeException.class)
+                .hasMessage(BusinessError.TEA003.getBusinessMessage());
+
+
+
+
     }
 
     @Test

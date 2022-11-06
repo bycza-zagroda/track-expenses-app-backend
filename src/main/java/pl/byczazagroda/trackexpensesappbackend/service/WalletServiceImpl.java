@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
@@ -27,15 +28,27 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
-        String walletName = createWalletDTO.name();
-        Wallet wallet = new Wallet(walletName);
-        Wallet savedWallet = walletRepository.save(wallet);
+        Wallet savedWallet = null;
 
-//       if(walletRepository.existsById(savedWallet.getId())) { debug tutaj i tak nie chwodzi
-        return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
+            String walletName = createWalletDTO.name();
+            Wallet wallet = new Wallet(walletName);
+            savedWallet = walletRepository.save(wallet);
+
+
+        System.out.println("bbb");
+
+
+
+
+//       if(walletRepository.existsById(savedWallet.getId())) { //debug tutaj i tak nie chwodzi
+
 //       }
-
-//       throw new ResourceNotFoundException("Wallet was not saved", savedWallet);
+//       throw new AppRuntimeException(
+//               BusinessError.TEA001,
+//               String.format("Wallet was not saved: %s", savedWallet.getId())
+//           );
+        return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
+//        return null;
     }
 
     @Override
