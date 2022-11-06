@@ -16,5 +16,5 @@ databaseChangeLog:
                    name: name
                    type: varchar(50)
                - column:
-                   name: create_date
-                   type: datetime(6)
+                   name: creation_date
+                   type: timestamp

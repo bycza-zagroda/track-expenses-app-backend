@@ -17,5 +17,5 @@ services:
           memory: '128M'
     ports:
       - '3306:3306'
-    volumes:
-      - /tmp/mysql:/var/lib/mysql
+#    volumes:
+#      - /tmp/mysql:/var/lib/mysql

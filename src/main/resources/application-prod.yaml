@@ -14,12 +14,13 @@ spring:
 
   liquibase:
     change-log: db/dbchangelog-prod.yaml
+    drop-first: true # TODO delete this line before release version 1.0.0
   #Jpa/Hibernate:
   jpa:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
 
     show-sql: true
 

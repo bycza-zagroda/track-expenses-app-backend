@@ -1,5 +1,9 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ApiException;
+import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
@@ -24,17 +30,9 @@ public class WalletController {
 
     private final WalletService walletService;
 
-    @PutMapping
-    public ResponseEntity<WalletDTO> updateWallet(@Valid @RequestBody UpdateWalletDTO updateWalletDto) {
-
-        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("message", "You have successfully updated Wallet!");
-        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
-    }
-
     @PostMapping()
-    public ResponseEntity<WalletDTO> createWallet(@Valid @RequestBody CreateWalletDTO createWalletDTO) {
+    public ResponseEntity<WalletDTO> createWallet(
+            @Valid @RequestBody CreateWalletDTO createWalletDTO) {
 
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
         HttpHeaders headers = new HttpHeaders();
@@ -43,11 +41,48 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "404",
+
+                    description = "wallet not found",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiException.class)
+                    )}),
+            @ApiResponse(
+                    responseCode = "400",
+
+                    description = "wallet not found",
+                    content = {@Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = BusinessError.class)
+                    )})
+
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<WalletDTO> findOne(@Valid @PathVariable Long id) {
+
+        WalletDTO one = walletService.findOne(id);
+
+        return new ResponseEntity<>(one, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<WalletDTO> updateWallet(
+            @Valid @RequestBody UpdateWalletDTO updateWalletDto) {
+
+        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "You have successfully updated Wallet!");
+        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
+    }
+
     @GetMapping()
     ResponseEntity<List<WalletDTO>> getWallets() {
 
         List<WalletDTO> walletsDTO = walletService.getWallets();
-        HttpHeaders headers =  new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
 
         if (!walletsDTO.isEmpty()) {
             headers.add("message", "The list of wallets has been successfully retrieved.");

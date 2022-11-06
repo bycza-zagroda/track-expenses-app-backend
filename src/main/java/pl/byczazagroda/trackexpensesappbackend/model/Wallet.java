@@ -4,18 +4,15 @@ package pl.byczazagroda.trackexpensesappbackend.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 /**
@@ -44,13 +41,20 @@ public class Wallet implements Serializable {
 
     @NotBlank
     @Size(max = 20)
-    @Pattern(regexp = "[a-z A-Z]+")
+    @Pattern(regexp = "[a-z A-Z]+", message = "invalide input. Name should contains only latin litters")
     private String name;
-    @Column(name = "create_date")
+    @Column(name = "creation_date")
+    @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
+    //yyyy-mm-dd hh:mm:ss. instant 2022-03-20T10:11:12
     private Instant creationDate;
 
     public Wallet(String name) {
         this.name = name;
         this.creationDate = Instant.now();
+    }
+
+    public Timestamp convertInstantToTimestamp (Instant creationDate) {
+        this.creationDate = creationDate;
+        return Timestamp.from(this.creationDate);
     }
 }
