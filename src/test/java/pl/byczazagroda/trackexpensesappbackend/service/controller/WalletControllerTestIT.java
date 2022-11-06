@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.controller;
+package pl.byczazagroda.trackexpensesappbackend.service.controller;
 
 
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
 import pl.byczazagroda.trackexpensesappbackend.BaseControllerTestIT;
+import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.transaction.Transactional;

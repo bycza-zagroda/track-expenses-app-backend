@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.controller;
+package pl.byczazagroda.trackexpensesappbackend.service.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
