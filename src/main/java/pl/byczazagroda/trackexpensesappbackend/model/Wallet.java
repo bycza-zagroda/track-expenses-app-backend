@@ -6,7 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -14,6 +19,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.DATE_TIME;
 
 /**
  * Entity class for money wallet.
@@ -38,11 +47,11 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "[a-z A-Z]+", message = "invalide input. Name should contains only latin litters")
     private String name;
+
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     //yyyy-mm-dd hh:mm:ss. instant 2022-03-20T10:11:12

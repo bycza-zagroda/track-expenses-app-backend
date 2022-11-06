@@ -1,15 +1,19 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
+import liquibase.pro.packaged.bu;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +101,15 @@ class GlobalExceptionHandlerController {
         });
         return businessDescription;
     }
+//
+//    private HttpStatus mapExceptionMessageCodeToHttpStatus(int code) {
+//        return switch (code) {
+//            case CODE_BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+//            case ExceptionMessage.CODE_NOT_FOUND -> HttpStatus.NOT_FOUND;
+//            case ExceptionMessage.CODE_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+//            default -> HttpStatus.OK;
+//        };
+//    }
 
 //    private HttpStatus mapExceptionMessageCodeToHttpStatus(int code) {
 //        return switch (code) {

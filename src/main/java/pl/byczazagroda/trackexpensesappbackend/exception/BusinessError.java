@@ -1,5 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.stereotype.Component;
+
 public enum BusinessError {
 
     W001("W001", "WALLET_RETRIEVING_ERROR", 200),
