@@ -1,14 +1,9 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,10 +13,6 @@ import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ApiException;
-import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiException;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
@@ -49,25 +40,16 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(
+    @Operation(
+            responses = {@ApiResponse(
                     responseCode = "404",
 
                     description = "wallet not found",
                     content = {@Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ApiException.class)
-                    )}),
-            @ApiResponse(
-                    responseCode = "400",
-
-                    description = "wallet not found",
-                    content = {@Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = BusinessError.class)
                     )})
-
-    })
+            })
     @GetMapping("/{id}")
     public ResponseEntity<WalletDTO> findOne(@Valid @PathVariable Long id) {
 
