@@ -7,6 +7,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -20,13 +21,10 @@ public interface WalletService {
 
     List<WalletDTO> getWallets();
 
-    void deleteWalletById(@NotNull
-                          @Min(value = 1, message = "Wallet id has to be greater than 0")
-                          Long id);
+    void deleteWalletById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
-    WalletDTO findById(@NotNull
-                       @Min(value = 1, message = "Wallet id has to be greater than 0")
-                       Long id);
+    WalletDTO findById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
-    List<WalletDTO> getWalletsByName(String name);
+    // fixme replace @NotBlank and @NotEmpty by proper @Pattern annotation value
+    List<WalletDTO> getWalletsByName(@NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
 }

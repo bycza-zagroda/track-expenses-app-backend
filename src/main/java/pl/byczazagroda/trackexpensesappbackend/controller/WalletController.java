@@ -79,9 +79,9 @@ public class WalletController {
     }
 
     @GetMapping("/{name}")
-    ResponseEntity<List<WalletDTO>> getWalletsByName(@Valid @NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") @PathVariable String name) {
+    ResponseEntity<List<WalletDTO>> getWalletsByName(@PathVariable String name) {
         List<WalletDTO> walletsDTO = walletService.getWalletsByName(name);
-        HttpHeaders headers =  new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
 
         if (!walletsDTO.isEmpty()) {
             headers.add("message", "The list of wallets has been successfully retrieved.");

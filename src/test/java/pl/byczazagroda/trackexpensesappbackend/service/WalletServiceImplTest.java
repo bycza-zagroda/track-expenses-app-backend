@@ -1,6 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
@@ -297,10 +300,32 @@ class WalletServiceImplTest {
                 .withMessage("Wallet with that id doesn't exist");
     }
 
+    @Test
+    @DisplayName("Should return list of WalletDTO by name with proper size")
+    void shouldReturnListOfWalletDTOByNameWithProperSize() {
+        // given
+        String walletNameSearched = "Family";
+        List<Wallet> walletList = createListOfWalletsByName("Family wallet", "Common Wallet", "Smith Family Wallet");
+        List<WalletDTO> walletListDTO = walletList.stream().map((Wallet x) -> new WalletDTO(x.getId(), x.getName(), x.getCreationDate())).toList();
+        given(walletRepository.findAll()).willReturn(walletList);
+        walletList.forEach(wallet -> given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(walletListDTO.stream().filter(walletDTO -> Objects.equals(wallet.getName(), walletDTO.name())).findAny().orElse(null)));
+
+        // when
+        List<WalletDTO> fundedWallets = walletService.getWalletsByName(walletNameSearched);
+
+        // then
+        assertThat(fundedWallets, hasSize(walletList.stream().filter(wallet -> wallet.getName().contains(walletNameSearched)).toList().size()));
+    }
+
+    private List<Wallet> createListOfWalletsByName(String... name) {
+        return Arrays.stream(name).map(Wallet::new).toList();
+    }
+
     private List<Wallet> createListOfWallets() {
         Wallet wallet1 = new Wallet(NAME_OF_WALLET);
         Wallet wallet2 = new Wallet(NAME_OF_WALLET_1);
         Wallet wallet3 = new Wallet(NAME_OF_WALLET_2);
         return List.of(wallet1, wallet2, wallet3);
     }
+
 }

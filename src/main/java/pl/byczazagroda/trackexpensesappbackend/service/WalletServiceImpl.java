@@ -16,7 +16,9 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.transaction.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
+import static java.util.Objects.isNull;
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 import java.util.Optional;

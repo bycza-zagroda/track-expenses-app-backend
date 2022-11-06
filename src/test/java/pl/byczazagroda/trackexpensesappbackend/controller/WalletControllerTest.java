@@ -23,10 +23,12 @@ import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -352,6 +354,7 @@ class WalletControllerTest {
         result.andExpect(status().isOk());
     }
 
+
     @Test
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
@@ -429,5 +432,28 @@ class WalletControllerTest {
 
         //then
         result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Should return information about all wallets funded by part of a wallet name and http ok status")
+    void shouldReturnListOfAllWalletsByName() throws Exception {
+        // given
+        String walletNameSearched = "Wallet2";
+        List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
+        List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2));
+        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
+        given(walletService.getWalletsByName(walletNameSearched)).willReturn(foundedWalletsDTO);
+
+        // then
+        mockMvc.perform(get("/api/wallet/{name}", walletNameSearched)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("message", LIST_OF_WALLETS_HEADER_MSG))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(foundedWalletsDTO.size()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(ID_OF_WALLET_2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(NAME_OF_WALLET_2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].creationDate")
+                        .value(CREATION_DATE_OF_WALLET_2.toString()));
     }
 }
