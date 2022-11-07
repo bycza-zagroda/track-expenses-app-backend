@@ -192,10 +192,10 @@ class WalletServiceImplTest {
 
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(illegalLettersName);
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
-
-        // when
         when(walletRepository.save(any(Wallet.class)))
                 .thenThrow(new AppRuntimeException(BusinessError.TEA003,BusinessError.TEA003.getBusinessMessage() ));
+
+        // when
         when(walletRepository.existsById(wallet.getId())).thenReturn(true);
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(walletDTO);
         Exception exception = assertThrows(AppRuntimeException.class, () -> walletService.createWallet(createWalletDTO));
