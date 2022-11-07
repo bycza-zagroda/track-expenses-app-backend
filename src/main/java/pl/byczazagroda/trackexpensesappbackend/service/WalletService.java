@@ -10,6 +10,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Validated
@@ -26,5 +31,5 @@ public interface WalletService {
     WalletDTO findById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
     // fixme replace @NotBlank and @NotEmpty by proper @Pattern annotation value
-    List<WalletDTO> getWalletsByName(@NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
+    List<WalletDTO> getWalletsByName(@NotBlank @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
 }
