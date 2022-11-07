@@ -2,16 +2,20 @@ version: '3.8'
 services:
   backend:
     build: .
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
     ports:
       - "8080:8080"
     depends_on:
       - database
 
   database:
-    image: mysql:8.0
+    image: mysql:8
+    restart: always
     environment:
-      - MYSQL_DATABASE=trackexpensesapp
+      - MYSQL_PASSWORD=root
       - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=trackexpensesapp
     deploy:
       resources:
         limits:
@@ -21,7 +25,7 @@ services:
           cpus: '0.25'
           memory: '128M'
     ports:
-        - '3306:3306'
+      - '3306:3306'
     volumes:
       - dbstore:/var/lib/mysql
 volumes:
