@@ -1,8 +1,9 @@
-package pl.byczazagroda.trackexpensesappbackend.service.controller;
+package pl.byczazagroda.trackexpensesappbackend.controller;
 
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
@@ -28,11 +29,13 @@ class WalletControllerTestIT extends BaseControllerTestIT {
     @Autowired
     private WalletController subjectUnderTest;
 
-    @Autowired
+    @MockBean
     private WalletService walletService;
 
     @Test
     void createWallet() {
+
+
     }
 
     @Test
