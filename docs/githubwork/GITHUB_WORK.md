@@ -35,11 +35,11 @@
 
 ## Local repository
 
-1. Clone repository with
+1. Clone from your repository with (in the examples we use the http method)
 
 ### Git
 
-`git clone https://github.com/bycza-zagroda/track-expenses-app-backend.git`
+`git clone https://github.com/[YOUR-GITHUB-NAME]/[REPOSITORY-NAME].git`
 
 ### IntelliJ IDEA
 
@@ -93,17 +93,18 @@ Additionally, If this is code review, commit should start: "code review: message
 
 ### For developers
 Before commit your changes you should resolve conflicts with upstream develop if any.
-1. Check if you have set up upstream.
+1. Check that you have set up upstream.
 ```shell
-mirek@dom:/tmp/fork-upstream-repository$ git remote -v
-origin  git@github.com:mirekgab/fork-upstream-repository.git (fetch)
-origin  git@github.com:mirekgab/fork-upstream-repository.git (push)
-upstream        https://github.com/mirekgab1/upstream-repository.git (fetch)
-upstream        https://github.com/mirekgab1/upstream-repository.git (push)
+git remote -v
+
+origin  git@github.com:[YOUR-GITHUB-NAME]/[REPOSITORY-NAME].git (fetch)
+origin  git@github.com:[YOUR-GITHUB-NAME]/[REPOSITORY-NAME].git (push)
+upstream        https://github.com/bycza-zagroda/[REPOSITORY-NAME].git (fetch)
+upstream        https://github.com/bycza-zagroda/[REPOSITORY-NAME].git (push)
 ```
-If you don't see the upstream repository execute the following command (you have to use bycza-zagroda repository.):
+If you don't see the upstream repository, execute the following command (as `upstream-repository` you should use `track-expenses-app-backend` or `track-expenses-app-frontend`):
 ```shell
-git remote add upstream https://github.com/mirekgab1/upstream-repository.git
+git remote add upstream https://github.com/bycza-zagroda/[REPOSITORY-NAME].git
 ```
 2. Fetch upstream branch.
 ```shell
@@ -113,19 +114,20 @@ git fetch upstream
 ```shell
 git checkout develop
 ```
-4. Merge upstream/develop into your local develop.
+4. Merge upstream/develop into your local develop, next update develop branch in fork repository.
 ```shell
 git merge upstream/develop
+git push origin develop
 ```
 5. Checkout to your fork's local branch - in this case, we use `feature/1-feature-name`
 ```shell
 git checkout feature/1-feature-name
 ```
-6. Merge the changes from the upstream develop branch into your local `feature/1-feature-name branch`.
+6. Merge the changes from the `develop` into your local `feature/1-feature-name` branch.
 ```shell
 git merge develop
 ```
-If you don't see any error, you can push your `feature/1-feature-name` and `develop` branch to your repository.
+If you don't see any error, you can push your `feature/1-feature-name` branch to your repository.
 
 If there are any existing conflicts, you'll see the following message:
 ```shell
@@ -158,13 +160,12 @@ Click Merge button and you see editor
 
 You have three panels here: the left one shows your version of the file, the right one shows the version of the file from upstream.
 In the middle you have final version. Decide if you want to keep only your branch's changes, keep only the upstream changes,
-or make a brand new change, which may incorporate changes from both branches. Delete the conflict markers `<<<<<<<`, `=======`, `>>>>>>>`
-and make the changes you want int the final merge.
-After resolve all conflict you can click Applay button.
+or make a brand new change, which may incorporate changes from both branches. 
+After resolve all conflict you can click Apply button.
 
 ![finish merging](images/img014_merge_revision_finish.png)
 
-Next commit and push you changes
+Next commit and push your changes to your fork repo.
 ```shell
 git commit -m "merging with upstream"
 git push
