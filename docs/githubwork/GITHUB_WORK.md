@@ -35,7 +35,7 @@
 
 ## Local repository
 
-1. Clone from your repository with (in the examples we use the http method)
+1. Clone from your fork repository with (in the examples we use the http method)
 
 ### Git
 
@@ -44,7 +44,9 @@
 ### IntelliJ IDEA
 
 ![IntelliJ Import Step 1](images/img008_intellij_import_step_1.png)
+
 ![IntelliJ Import Step 2](images/img008_intellij_import_step_2.png)
+
 ![IntelliJ Import Step 3](images/img008_intellij_import_step_3.png)
 
 ---
@@ -83,8 +85,12 @@ Now you can start working with the task.
 
 ## Commits
 Commit should be done according to the image below:
-for example for new feature: "feat: add new image: img009_commits_message.png to the documentation"
+for example for new feature: 
+
+`feat: add new image to the documentation`
+
 ![commits](images/img009_commits_message.png)
+
 
 Additionally, If this is code review, commit should start: "code review: message"
 
