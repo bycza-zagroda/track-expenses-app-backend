@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -34,12 +34,6 @@ public class WalletServiceImpl implements WalletService {
             Wallet wallet = new Wallet(walletName);
             savedWallet = walletRepository.save(wallet);
 
-
-        System.out.println("bbb");
-
-
-
-
 //       if(walletRepository.existsById(savedWallet.getId())) { //debug tutaj i tak nie chwodzi
 
 //       }
@@ -55,10 +49,9 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO findOne(Long id) {
         return walletRepository
                 .findById(id)
-//                .findOne(id)
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
                 .orElseThrow(() -> new AppRuntimeException(
-                        BusinessError.W003,
+                        ErrorCode.W003,
                         String.format("Wallet with id: %d does not exist", id))
                 );
     }
@@ -69,7 +62,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = walletRepository.findById(dto.id())
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
-                            BusinessError.W003,
+                            ErrorCode.W003,
                             String.format("Wallet with id: %d does not exist", dto.id()));
                 });
         wallet.setName(dto.name());
@@ -90,7 +83,7 @@ public class WalletServiceImpl implements WalletService {
             walletRepository.deleteById(id);
         } else {
             throw new AppRuntimeException(
-                    BusinessError.W003,
+                    ErrorCode.W003,
                     String.format("Wallet with given id: %d does not exist", id));
         }
     }

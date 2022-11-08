@@ -1,9 +1,7 @@
-package pl.byczazagroda.trackexpensesappbackend.service.controller;
+package pl.byczazagroda.trackexpensesappbackend.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.hamcrest.Matchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +12,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
@@ -33,23 +32,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = WalletController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
                 WalletModelMapper.class}))
+@ActiveProfiles("test")
 class WalletControllerTest {
 
     private static final Long ID_OF_WALLET_1 = 1L;
@@ -83,8 +78,83 @@ class WalletControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
+    /**
+     * tests for creat method
+     */
+    @Test //zla nazwa testu, sprawdza status nie wyjatek
+    @DisplayName("Should Return Status BadRequest And New Wallet Is Not Created When Name Is Null")
+    void shouldNotCreateNewWalletWhenNameIsNull() throws Exception {
+        // given
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
+        given(walletService.createWallet(createWalletDTO))
+                .willReturn(new WalletDTO(1L, null, Instant.now()));
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/wallet")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
+        // then
+        result.andExpect(status().isBadRequest());
+    }
+
+
     @Test
-    void itShouldReturnStatusOKAndCorrectResponseBody() throws Exception {
+    @DisplayName("should Return BadRequest Status And New Wallet Is Not Created When Name Is Empty")
+    void shouldNotCreateNewWalletWhenNameIsEmpty() throws Exception {
+        // given
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO("");
+        given(walletService.createWallet(createWalletDTO))
+                .willReturn(new WalletDTO(1L, "", Instant.now()));
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/wallet")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
+        // then
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("should Return BadRequest Status And New Wallet Is Not Created When Name Is Too Long")
+    void shouldTReturnBadRequestStatusWhenNameIsTooLong() throws Exception {
+        // given
+        String walletName = "This wallet name is too long, it contains over 20 characters";
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
+        given(walletService.createWallet(createWalletDTO))
+                .willReturn(
+                        new WalletDTO(1L, walletName, Instant.now()));
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/wallet")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
+        // then
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("should Return BadRequest Status And New Wallet Is Not Created When Name Contains Illegal Letters")
+    void shouldThrowAnExceptionWhenNameContainsIllegalLetters() throws Exception {
+        // given
+        CreateWalletDTO createWalletDTO = new CreateWalletDTO("#$@");
+        given(walletService.createWallet(createWalletDTO))
+                .willReturn(new WalletDTO(1L, "#$@", Instant.now()));
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/wallet")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
+        // then
+        result.andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test for update
+     */
+    @Test
+    @DisplayName("should Return Status OK And Correct Response Body When Wallet Name Is Changed")
+    void shouldReturnStatusOKAndCorrectResponseBodyWhenWalletNameIsChanged() throws Exception {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(1L, "anyName");
@@ -92,8 +162,7 @@ class WalletControllerTest {
                 new WalletDTO(
                         updateWalletDto.id(),
                         updateWalletDto.name(),
-                        timeCreated
-                )
+                        timeCreated)
         );
 
         // when
@@ -110,7 +179,8 @@ class WalletControllerTest {
     }
 
     @Test
-    void itShouldReturnBadRequestWhenNameIsEmpty() throws Exception {
+    @DisplayName("should Return Status BadRequest And Not Update Wallet When Name Is Empty")
+    void shouldReturnBadRequestWhenNameIsEmpty() throws Exception {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "");
@@ -129,7 +199,8 @@ class WalletControllerTest {
     }
 
     @Test
-    void itShouldReturnBadRequestWhenNameIsTooLong() throws Exception {
+    @DisplayName("should Return Status BadRequest And Not Update Wallet When Name Is Too Long")
+    void shouldReturnBadRequestWhenNameIsTooLong() throws Exception {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "Too long name - more than 20 letters.");
@@ -147,29 +218,18 @@ class WalletControllerTest {
         result.andExpect(status().isBadRequest());
     }
 
-    @Test
-    void shouldThrowAnExceptionWhenNameIsEmpty() throws Exception {
-        // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO("");
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, "", Instant.now()));
-
-        // when
-        ResultActions result = mockMvc.perform(post("/api/wallet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
-        // then
-        result.andExpect(status().isBadRequest());
-    }
 
     @Test
-    void itShouldReturnBadRequestWhenNameContainsIllegalLetters() throws Exception {
+    @DisplayName("should Return BadRequest Status And Not Update Wallet When Name Contains IllegalLetters")
+    void shouldReturnBadRequestWhenNameContainsIllegalLetters() throws Exception {
         // given
         Instant timeCreated = Instant.now();
 
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "@#$%^&");
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "wallet");
+//        given(walletService.updateWallet(updateWalletDTO))
+//                .willReturn(new WalletDTO(1L, "", timeCreated));
         given(walletService.updateWallet(updateWalletDTO))
-                .willReturn(new WalletDTO(1L, "", timeCreated));
+                .willThrow(new RuntimeException("exception message"));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -178,21 +238,6 @@ class WalletControllerTest {
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        // then
-        result.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldThrowAnExceptionWhenNameIsNull() throws Exception {
-        // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, null, Instant.now()));
-
-        // when
-        ResultActions result = mockMvc.perform(post("/api/wallet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
         result.andExpect(status().isBadRequest());
     }
@@ -213,23 +258,6 @@ class WalletControllerTest {
                         .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateWalletDTO)))
         );
 
-        // then
-        result.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldThrowAnExceptionWhenNameIsTooLong() throws Exception {
-        // given
-        String walletName = "This wallet name is too long, it contains over 20 characters";
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(
-                        new WalletDTO(1L, walletName, Instant.now()));
-
-        // when
-        ResultActions result = mockMvc.perform(post("/api/wallet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
         // then
         result.andExpect(status().isBadRequest());
     }
@@ -273,21 +301,11 @@ class WalletControllerTest {
         result.andExpect(status().isBadRequest());
     }
 
-    @Test
-    void shouldThrowAnExceptionWhenNameContainsIllegalLetters() throws Exception {
-        // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO("#$@");
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, "#$@", Instant.now()));
 
-        // when
-        ResultActions result = mockMvc.perform(post("/api/wallet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createWalletDTO))));
-        // then
-        result.andExpect(status().isBadRequest());
-    }
 
+    /**
+     * test for list
+     */
     @Test
     @DisplayName("Should return empty list of wallets and http ok status")
     void shouldReturnEmptyList() throws Exception {
@@ -332,13 +350,10 @@ class WalletControllerTest {
                         .value(CREATION_DATE_OF_WALLET_3.toString()));
     }
 
-    private List<WalletDTO> createListOfWalletsDTO() {
-        WalletDTO walletDTO1 = new WalletDTO(ID_OF_WALLET_1, NAME_OF_WALLET_1, CREATION_DATE_OF_WALLET_1);
-        WalletDTO walletDTO2 = new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2);
-        WalletDTO walletDTO3 = new WalletDTO(ID_OF_WALLET_3, NAME_OF_WALLET_3, CREATION_DATE_OF_WALLET_3);
-        return List.of(walletDTO1, walletDTO2, walletDTO3);
-    }
 
+    /**
+     * delete
+     */
     @Test
     void shouldReturnStatusOkWhenDeleteWalletCorrectly() throws Exception {
         //given
@@ -367,5 +382,16 @@ class WalletControllerTest {
 
         //then
         result.andExpect(status().isNoContent());
+    }
+
+
+    /**
+     * private method
+     */
+    private List<WalletDTO> createListOfWalletsDTO() {
+        WalletDTO walletDTO1 = new WalletDTO(ID_OF_WALLET_1, NAME_OF_WALLET_1, CREATION_DATE_OF_WALLET_1);
+        WalletDTO walletDTO2 = new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2);
+        WalletDTO walletDTO3 = new WalletDTO(ID_OF_WALLET_3, NAME_OF_WALLET_3, CREATION_DATE_OF_WALLET_3);
+        return List.of(walletDTO1, walletDTO2, walletDTO3);
     }
 }

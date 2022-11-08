@@ -13,7 +13,7 @@ public class AppRuntimeException extends RuntimeException {
     private String businessDescription; //  "Wallet with id: is not found in the database",
     private Integer businessStatusCode; //  404,
 
-    public AppRuntimeException(BusinessError error, String description) {
+    public AppRuntimeException(ErrorCode error, String description) {
         super(error.getBusinessMessage());
         this.businessStatus = error.getBusinessStatus();
         this.businessMessage = error.getBusinessMessage();

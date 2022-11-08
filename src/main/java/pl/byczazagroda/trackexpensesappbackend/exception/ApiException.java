@@ -10,26 +10,26 @@ import lombok.Setter;
 public class ApiException {
     @JsonIgnore
     private String profileName;
-    private String businessStatus; // "W001",
-    private String businessMessage; //  "WALLETS_RETRIEVING_ERROR",
-    private String businessDescription; //  "Wallet with id: is not found in the database",
-    private Integer businessStatusCode; //  404,
+    private String status; // "W001",
+    private String message; //  "WALLETS_RETRIEVING_ERROR",
+    private String description; //  "Wallet with id: is not found in the database",
+    private Integer statusCode; //  404,
 
     public ApiException(
-            String profileName, String businessStatus, String businessMessage,
-            String businessDescription,
-            Integer businessStatusCode) {
+            String profileName, String status, String message,
+            String description,
+            Integer statusCode) {
         this.profileName = profileName;
-        this.businessStatus = businessStatus;
-        this.businessMessage = businessMessage;
-        this.businessDescription = setBusinessDescriptionMethod(businessDescription);
-        this.businessStatusCode = businessStatusCode;
+        this.status = status;
+        this.message = message;
+        this.description = setDescriptionMethod(description);
+        this.statusCode = statusCode;
     }
 
     @JsonIgnore
-    private String setBusinessDescriptionMethod(String businessDescription) {
-        if (profileName.equals("dev")) {
-            return businessDescription;
+    private String setDescriptionMethod(String description) {
+        if (profileName.equals("dev") || profileName.equals("test")) {
+            return description;
         }
         return " ";
     }

@@ -37,7 +37,6 @@ public abstract class BaseControllerTestIT {
             .withUsername("root")
             .withPassword("root")
             .withReuse(true);
-            //.withFileSystemBind("/tmp/mysqlcontainer", "/var/lib/mysql");
 
     @DynamicPropertySource
     private static void containerConfig(DynamicPropertyRegistry registry) {

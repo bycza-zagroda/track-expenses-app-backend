@@ -1,6 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
-public enum BusinessError {
+public enum ErrorCode {
 
     W001("W001", "WALLET_RETRIEVING_ERROR", 200),
     W003("W003", "WALLET_NOT_FOUND", 404),
@@ -9,13 +9,14 @@ public enum BusinessError {
 
     TEA001("TEA001", "INTERNAL_SERVER_ERROR", 500),
     TEA002("TEA002", "ENDPOINT_DOES_NOT_EXISTS", 400),
-    TEA003("TEA003", "VALIDATION_FAILED", 400);
+    TEA003("TEA003", "VALIDATION_FAILED", 400),
+    TEA004("TEA004", "THROWABLE_EXCEPTION", 500);
 
     private String businessStatus;
     private String businessMessage;
     private Integer businessStatusCode;
 
-    BusinessError(String businessStatus, String businessMessage, Integer businessStatusCode) {
+    ErrorCode(String businessStatus, String businessMessage, Integer businessStatusCode) {
         this.businessStatus = businessStatus;
         this.businessMessage = businessMessage;
         this.businessStatusCode = businessStatusCode;

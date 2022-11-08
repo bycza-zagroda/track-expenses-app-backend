@@ -9,5 +9,4 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
  */
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
-//    Optional<Wallet> findOne(@Valid Long id);
 }

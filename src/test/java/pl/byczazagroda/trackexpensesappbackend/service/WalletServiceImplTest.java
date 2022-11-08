@@ -4,19 +4,17 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.BusinessError;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -31,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -193,7 +190,7 @@ class WalletServiceImplTest {
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(illegalLettersName);
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
         when(walletRepository.save(any(Wallet.class)))
-                .thenThrow(new AppRuntimeException(BusinessError.TEA003,BusinessError.TEA003.getBusinessMessage() ));
+                .thenThrow(new AppRuntimeException(ErrorCode.TEA003, ErrorCode.TEA003.getBusinessMessage() ));
 
         // when
         when(walletRepository.existsById(wallet.getId())).thenReturn(true);
@@ -203,7 +200,7 @@ class WalletServiceImplTest {
         // then
         assertThat(exception)
                 .isInstanceOf(AppRuntimeException.class)
-                .hasMessage(BusinessError.TEA003.getBusinessMessage());
+                .hasMessage(ErrorCode.TEA003.getBusinessMessage());
 
 
 
@@ -271,7 +268,7 @@ class WalletServiceImplTest {
                 .isInstanceOf(AppRuntimeException.class);
         assertThatExceptionOfType(AppRuntimeException.class)
                 .isThrownBy(()->walletService.deleteWalletById(5L))
-                .withMessage(BusinessError.W003.getBusinessMessage());
+                .withMessage(ErrorCode.W003.getBusinessMessage());
     }
 
     private List<Wallet> createListOfWallets() {
