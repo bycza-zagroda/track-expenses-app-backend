@@ -2,6 +2,7 @@ FROM eclipse-temurin:17-jdk-alpine as stage1
 WORKDIR /opt/app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+RUN sed -i 's/\r$//' mvnw
 RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
 COPY ./src ./src
