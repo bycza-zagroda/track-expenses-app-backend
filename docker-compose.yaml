@@ -2,6 +2,7 @@ version: '3.8'
 services:
   backend:
     build: .
+    restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     ports:
