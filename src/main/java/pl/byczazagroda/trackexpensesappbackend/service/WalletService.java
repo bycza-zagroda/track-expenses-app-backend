@@ -8,6 +8,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Validated
@@ -19,6 +20,11 @@ public interface WalletService {
 
     List<WalletDTO> getWallets();
 
-    void deleteWalletById(@Min(value = 1, message = "Wallet id has to be greater than 0")
+    void deleteWalletById(@NotNull
+                          @Min(value = 1, message = "Wallet id has to be greater than 0")
                           Long id);
+
+    WalletDTO findById(@NotNull
+                       @Min(value = 1, message = "Wallet id has to be greater than 0")
+                       Long id);
 }

@@ -19,6 +19,8 @@ import java.util.List;
 
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
+import java.util.Optional;
+
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -70,6 +72,16 @@ public class WalletServiceImpl implements WalletService {
             walletRepository.deleteById(id);
         } else {
             throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
+        }
+    }
+
+    @Override
+    public WalletDTO findById(Long id) {
+        Optional<Wallet> wallet = walletRepository.findById(id);
+        if (wallet.isPresent()) {
+            return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());
+        } else {
+            throw new ResourceNotFoundException("Wallet with that id doesn't exist");
         }
     }
 }
