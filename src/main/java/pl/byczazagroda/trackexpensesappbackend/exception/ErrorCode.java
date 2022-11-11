@@ -12,9 +12,9 @@ public enum ErrorCode {
     TEA003("TEA003", "VALIDATION_FAILED", 400),
     TEA004("TEA004", "THROWABLE_EXCEPTION", 500);
 
-    private String businessStatus;
-    private String businessMessage;
-    private Integer businessStatusCode;
+    private final String businessStatus;
+    private final String businessMessage;
+    private final Integer businessStatusCode;
 
     ErrorCode(String businessStatus, String businessMessage, Integer businessStatusCode) {
         this.businessStatus = businessStatus;

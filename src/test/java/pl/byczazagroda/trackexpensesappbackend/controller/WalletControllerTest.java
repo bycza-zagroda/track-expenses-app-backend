@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -39,7 +38,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(controllers = WalletController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -48,41 +46,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WalletControllerTest {
 
     private static final Long ID_OF_WALLET_1 = 1L;
-
     private static final Long ID_OF_WALLET_2 = 2L;
-
     private static final Long ID_OF_WALLET_3 = 3L;
-
     private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
-
     private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
-
     private static final String NAME_OF_WALLET_3 = "nameOfWallet3";
-
     private static final Instant CREATION_DATE_OF_WALLET_1 = Instant.parse("2022-09-24T19:09:35.573036Z");
-
     private static final Instant CREATION_DATE_OF_WALLET_2 = Instant.parse("2022-09-25T17:10:39.684145Z");
-
     private static final Instant CREATION_DATE_OF_WALLET_3 = Instant.parse("2022-09-26T18:11:49.132454Z");
-
     private static final String LIST_OF_WALLETS_HEADER_MSG = "The list of wallets has been successfully retrieved.";
-
     private static final String EMPTY_LIST_OF_WALLETS_HEADER_MSG = "There are no available wallets to view.";
-
     @MockBean
     private WalletService walletService;
-
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
 
     /**
      * tests for creat method
      */
-    @Test //zla nazwa testu, sprawdza status nie wyjatek
+    @Test 
     @DisplayName("Should Return Status BadRequest And New Wallet Is Not Created When Name Is Null")
     void shouldNotCreateNewWalletWhenNameIsNull() throws Exception {
         // given
@@ -97,8 +81,7 @@ class WalletControllerTest {
         // then
         result.andExpect(status().isBadRequest());
     }
-
-
+    
     @Test
     @DisplayName("should Return BadRequest Status And New Wallet Is Not Created When Name Is Empty")
     void shouldNotCreateNewWalletWhenNameIsEmpty() throws Exception {
@@ -218,7 +201,6 @@ class WalletControllerTest {
         result.andExpect(status().isBadRequest());
     }
 
-
     @Test
     @DisplayName("should Return BadRequest Status And Not Update Wallet When Name Contains IllegalLetters")
     void shouldReturnBadRequestWhenNameContainsIllegalLetters() throws Exception {
@@ -301,8 +283,6 @@ class WalletControllerTest {
         result.andExpect(status().isBadRequest());
     }
 
-
-
     /**
      * test for list
      */
@@ -350,7 +330,6 @@ class WalletControllerTest {
                         .value(CREATION_DATE_OF_WALLET_3.toString()));
     }
 
-
     /**
      * delete
      */
@@ -368,7 +347,6 @@ class WalletControllerTest {
         result.andExpect(status().isOk());
     }
 
-
     @Test
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
@@ -383,7 +361,6 @@ class WalletControllerTest {
         //then
         result.andExpect(status().isNoContent());
     }
-
 
     /**
      * private method

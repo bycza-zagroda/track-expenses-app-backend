@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.1
+  version: 0.2
 
 #Datasource
 spring:
@@ -18,6 +18,9 @@ spring:
   web:
     resources:
       add-mappings: false
+
+  jackson:
+    default-property-inclusion: non_empty
 
   liquibase:
     change-log: db/dbchangelog-dev.yaml
@@ -46,5 +49,3 @@ springdoc:
   swagger-ui:
     path: /docs/swagger
     enabled: true
-
-    ### temprar logging for debuging

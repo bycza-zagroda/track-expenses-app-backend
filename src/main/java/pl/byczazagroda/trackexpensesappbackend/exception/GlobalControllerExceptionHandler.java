@@ -13,10 +13,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ import java.util.List;
 class GlobalControllerExceptionHandler {
 
     @Autowired
-    Environment environment;
+    private Environment environment;
 
     @Value("${spring.profiles.active}")
     private String profileName;
@@ -68,13 +68,13 @@ class GlobalControllerExceptionHandler {
     public ResponseEntity<Object> handleAppRuntimeException(AppRuntimeException ex) {
         log.error(
                 "handleAppRuntimeException message: {}, object: {}", ex.getBusinessMessage(),
-                ex.getBusinessDescription());
+                ex.getDescription());
         return new ResponseEntity<>(
                 new ApiException(
                         this.profileName,
                         ex.getBusinessStatus(),
                         ex.getBusinessMessage(),
-                        ex.getBusinessDescription(),
+                        ex.getDescription(),
                         ex.getBusinessStatusCode()),
                 HttpStatus.valueOf(ex.getBusinessStatusCode()));
     }
@@ -85,8 +85,8 @@ class GlobalControllerExceptionHandler {
         profileName = environment.getActiveProfiles()[0];
 
         log.error(
-                "handleNoHandlerFoundException message: {}, headers: {},  httpMethod: {}, request Url{}",
-                ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
+                " profile: {}, handleNoHandlerFoundException message: {}, headers: {},  httpMethod: {}, request Url{}",
+                profileName,ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
 
         return new ResponseEntity<>(
                 new ApiException(
@@ -104,12 +104,15 @@ class GlobalControllerExceptionHandler {
             MethodArgumentNotValidException ex) {
         profileName = environment.getActiveProfiles()[0];
 
+        log.info("Active profile: {}, MethodArgumentNotValidException in: {}",
+                profileName, ex.getObjectName());
+
         return new ResponseEntity<>(
                 new ApiExceptionDescriptionList(
                         this.profileName,
                         ErrorCode.TEA003.getBusinessStatus(),
                         ErrorCode.TEA003.getBusinessMessage(),
-                        null,
+                        buildBusinessDescription(ex),
                         ErrorCode.TEA003.getBusinessStatusCode()
                 ),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode()));

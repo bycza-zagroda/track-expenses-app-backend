@@ -1,11 +1,13 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static pl.byczazagroda.trackexpensesappbackend.exception.Utility.setMessageInApiException;
 
 // klasa do zbudowania response
 @Getter
@@ -15,24 +17,21 @@ public class ApiExceptionDescriptionList {
     private String profileName;
     private String businessStatus; // "W001",
     private String businessMessage; //  "WALLETS_RETRIEVING_ERROR",
-    private List<String> businessDescription; //  "Wallet with id: is not found in the database",
+    private List<String> descriptionList; //  "Wallet with id: is not found in the database",
     private Integer businessStatusCode; //  404,
-
     public ApiExceptionDescriptionList(
             String profileName, String businessStatus, String businessMessage,
-            List<String> businessDescription, Integer businessStatusCode) {
+            List<String> descriptionList, Integer businessStatusCode) {
         this.profileName = profileName;
         this.businessStatus = businessStatus;
-        this.businessMessage = businessMessage;
-        this.businessDescription = setBusinessDescriptionMethod(businessDescription);
+        this.businessMessage = setMessageInApiException(profileName,businessMessage);
+        this.descriptionList = setBusinessDescriptionMethod(descriptionList);
         this.businessStatusCode = businessStatusCode;
     }
-
-    @JsonIgnore
-    private List<String> setBusinessDescriptionMethod(List<String> businessDescription) {
-        if (profileName.equals("dev")) {
-            return businessDescription;
+    private List<String> setBusinessDescriptionMethod(List<String> descriptionList) {
+        if (profileName.equals("prod")) {
+            return Collections.emptyList();
         }
-        return new ArrayList<>();
+        return  descriptionList;
     }
 }

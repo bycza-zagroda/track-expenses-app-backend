@@ -4,7 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import static pl.byczazagroda.trackexpensesappbackend.exception.Utility.setMessageInApiException;
+
 // klasa do zbudowania response
+
+/**
+ * Class to build Exceptions for application
+ */
 @Getter
 @Setter
 public class ApiException {
@@ -21,16 +27,22 @@ public class ApiException {
             Integer statusCode) {
         this.profileName = profileName;
         this.status = status;
-        this.message = message;
-        this.description = setDescriptionMethod(description);
+        this.message = setMessageInApiException(profileName,message);
+        this.description = setDescriptionInApiException(description);
         this.statusCode = statusCode;
     }
 
-    @JsonIgnore
-    private String setDescriptionMethod(String description) {
-        if (profileName.equals("dev") || profileName.equals("test")) {
-            return description;
+    /**
+     * Method override setter for description
+     *
+     * @param description inform when and where exception is created
+     *
+     * @return null when spring profile is prod, otherwise full description for exception
+     */
+    private String setDescriptionInApiException(String description) {
+        if (profileName.equals("prod")) {
+            return null;
         }
-        return " ";
+        return description;
     }
 }

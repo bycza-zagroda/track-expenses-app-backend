@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.1
+  version: 0.2
 
 #Datasource
 spring:
@@ -11,6 +11,9 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jackson:
+    default-property-inclusion: non_empty
 
   liquibase:
     change-log: db/dbchangelog-prod.yaml
