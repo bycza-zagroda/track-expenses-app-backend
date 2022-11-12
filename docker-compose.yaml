@@ -1,5 +1,25 @@
 version: '3.8'
 services:
+#  backend:
+#    build: .
+#    restart: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - database
+
+#
+#  database:
+#    image: mysql:8
+#    restart: always
+#    environment:
+#      - MYSQL_PASSWORD=root
+#      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_DATABASE=trackexpensesapp
+
+  #database container
   track-expenses-docker:
     container_name: track-expenses-container
     image: mysql:8.0
@@ -7,7 +27,7 @@ services:
     environment:
       - MYSQL_DATABASE=trackexpensesapp
       - MYSQL_ROOT_PASSWORD=root
-    deploy:
+    deploy: # od deploy tak samo
       resources:
         limits:
           cpus: '0.5'
@@ -17,3 +37,7 @@ services:
           memory: '128M'
     ports:
       - '3306:3306'
+#    volumes:
+#      - dbstore:/var/lib/mysql
+#volumes:
+#  dbstore:

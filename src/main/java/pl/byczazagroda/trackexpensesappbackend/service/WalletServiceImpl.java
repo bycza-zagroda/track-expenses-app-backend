@@ -26,6 +26,17 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper walletModelMapper;
 
     @Override
+    @Transactional
+    public WalletDTO updateWallet(UpdateWalletDTO dto) throws ResourceNotFoundException {
+        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() -> {
+            throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
+        });
+        wallet.setName(dto.name());
+
+        return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
+    }
+
+    @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
         Wallet savedWallet = null;
 
@@ -84,6 +95,16 @@ public class WalletServiceImpl implements WalletService {
             throw new AppRuntimeException(
                     ErrorCode.W003,
                     String.format("Wallet with given id: %d does not exist", id));
+        }
+    }
+
+    @Override
+    public WalletDTO findById(Long id) {
+        Optional<Wallet> wallet = walletRepository.findById(id);
+        if (wallet.isPresent()) {
+            return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());
+        } else {
+            throw new ResourceNotFoundException("Wallet with that id doesn't exist");
         }
     }
 }
