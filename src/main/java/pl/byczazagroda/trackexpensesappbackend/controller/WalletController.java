@@ -53,7 +53,7 @@ public class WalletController {
                             schema = @Schema(implementation = ApiException.class)
                     )})
             })
-    @GetMapping("/{id}")
+    @GetMapping("/map/{id}")
     public ResponseEntity<WalletDTO> findOne(@Valid @PathVariable Long id) {
 
         WalletDTO one = walletService.findOne(id);

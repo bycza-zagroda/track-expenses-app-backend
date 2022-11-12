@@ -15,6 +15,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,17 +26,6 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletModelMapper walletModelMapper;
-
-    @Override
-    @Transactional
-    public WalletDTO updateWallet(UpdateWalletDTO dto) throws ResourceNotFoundException {
-        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() -> {
-            throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
-        });
-        wallet.setName(dto.name());
-
-        return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
-    }
 
     @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
@@ -98,13 +89,10 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+    //to fixme
     @Override
     public WalletDTO findById(Long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
-        if (wallet.isPresent()) {
-            return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());
-        } else {
-            throw new ResourceNotFoundException("Wallet with that id doesn't exist");
-        }
+        return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
     }
 }
