@@ -1,7 +1,23 @@
 version: '3.8'
+
 services:
-  bd:
-    container_name: bd
+  backend:
+    build: .
+    container_name: backend
+    restart: always
+    networks:
+      - tea_network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_SERVER: database
+      DB_PORT: 3308
+
+  database:
+    container_name: database
     image: mysql:8
     restart: always
     networks:
@@ -17,43 +33,15 @@ services:
           cpus: '0.5'
           memory: '512M'
         reservations:
-          cpus: '0.25'
           memory: '128M'
     ports:
       - '3308:3306'
     volumes:
       - dbstore:/var/lib/mysql
 
-  liquibase:
-    image: liquibase/liquibase
-    container_name: liquibase
-    depends_on:
-      - db
-    hostname: liquibase
-#    env_file: config/db/dbchangelog-dev.yaml
-    environment:
-      MYSQL_DB: trackexpensesapp
-
-  backend:
-    build: .
-    container_name: backend
-    networks:
-      - tea_network
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/trackexpensesapp?useUnicode=true&serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-#      - DB_SERVER=database
-#      - MYSQL_DATABASE=trackexpensesapp
-volumes:
-  dbstore:
-
 networks:
   tea_network:
     driver: bridge
+
+volumes:
+  dbstore:
