@@ -1,22 +1,16 @@
 version: '3.8'
 services:
-  backend:
-    build: ./database
-    restart: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    ports:
-      - "8080:8080"
-    depends_on:
-      - database
-
-  database:
+  bd:
+    container_name: bd
     image: mysql:8
     restart: always
+    networks:
+      - tea_network
     environment:
-      - MYSQL_PASSWORD=root
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=trackexpensesapp
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: trackexpensesapp
+      MYSQL_USER: user
     deploy:
       resources:
         limits:
@@ -26,8 +20,40 @@ services:
           cpus: '0.25'
           memory: '128M'
     ports:
-      - '3306:3306'
+      - '3308:3306'
     volumes:
       - dbstore:/var/lib/mysql
+
+  liquibase:
+    image: liquibase/liquibase
+    container_name: liquibase
+    depends_on:
+      - db
+    hostname: liquibase
+#    env_file: config/db/dbchangelog-dev.yaml
+    environment:
+      MYSQL_DB: trackexpensesapp
+
+  backend:
+    build: .
+    container_name: backend
+    networks:
+      - tea_network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/trackexpensesapp?useUnicode=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+#      - DB_SERVER=database
+#      - MYSQL_DATABASE=trackexpensesapp
 volumes:
   dbstore:
+
+networks:
+  tea_network:
+    driver: bridge
