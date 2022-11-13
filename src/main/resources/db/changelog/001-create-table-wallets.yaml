@@ -33,5 +33,6 @@ databaseChangeLog:
                 -  column:
                      name: creation_date
                      type: timestamp
+                     # type: datetime(6) TODO choose type
                      constraints:
                        nullable: false

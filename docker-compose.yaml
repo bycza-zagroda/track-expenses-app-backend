@@ -23,8 +23,8 @@ services:
     networks:
       - tea_network
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
       MYSQL_DATABASE: trackexpensesapp
       MYSQL_USER: user
     deploy:
