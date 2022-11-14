@@ -7,7 +7,7 @@ spring:
   banner:
     location: classpath:banner.txt
   datasource:
-    url: jdbc:mysql://localhost:3306/trackexpensesapp?useUnicode=true&serverTimezone=UTC
+    url: jdbc:mysql://${DB_SERVER}:${DB_PORT}/trackexpensesapp?useUnicode=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
