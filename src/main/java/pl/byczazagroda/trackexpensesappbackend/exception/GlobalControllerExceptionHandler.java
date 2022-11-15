@@ -3,10 +3,8 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,10 +24,7 @@ import java.util.List;
 class GlobalControllerExceptionHandler {
 
     @Autowired
-    private Environment environment;
-
-    @Value("${spring.profiles.active}")
-    private String profileName;
+    ApiExceptionStrategy apiExceptionStrategy;
 
     /**
      * This handler is not used, ConstraintViolationException is handle as Throwable exception
@@ -50,15 +44,13 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @Order(Ordered.LOWEST_PRECEDENCE)
     public ResponseEntity<Object> handleThrowableException(Throwable ex) {
-        profileName = environment.getActiveProfiles()[0];
         log.error("handleThrowableException: {}", ex.getMessage());
 
         return new ResponseEntity<>(
                 new ApiException(
-                        this.profileName,
                         ErrorCode.TEA004.getBusinessStatus(),
-                        ErrorCode.TEA004.getBusinessMessage(),
-                        String.format("Throwable exception %s", ex.getMessage()),
+                        apiExceptionStrategy.returnMessage(ErrorCode.TEA004.getBusinessMessage()),
+                        apiExceptionStrategy.returnMessage(String.format("Throwable exception %s", ex.getMessage())),
                         ErrorCode.TEA004.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA004.getBusinessStatusCode())
         );
@@ -71,10 +63,9 @@ class GlobalControllerExceptionHandler {
                 ex.getDescription());
         return new ResponseEntity<>(
                 new ApiException(
-                        this.profileName,
                         ex.getBusinessStatus(),
-                        ex.getBusinessMessage(),
-                        ex.getDescription(),
+                        apiExceptionStrategy.returnMessage(ex.getBusinessMessage()),
+                        apiExceptionStrategy.returnMessage(ex.getDescription()),
                         ex.getBusinessStatusCode()),
                 HttpStatus.valueOf(ex.getBusinessStatusCode()));
     }
@@ -82,18 +73,16 @@ class GlobalControllerExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex) {
-        profileName = environment.getActiveProfiles()[0];
 
         log.error(
-                " profile: {}, handleNoHandlerFoundException message: {}, headers: {},  httpMethod: {}, request Url{}",
-                profileName,ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
+                "handleNoHandlerFoundException message: {}, headers: {},  httpMethod: {}, request Url{}",
+                ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
 
         return new ResponseEntity<>(
                 new ApiException(
-                        this.profileName,
                         ErrorCode.TEA002.getBusinessStatus(),
-                        ErrorCode.TEA002.getBusinessMessage(),
-                        String.format("no handle for url %s", ex.getRequestURL()),
+                        apiExceptionStrategy.returnMessage(ErrorCode.TEA002.getBusinessMessage()),
+                        apiExceptionStrategy.returnMessage(String.format("no handle for url %s", ex.getRequestURL())),
                         ErrorCode.TEA002.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA002.getBusinessStatusCode())
         );
@@ -102,17 +91,14 @@ class GlobalControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex) {
-        profileName = environment.getActiveProfiles()[0];
 
-        log.info("Active profile: {}, MethodArgumentNotValidException in: {}",
-                profileName, ex.getObjectName());
+        log.info("MethodArgumentNotValidException in: {}", ex.getObjectName());
 
         return new ResponseEntity<>(
                 new ApiExceptionDescriptionList(
-                        this.profileName,
                         ErrorCode.TEA003.getBusinessStatus(),
-                        ErrorCode.TEA003.getBusinessMessage(),
-                        buildBusinessDescription(ex),
+                        apiExceptionStrategy.returnMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        apiExceptionStrategy.returnListMessage(buildBusinessDescription(ex)),
                         ErrorCode.TEA003.getBusinessStatusCode()
                 ),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode()));
