@@ -22,9 +22,10 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,7 +39,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
-@WebMvcTest(controllers = WalletController.class, includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletRepository.class, WalletServiceImpl.class}))
+@WebMvcTest(
+        controllers = WalletController.class,
+        includeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {WalletRepository.class, WalletServiceImpl.class}))
 class WalletServiceImplTest {
 
     private static final String NAME_OF_WALLET = "nameOfWallet";
@@ -313,5 +318,5 @@ class WalletServiceImplTest {
         Wallet wallet3 = new Wallet(NAME_OF_WALLET_2);
         return List.of(wallet1, wallet2, wallet3);
     }
-
 }
+

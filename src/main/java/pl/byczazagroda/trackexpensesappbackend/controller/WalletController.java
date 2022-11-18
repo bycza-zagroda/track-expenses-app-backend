@@ -92,4 +92,5 @@ public class WalletController {
 
         return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
     }
+
 }
