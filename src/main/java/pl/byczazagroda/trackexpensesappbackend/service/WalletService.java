@@ -17,16 +17,15 @@ import java.util.List;
 @Validated
 public interface WalletService {
 
-    WalletDTO updateWallet(@Valid UpdateWalletDTO walletToUpdate);
+    WalletDTO update(@Valid UpdateWalletDTO walletToUpdate);
 
-    WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
+    WalletDTO create(@Valid CreateWalletDTO createWalletDTO);
 
-    List<WalletDTO> getWallets();
+    List<WalletDTO> getAll();
 
-    void deleteWalletById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
+    void deleteById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
     WalletDTO findById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
-    // fixme replace @NotBlank and @NotEmpty by proper @Pattern annotation value
-    List<WalletDTO> getWalletsByName(@NotBlank @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
+    List<WalletDTO> findByName(@NotBlank() @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
 }

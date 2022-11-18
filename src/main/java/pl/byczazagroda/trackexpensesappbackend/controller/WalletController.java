@@ -28,18 +28,18 @@ public class WalletController {
     private final WalletService walletService;
 
     @PutMapping
-    public ResponseEntity<WalletDTO> updateWallet(@Valid @RequestBody UpdateWalletDTO updateWalletDto) {
+    public ResponseEntity<WalletDTO> update(@Valid @RequestBody UpdateWalletDTO updateWalletDto) {
 
-        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
+        WalletDTO walletDTO = walletService.update(updateWalletDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "You have successfully updated Wallet!");
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<WalletDTO> createWallet(@Valid @RequestBody CreateWalletDTO createWalletDTO) {
+    public ResponseEntity<WalletDTO> create(@Valid @RequestBody CreateWalletDTO createWalletDTO) {
 
-        WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
+        WalletDTO walletDTO = walletService.create(createWalletDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "You have successfully completed the creation of a new Wallet!");
 
@@ -47,9 +47,9 @@ public class WalletController {
     }
 
     @GetMapping()
-    ResponseEntity<List<WalletDTO>> getWallets() {
+    ResponseEntity<List<WalletDTO>> getAll() {
 
-        List<WalletDTO> walletsDTO = walletService.getWallets();
+        List<WalletDTO> walletsDTO = walletService.getAll();
         HttpHeaders headers = new HttpHeaders();
 
         if (walletsDTO.isEmpty()) {
@@ -62,8 +62,8 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WalletDTO> deleteWalletById(@NotNull @Min(1) @PathVariable Long id) {
-        walletService.deleteWalletById(id);
+    public ResponseEntity<WalletDTO> deleteById(@NotNull @Min(1) @PathVariable Long id) {
+        walletService.deleteById(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "You have successfully completed the delete of a Wallet!");
 
@@ -71,7 +71,7 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@NotNull @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> findById(@NotNull @Min(1) @PathVariable Long id) {
         WalletDTO walletDTO = walletService.findById(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "The wallet has been successfully retrieved.");
@@ -79,9 +79,9 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/{name}")
-    ResponseEntity<List<WalletDTO>> getWalletsByName(@PathVariable String name) {
-        List<WalletDTO> walletsDTO = walletService.getWalletsByName(name);
+    @GetMapping("/find/{name}")
+    ResponseEntity<List<WalletDTO>> findByName(@PathVariable String name) {
+        List<WalletDTO> walletsDTO = walletService.findByName(name);
         HttpHeaders headers = new HttpHeaders();
 
         if (walletsDTO.isEmpty()) {

@@ -82,7 +82,7 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(1L, "anyName");
-        given(walletService.updateWallet(Mockito.any())).willReturn(
+        given(walletService.update(Mockito.any())).willReturn(
                 new WalletDTO(
                         updateWalletDto.id(),
                         updateWalletDto.name(),
@@ -108,7 +108,7 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
 
         //when
@@ -127,7 +127,7 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "Too long name - more than 20 letters.");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
 
         // when
@@ -145,7 +145,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameIsEmpty() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("");
-        given(walletService.createWallet(createWalletDTO))
+        given(walletService.create(createWalletDTO))
                 .willReturn(new WalletDTO(1L, "", Instant.now()));
 
         // when
@@ -162,7 +162,7 @@ class WalletControllerTest {
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(1L, "", timeCreated));
 
         // when
@@ -180,7 +180,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameIsNull() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
-        given(walletService.createWallet(createWalletDTO))
+        given(walletService.create(createWalletDTO))
                 .willReturn(new WalletDTO(1L, null, Instant.now()));
 
         // when
@@ -197,7 +197,7 @@ class WalletControllerTest {
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(null, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(null, "", timeCreated));
 
         // when
@@ -216,7 +216,7 @@ class WalletControllerTest {
         // given
         String walletName = "This wallet name is too long, it contains over 20 characters";
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
-        given(walletService.createWallet(createWalletDTO))
+        given(walletService.create(createWalletDTO))
                 .willReturn(
                         new WalletDTO(1L, walletName, Instant.now()));
 
@@ -234,7 +234,7 @@ class WalletControllerTest {
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(0L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(0L, "", timeCreated));
 
         // when
@@ -253,7 +253,7 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(-1L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(-1L, "", timeCreated));
 
         // when
@@ -271,7 +271,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameContainsIllegalLetters() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("#$@");
-        given(walletService.createWallet(createWalletDTO))
+        given(walletService.create(createWalletDTO))
                 .willReturn(new WalletDTO(1L, "#$@", Instant.now()));
 
         // when
@@ -303,7 +303,7 @@ class WalletControllerTest {
     void shouldReturnListOfAllWallets() throws Exception {
         // given
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
-        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
+        given(walletService.getAll()).willReturn(listOfWalletsDTO);
 
         // then
         mockMvc.perform(get("/api/wallet")
@@ -352,7 +352,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
         WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
-        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(0L);
+        doThrow(ConstraintViolationException.class).when(walletService).deleteById(0L);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 0L)
@@ -434,11 +434,11 @@ class WalletControllerTest {
         String walletNameSearched = "Wallet2";
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
         List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2));
-        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
-        given(walletService.getWalletsByName(walletNameSearched)).willReturn(foundedWalletsDTO);
+        given(walletService.getAll()).willReturn(listOfWalletsDTO);
+        given(walletService.findByName(walletNameSearched)).willReturn(foundedWalletsDTO);
 
         // then
-        mockMvc.perform(get("/api/wallet/{name}", walletNameSearched)
+        mockMvc.perform(get("/api/find/{name}", walletNameSearched)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
