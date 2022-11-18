@@ -31,18 +31,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = WalletController.class,
@@ -385,7 +380,7 @@ class WalletControllerTest {
     }
 
     @Test
-    void shouldReturnCorrectnessOfDataInFoundWalletWhenFindWalletById() throws Exception {
+    void shouldReturnCorrectnessOfDataInFoundWalletWhenFindWalletById() throws Exception{
         // given
         Instant creationDate = Instant.now();
         WalletDTO wallet = new WalletDTO(1L, "Default", creationDate);
@@ -403,7 +398,7 @@ class WalletControllerTest {
     }
 
     @Test
-    void shouldThrowWalletNotFoundExceptionWhenWalletByIdDoesNotExist() throws Exception {
+    void shouldThrowWalletNotFoundExceptionWhenWalletByIdDoesNotExist() throws Exception{
         Instant creationDate = Instant.now();
         WalletDTO wallet = new WalletDTO(1L, "", creationDate);
         doThrow(ResourceNotFoundException.class).when(walletService).findById(100L);

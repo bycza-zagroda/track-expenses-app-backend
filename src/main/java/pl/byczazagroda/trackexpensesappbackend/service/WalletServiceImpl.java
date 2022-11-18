@@ -14,12 +14,10 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
+import java.util.Optional;
 
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
-
-import java.util.Optional;
 
 @Service
 @Validated
@@ -57,9 +55,7 @@ public class WalletServiceImpl implements WalletService {
     public List<WalletDTO> getWallets() {
         List<WalletDTO> walletsDTO;
         try {
-            walletsDTO = walletRepository.findAll().stream()
-                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                    .toList();
+            walletsDTO = walletRepository.findAll().stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
         } catch (RuntimeException e) {
             throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
         }

@@ -13,6 +13,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

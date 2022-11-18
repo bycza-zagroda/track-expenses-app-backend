@@ -22,27 +22,23 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThrows;
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
-@WebMvcTest
-        (controllers = WalletController.class,
-                includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                        WalletRepository.class,
-                        WalletServiceImpl.class}))
+@WebMvcTest(controllers = WalletController.class, includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletRepository.class, WalletServiceImpl.class}))
 class WalletServiceImplTest {
 
     private static final String NAME_OF_WALLET = "nameOfWallet";
@@ -69,8 +65,7 @@ class WalletServiceImplTest {
         Instant time = Instant.now();
         wallet.setCreationDate(Instant.now());
         WalletDTO newWallet = new WalletDTO(1L, "walletName", time);
-        given(walletRepository.findById(updateWalletDto.id()))
-                .willReturn(Optional.of(wallet));
+        given(walletRepository.findById(updateWalletDto.id())).willReturn(Optional.of(wallet));
         given(walletModelMapper.mapWalletEntityToWalletDTO(Mockito.any(Wallet.class))).willReturn(newWallet);
 
         // when
@@ -88,8 +83,7 @@ class WalletServiceImplTest {
 
         // when
         // then
-        assertThatThrownBy(() -> walletService.updateWallet(updateWalletDto))
-                .isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> walletService.updateWallet(updateWalletDto)).isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
@@ -117,7 +111,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenNameIsEmpty() throws Exception {
+    void shouldThrowAnExceptionWhenNameIsEmpty() {
         // given
         Instant creationTime = Instant.now();
         String emptyName = "  ";
@@ -138,7 +132,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenNameIsNull() throws Exception {
+    void shouldThrowAnExceptionWhenNameIsNull() {
         // given
         Instant creationTime = Instant.now();
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
@@ -158,7 +152,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenNameIsTooLong() throws Exception {
+    void shouldThrowAnExceptionWhenNameIsTooLong() {
         // given
         Instant creationTime = Instant.now();
         String tooLongName = "This wallet name is too long, it contains over 20 characters";
@@ -179,7 +173,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenNameContainsIllegalLetters() throws Exception {
+    void shouldThrowAnExceptionWhenNameContainsIllegalLetters() {
         // given
         Instant creationTime = Instant.now();
         String illegalLettersName = "@#$";
@@ -221,9 +215,7 @@ class WalletServiceImplTest {
         Exception exception = assertThrows(RuntimeException.class, () -> walletService.getWallets());
 
         // then
-        assertThat(exception)
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
+        assertThat(exception).isInstanceOf(ResourceNotFoundException.class).hasMessage(WALLETS_LIST_NOT_FOUND_EXC_MSG);
     }
 
     @Test
@@ -244,7 +236,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenWalletWithIdDoesNotExist() throws Exception {
+    void shouldThrowAnExceptionWhenWalletWithIdDoesNotExist() {
         Wallet wallet = new Wallet(NAME_OF_WALLET);
         Long id = 1L;
         Instant creationTime = Instant.now();
@@ -255,11 +247,8 @@ class WalletServiceImplTest {
         given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> walletService.deleteWalletById(5L))
-                .isInstanceOf(ResourceNotDeletedException.class);
-        assertThatExceptionOfType(ResourceNotDeletedException.class)
-                .isThrownBy(() -> walletService.deleteWalletById(5L))
-                .withMessage("Value does not exist in the database, please change your request");
+        assertThatThrownBy(() -> walletService.deleteWalletById(5L)).isInstanceOf(ResourceNotDeletedException.class);
+        assertThatExceptionOfType(ResourceNotDeletedException.class).isThrownBy(() -> walletService.deleteWalletById(5L)).withMessage("Value does not exist in the database, please change your request");
     }
 
     @Test
@@ -293,11 +282,8 @@ class WalletServiceImplTest {
         given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> walletService.findById(5L))
-                .isInstanceOf(ResourceNotFoundException.class);
-        assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> walletService.findById(5L))
-                .withMessage("Wallet with that id doesn't exist");
+        assertThatThrownBy(() -> walletService.findById(5L)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> walletService.findById(5L)).withMessage("Wallet with that id doesn't exist");
     }
 
     @Test

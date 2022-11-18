@@ -8,13 +8,6 @@ import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Validated
