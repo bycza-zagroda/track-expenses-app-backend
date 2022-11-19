@@ -14,12 +14,10 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
+import java.util.Optional;
 
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
-
-import java.util.Optional;
 
 @Service
 @Validated
@@ -31,7 +29,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(UpdateWalletDTO dto) throws ResourceNotFoundException {
+    public WalletDTO update(UpdateWalletDTO dto) throws ResourceNotFoundException {
         Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() -> {
             throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
         });
@@ -41,7 +39,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
+    public WalletDTO create(CreateWalletDTO createWalletDTO) {
         String walletName = createWalletDTO.name();
         Wallet wallet = new Wallet(walletName);
         Wallet savedWallet = walletRepository.save(wallet);
@@ -54,12 +52,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDTO> getWallets() {
+    public List<WalletDTO> getAll() {
         List<WalletDTO> walletsDTO;
         try {
-            walletsDTO = walletRepository.findAll().stream()
-                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                    .toList();
+            walletsDTO = walletRepository.findAll().stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
         } catch (RuntimeException e) {
             throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
         }
@@ -67,7 +63,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void deleteWalletById(Long id) {
+    public void deleteById(Long id) {
         if (walletRepository.existsById(id)) {
             walletRepository.deleteById(id);
         } else {
@@ -83,5 +79,10 @@ public class WalletServiceImpl implements WalletService {
         } else {
             throw new ResourceNotFoundException("Wallet with that id doesn't exist");
         }
+    }
+
+    @Override
+    public List<WalletDTO> findByName(String name) {
+        return getAll().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
     }
 }
