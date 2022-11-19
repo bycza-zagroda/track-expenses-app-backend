@@ -436,7 +436,7 @@ class WalletControllerTest {
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
         List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2));
         given(walletService.getAll()).willReturn(listOfWalletsDTO);
-        given(walletService.findByName(walletNameSearched)).willReturn(foundedWalletsDTO);
+        given(walletService.findAllByName(walletNameSearched)).willReturn(foundedWalletsDTO);
 
         // then
         mockMvc.perform(get("/api/wallet/find/{name}", walletNameSearched)

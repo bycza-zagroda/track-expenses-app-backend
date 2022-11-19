@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
     @Query("SELECT w FROM Wallet w WHERE w.name LIKE %:name%")
-    List<Wallet> findByLikeName(@Param("name") String name);
+    List<Wallet> findAllByLikeName(@Param("name") String name);
 }

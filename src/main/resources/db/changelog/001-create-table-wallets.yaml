@@ -23,15 +23,16 @@ databaseChangeLog:
                 -  column:
                      name: id
                      type: bigint
-#                     autoIncrement:  true
+                     autoIncrement:  true
                      constraints:
                        primaryKey: true
                        nullable: false
                 -  column:
-                     name: firstname
+                     name: name
                      type: varchar(50)
                 -  column:
-                     name: lastname
-                     type: varchar(50)
+                     name: creation_date
+                     type: timestamp
+                     # type: datetime(6) TODO choose type
                      constraints:
                        nullable: false
