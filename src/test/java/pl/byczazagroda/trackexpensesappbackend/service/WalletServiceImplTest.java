@@ -304,7 +304,7 @@ class WalletServiceImplTest {
         List<WalletDTO> fundedWallets = walletService.findByName(walletNameSearched);
 
         // then
-        assertThat(fundedWallets, hasSize(walletList.stream().filter(wallet -> wallet.getName().contains(walletNameSearched)).toList().size()));
+        assertThat(fundedWallets, hasSize(walletRepository.findByLikeName(walletNameSearched).size()));
     }
 
     private List<Wallet> createListOfWalletsByName(String... name) {

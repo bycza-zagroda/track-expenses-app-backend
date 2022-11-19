@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG;
 import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
 @Service
@@ -83,6 +84,12 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDTO> findByName(String name) {
-        return getAll().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
+        List<WalletDTO> walletsDTO;
+        try {
+            walletsDTO = walletRepository.findByLikeName(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException(String.format(WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG, name));
+        }
+        return walletsDTO;
     }
 }
