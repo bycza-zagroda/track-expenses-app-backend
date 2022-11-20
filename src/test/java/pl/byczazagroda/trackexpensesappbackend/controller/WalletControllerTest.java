@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
@@ -30,17 +31,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = WalletController.class,
@@ -55,11 +52,12 @@ class WalletControllerTest {
 
     private static final Long ID_OF_WALLET_3 = 3L;
 
-    private static final String NAME_OF_WALLET_1 = "nameOfWallet1";
+    public static final String WALLET_TEST_NAME = "WalletTestName";
+    private static final String NAME_OF_WALLET_1 = "WalletTestName1";
 
-    private static final String NAME_OF_WALLET_2 = "nameOfWallet2";
+    private static final String NAME_OF_WALLET_2 = "WalletTestName2";
 
-    private static final String NAME_OF_WALLET_3 = "nameOfWallet3";
+    private static final String NAME_OF_WALLET_3 = "WalletTestName3";
 
     private static final Instant CREATION_DATE_OF_WALLET_1 = Instant.parse("2022-09-24T19:09:35.573036Z");
 
@@ -84,8 +82,8 @@ class WalletControllerTest {
     void itShouldReturnStatusOKAndCorrectResponseBody() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(1L, "anyName");
-        given(walletService.updateWallet(Mockito.any())).willReturn(
+        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME);
+        given(walletService.update(Mockito.any())).willReturn(
                 new WalletDTO(
                         updateWalletDto.id(),
                         updateWalletDto.name(),
@@ -110,9 +108,9 @@ class WalletControllerTest {
     void itShouldReturnBadRequestWhenNameIsEmpty() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "");
-        given(walletService.updateWallet(updateWalletDTO))
-                .willReturn(new WalletDTO(1L, "", timeCreated));
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(ID_OF_WALLET_1, "");
+        given(walletService.update(updateWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, "", timeCreated));
 
         //when
         ResultActions result = mockMvc.perform(
@@ -129,9 +127,9 @@ class WalletControllerTest {
     void itShouldReturnBadRequestWhenNameIsTooLong() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "Too long name - more than 20 letters.");
-        given(walletService.updateWallet(updateWalletDTO))
-                .willReturn(new WalletDTO(1L, "", timeCreated));
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(ID_OF_WALLET_1, "Too long name - more than 20 letters.");
+        given(walletService.update(updateWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, "", timeCreated));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -148,8 +146,8 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameIsEmpty() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("");
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, "", Instant.now()));
+        given(walletService.create(createWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, "", Instant.now()));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/wallet")
@@ -164,9 +162,9 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
 
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(1L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
-                .willReturn(new WalletDTO(1L, "", timeCreated));
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(ID_OF_WALLET_1, "@#$%^&");
+        given(walletService.update(updateWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, "", timeCreated));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -183,8 +181,8 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameIsNull() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, null, Instant.now()));
+        given(walletService.create(createWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, null, Instant.now()));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/wallet")
@@ -200,7 +198,7 @@ class WalletControllerTest {
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(null, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(null, "", timeCreated));
 
         // when
@@ -219,9 +217,9 @@ class WalletControllerTest {
         // given
         String walletName = "This wallet name is too long, it contains over 20 characters";
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(walletName);
-        given(walletService.createWallet(createWalletDTO))
+        given(walletService.create(createWalletDTO))
                 .willReturn(
-                        new WalletDTO(1L, walletName, Instant.now()));
+                        new WalletDTO(ID_OF_WALLET_1, walletName, Instant.now()));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/wallet")
@@ -237,7 +235,7 @@ class WalletControllerTest {
         Instant timeCreated = Instant.now();
 
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(0L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
+        given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(0L, "", timeCreated));
 
         // when
@@ -255,9 +253,9 @@ class WalletControllerTest {
     void itShouldReturnBadRequestWhenIdIsNegative() throws Exception {
         // given
         Instant timeCreated = Instant.now();
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(-1L, "@#$%^&");
-        given(walletService.updateWallet(updateWalletDTO))
-                .willReturn(new WalletDTO(-1L, "", timeCreated));
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(-ID_OF_WALLET_1, "@#$%^&");
+        given(walletService.update(updateWalletDTO))
+                .willReturn(new WalletDTO(-ID_OF_WALLET_1, "", timeCreated));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -274,8 +272,8 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenNameContainsIllegalLetters() throws Exception {
         // given
         CreateWalletDTO createWalletDTO = new CreateWalletDTO("#$@");
-        given(walletService.createWallet(createWalletDTO))
-                .willReturn(new WalletDTO(1L, "#$@", Instant.now()));
+        given(walletService.create(createWalletDTO))
+                .willReturn(new WalletDTO(ID_OF_WALLET_1, "#$@", Instant.now()));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/wallet")
@@ -306,7 +304,7 @@ class WalletControllerTest {
     void shouldReturnListOfAllWallets() throws Exception {
         // given
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
-        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
+        given(walletService.getAll()).willReturn(listOfWalletsDTO);
 
         // then
         mockMvc.perform(get("/api/wallet")
@@ -339,10 +337,10 @@ class WalletControllerTest {
     @Test
     void shouldReturnStatusOkWhenDeleteWalletCorrectly() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
+        WalletDTO walletDTO = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, Instant.now());
 
         //when
-        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 1L)
+        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", ID_OF_WALLET_1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
 
@@ -354,8 +352,8 @@ class WalletControllerTest {
     @Test
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(1L, "Default", Instant.now());
-        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(0L);
+        WalletDTO walletDTO = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, Instant.now());
+        doThrow(ConstraintViolationException.class).when(walletService).deleteById(0L);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 0L)
@@ -364,5 +362,92 @@ class WalletControllerTest {
 
         //then
         result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnStatusOkWhenWalletHasBeenFound() throws Exception {
+        // given
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(ID_OF_WALLET_1, "WALLET_TEST_NAME", creationDate);
+
+        // when
+        when(walletService.findById(ID_OF_WALLET_1)).thenReturn(wallet);
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", ID_OF_WALLET_1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+
+        // then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnCorrectnessOfDataInFoundWalletWhenFindWalletById() throws Exception{
+        // given
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, creationDate);
+
+        // when
+        when(walletService.findById(ID_OF_WALLET_1)).thenReturn(wallet);
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", ID_OF_WALLET_1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+
+        // then
+        result.andExpect(jsonPath("$.id").value(ID_OF_WALLET_1))
+                .andExpect(jsonPath("$.name").value(WALLET_TEST_NAME))
+                .andExpect(jsonPath("$.creationDate").value(creationDate.toString()));
+    }
+
+    @Test
+    void shouldThrowWalletNotFoundExceptionWhenWalletByIdDoesNotExist() throws Exception{
+        Instant creationDate = Instant.now();
+        WalletDTO wallet = new WalletDTO(ID_OF_WALLET_1, "", creationDate);
+        doThrow(ResourceNotFoundException.class).when(walletService).findById(100L);
+        // when
+
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 100L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+
+        // then
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldThrowAnExceptionWhenFindWalletByIdAndIdEqualsZero() throws Exception {
+        //given
+        WalletDTO walletDTO = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, Instant.now());
+        doThrow(ConstraintViolationException.class).when(walletService).findById(0L);
+
+        //when
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 0L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+
+        //then
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Should return information about all wallets funded by part of a wallet name and http ok status")
+    void shouldReturnListOfAllWalletsByName() throws Exception {
+        // given
+        String walletNameSearched = WALLET_TEST_NAME;
+        List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
+        List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2));
+        given(walletService.getAll()).willReturn(listOfWalletsDTO);
+        given(walletService.findByName(walletNameSearched)).willReturn(foundedWalletsDTO);
+
+        // then
+        mockMvc.perform(get("/api/wallet/find/{name}", walletNameSearched)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("message", LIST_OF_WALLETS_HEADER_MSG))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(foundedWalletsDTO.size()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(ID_OF_WALLET_2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(NAME_OF_WALLET_2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].creationDate")
+                        .value(CREATION_DATE_OF_WALLET_2.toString()));
     }
 }
