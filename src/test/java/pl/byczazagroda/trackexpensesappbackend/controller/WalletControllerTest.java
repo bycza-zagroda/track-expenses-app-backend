@@ -439,7 +439,7 @@ class WalletControllerTest {
         given(walletService.findAllByName(walletNameSearched)).willReturn(foundedWalletsDTO);
 
         // then
-        mockMvc.perform(get("/api/wallet/find/{name}", walletNameSearched)
+        mockMvc.perform(get("/api/wallet/list/{name}", walletNameSearched)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
