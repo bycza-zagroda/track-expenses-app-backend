@@ -258,7 +258,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void shouldThrowAnExceptionWhenWalletWithIdDoesNotExist() throws Exception {
+    void shouldThrowAnExceptionWhenWalletWithIdDoesNotExist() {
         Wallet wallet = new Wallet(NAME_OF_WALLET);
         Long id = 1L;
         Instant creationTime = Instant.now();

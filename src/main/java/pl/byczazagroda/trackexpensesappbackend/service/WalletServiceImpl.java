@@ -95,4 +95,9 @@ public class WalletServiceImpl implements WalletService {
         Optional<Wallet> wallet = walletRepository.findById(id);
         return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
     }
+
+    @Override
+    public List<WalletDTO> findByName(String name) {
+        return getAll().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
+    }
 }
