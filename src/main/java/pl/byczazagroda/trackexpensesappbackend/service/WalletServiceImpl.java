@@ -83,10 +83,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDTO> findAllByName(String name) {
-        List<WalletDTO> listOfWalletDTO ;
+    public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
+        List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO  = walletRepository.findAllByLikeName(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
+            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
         } catch (RuntimeException e) {
             throw new ResourceNotFoundException(String.format(WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG, name));
         }
