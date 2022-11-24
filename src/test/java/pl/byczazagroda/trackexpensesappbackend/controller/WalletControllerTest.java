@@ -77,7 +77,7 @@ class WalletControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    private long WALLET_ID_IS_ZERO;
+    private static final long WALLET_ID_IS_ZERO = 0L;
 
     @Test
     void itShouldReturnStatusOKAndCorrectResponseBody() throws Exception {
@@ -235,10 +235,9 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
 
-        WALLET_ID_IS_ZERO = 0L;
         UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(WALLET_ID_IS_ZERO, "@#$%^&");
         given(walletService.update(updateWalletDTO))
-                .willReturn(new WalletDTO(0L, "", timeCreated));
+                .willReturn(new WalletDTO(WALLET_ID_IS_ZERO, "", timeCreated));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -358,7 +357,7 @@ class WalletControllerTest {
         doThrow(ConstraintViolationException.class).when(walletService).deleteById(WALLET_ID_IS_ZERO);
 
         //when
-        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 0L)
+        ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", WALLET_ID_IS_ZERO)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
 
@@ -422,7 +421,7 @@ class WalletControllerTest {
         doThrow(ConstraintViolationException.class).when(walletService).findById(WALLET_ID_IS_ZERO);
 
         //when
-        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 0L)
+        ResultActions result = mockMvc.perform(get("/api/wallet/{id}", WALLET_ID_IS_ZERO)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
 
