@@ -81,7 +81,7 @@ public class WalletController {
 
     @GetMapping("/list/{name}")
     ResponseEntity<List<WalletDTO>> findByName(@PathVariable String name) {
-        List<WalletDTO> walletsDTO = walletService.findAllByName(name);
+        List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
         HttpHeaders headers = new HttpHeaders();
 
         if (walletsDTO.isEmpty()) {

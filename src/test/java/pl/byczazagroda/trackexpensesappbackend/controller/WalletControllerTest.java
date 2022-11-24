@@ -77,6 +77,7 @@ class WalletControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    private long WALLET_ID_IS_ZERO;
 
     @Test
     void itShouldReturnStatusOKAndCorrectResponseBody() throws Exception {
@@ -234,7 +235,8 @@ class WalletControllerTest {
         // given
         Instant timeCreated = Instant.now();
 
-        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(0L, "@#$%^&");
+        WALLET_ID_IS_ZERO = 0L;
+        UpdateWalletDTO updateWalletDTO = new UpdateWalletDTO(WALLET_ID_IS_ZERO, "@#$%^&");
         given(walletService.update(updateWalletDTO))
                 .willReturn(new WalletDTO(0L, "", timeCreated));
 
@@ -353,7 +355,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenWalletIdEqualsZero() throws Exception {
         //given
         WalletDTO walletDTO = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, Instant.now());
-        doThrow(ConstraintViolationException.class).when(walletService).deleteById(0L);
+        doThrow(ConstraintViolationException.class).when(walletService).deleteById(WALLET_ID_IS_ZERO);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallet/{id}", 0L)
@@ -417,7 +419,7 @@ class WalletControllerTest {
     void shouldThrowAnExceptionWhenFindWalletByIdAndIdEqualsZero() throws Exception {
         //given
         WalletDTO walletDTO = new WalletDTO(ID_OF_WALLET_1, WALLET_TEST_NAME, Instant.now());
-        doThrow(ConstraintViolationException.class).when(walletService).findById(0L);
+        doThrow(ConstraintViolationException.class).when(walletService).findById(WALLET_ID_IS_ZERO);
 
         //when
         ResultActions result = mockMvc.perform(get("/api/wallet/{id}", 0L)
@@ -436,7 +438,7 @@ class WalletControllerTest {
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
         List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_OF_WALLET_2, NAME_OF_WALLET_2, CREATION_DATE_OF_WALLET_2));
         given(walletService.getAll()).willReturn(listOfWalletsDTO);
-        given(walletService.findAllByName(walletNameSearched)).willReturn(foundedWalletsDTO);
+        given(walletService.findAllByNameLikeIgnoreCase(walletNameSearched)).willReturn(foundedWalletsDTO);
 
         // then
         mockMvc.perform(get("/api/wallet/list/{name}", walletNameSearched)
