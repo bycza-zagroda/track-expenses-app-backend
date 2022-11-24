@@ -27,5 +27,5 @@ public interface WalletService {
 
     WalletDTO findById(@NotNull @Min(value = 1, message = "Wallet id has to be greater than 0") Long id);
 
-    List<WalletDTO> findByName(@NotBlank() @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
+    List<WalletDTO> findAllByName(@NotBlank() @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
 }

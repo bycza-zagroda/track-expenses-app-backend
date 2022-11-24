@@ -79,9 +79,9 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{name}")
+    @GetMapping("/list/{name}")
     ResponseEntity<List<WalletDTO>> findByName(@PathVariable String name) {
-        List<WalletDTO> walletsDTO = walletService.findByName(name);
+        List<WalletDTO> walletsDTO = walletService.findAllByName(name);
         HttpHeaders headers = new HttpHeaders();
 
         if (walletsDTO.isEmpty()) {

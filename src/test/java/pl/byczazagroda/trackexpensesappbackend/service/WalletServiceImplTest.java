@@ -301,10 +301,10 @@ class WalletServiceImplTest {
         walletList.forEach(wallet -> given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(walletListDTO.stream().filter(walletDTO -> Objects.equals(wallet.getName(), walletDTO.name())).findAny().orElse(null)));
 
         // when
-        List<WalletDTO> fundedWallets = walletService.findByName(walletNameSearched);
+        List<WalletDTO> fundedWallets = walletService.findAllByName(walletNameSearched);
 
         // then
-        assertThat(fundedWallets, hasSize(walletList.stream().filter(wallet -> wallet.getName().contains(walletNameSearched)).toList().size()));
+        assertThat(fundedWallets, hasSize(walletRepository.findAllByLikeName(walletNameSearched).size()));
     }
 
     private List<Wallet> createListOfWalletsByName(String... name) {
