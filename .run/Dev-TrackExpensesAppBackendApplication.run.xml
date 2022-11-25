@@ -2,7 +2,7 @@
   <configuration default="false" name="Dev-TrackExpensesAppBackendApplication " type="Application" factoryName="Application" singleton="true">
     <envs>
       <env name="DB_SERVER" value="localhost" />
-      <env name="DB_PORT" value="3308" />
+      <env name="DB_PORT" value="3306" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="pl.byczazagroda.trackexpensesappbackend.TrackExpensesAppBackendApplication" />
     <module name="track-expenses-app-backend" />
