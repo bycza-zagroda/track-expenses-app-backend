@@ -1,8 +1,12 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +24,9 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,12 +56,20 @@ class WalletServiceImplTest {
 
     @MockBean
     private WalletRepository walletRepository;
+    @Mock
+    private HelloWorldService helloWorldService;
+
 
     @Autowired
     private WalletServiceImpl walletService;
 
     @MockBean
     private WalletModelMapper walletModelMapper;
+
+    @BeforeEach
+    void beforeAll() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void itShouldUpdateWalletName() {
@@ -199,7 +213,7 @@ class WalletServiceImplTest {
         CreateWalletDTO createWalletDTO = new CreateWalletDTO(illegalLettersName);
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
         when(walletRepository.save(any(Wallet.class)))
-                .thenThrow(new AppRuntimeException(ErrorCode.TEA003, ErrorCode.TEA003.getBusinessMessage() ));
+                .thenThrow(new AppRuntimeException(ErrorCode.TEA003, ErrorCode.TEA003.getBusinessMessage()));
 
         // when
         when(walletRepository.existsById(wallet.getId())).thenReturn(true);
@@ -272,7 +286,7 @@ class WalletServiceImplTest {
         assertThatThrownBy(() -> walletService.deleteWalletById(5L))
                 .isInstanceOf(AppRuntimeException.class);
         assertThatExceptionOfType(AppRuntimeException.class)
-                .isThrownBy(()->walletService.deleteWalletById(5L))
+                .isThrownBy(() -> walletService.deleteWalletById(5L))
                 .withMessage(ErrorCode.W003.getBusinessMessage());
     }
 
@@ -314,21 +328,21 @@ class WalletServiceImplTest {
 //                .withMessage("Wallet with that id doesn't exist");
 //    }
 
-    @Test
-    void shouldThrowExceptionWhenWalletByIdNotFound() {
-        Wallet wallet = new Wallet(NAME_OF_WALLET);
-        Long id = 1L;
-        Instant creationTime = Instant.now();
-        wallet.setId(id);
-        wallet.setCreationDate(creationTime);
-
-        //when
-        given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-
-        //then
-        assertThatThrownBy(() -> walletService.findById(5L)).isInstanceOf(ResourceNotFoundException.class);
-        assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> walletService.findById(5L)).withMessage("Wallet with that id doesn't exist");
-    }
+//    @Test
+//    void shouldThrowExceptionWhenWalletByIdNotFound() {
+//        Wallet wallet = new Wallet(NAME_OF_WALLET);
+//        Long id = 1L;
+//        Instant creationTime = Instant.now();
+//        wallet.setId(id);
+//        wallet.setCreationDate(creationTime);
+//
+//        //when
+//        given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+//
+//        //then
+//        assertThatThrownBy(() -> walletService.findById(5L)).isInstanceOf(ResourceNotFoundException.class);
+//        assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() -> walletService.findById(5L)).withMessage("Wallet with that id doesn't exist");
+//    }
 
     @Test
     @DisplayName("Should return list of WalletDTO by name with proper size")
@@ -336,9 +350,17 @@ class WalletServiceImplTest {
         // given
         String walletNameSearched = "Family";
         List<Wallet> walletList = createListOfWalletsByName("Family wallet", "Common Wallet", "Smith Family Wallet");
-        List<WalletDTO> walletListDTO = walletList.stream().map((Wallet x) -> new WalletDTO(x.getId(), x.getName(), x.getCreationDate())).toList();
+        List<WalletDTO> walletListDTO = walletList.stream()
+                .map((Wallet x) -> new WalletDTO(x.getId(), x.getName(), x.getCreationDate()))
+                .toList();
         given(walletRepository.findAll()).willReturn(walletList);
-        walletList.forEach(wallet -> given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(walletListDTO.stream().filter(walletDTO -> Objects.equals(wallet.getName(), walletDTO.name())).findAny().orElse(null)));
+        walletList.forEach(wallet -> given(walletModelMapper
+                .mapWalletEntityToWalletDTO(wallet))
+                .willReturn(walletListDTO
+                        .stream()
+                        .filter(walletDTO -> Objects.equals(wallet.getName(), walletDTO.name()))
+                        .findAny()
+                        .orElse(null)));
 
         // when
         List<WalletDTO> fundedWallets = walletService.findAllByNameLikeIgnoreCase(walletNameSearched);

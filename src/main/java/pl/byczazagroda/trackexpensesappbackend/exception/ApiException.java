@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-// klasa do zbudowania response
-
 /**
- * Class to build Exceptions for application
+ * Class to build responses for Exceptions // klasa do zbudowania response
  */
 @Getter
 @Setter
@@ -20,13 +18,12 @@ public class ApiException extends ApiExceptionBase{
     private String description; //  "Wallet with id: is not found in the database",
     private Integer statusCode; //  404,
 
-    public ApiException(
-            String profileName, String status, String message,
+    public ApiException(String status, String message,
             String description,
             Integer statusCode) {
         this.profileName = profileName;
         this.status = status;
-        this.message = setMessageInApiException(profileName,message);
+        this.message = message;
         this.description = setDescriptionInApiException(description);
         this.statusCode = statusCode;
     }

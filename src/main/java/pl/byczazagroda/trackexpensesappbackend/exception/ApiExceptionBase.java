@@ -3,7 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 import org.springframework.context.annotation.Profile;
 
 /**
- * Utility class for Exceptions
+ * Class for Exception's profile prod
  */
 @Profile("prod")
 public class ApiExceptionBase {

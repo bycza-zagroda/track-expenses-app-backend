@@ -45,16 +45,10 @@ public class Wallet implements Serializable {
 
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
-    //yyyy-mm-dd hh:mm:ss. instant 2022-03-20T10:11:12
     private Instant creationDate;
 
     public Wallet(String name) {
         this.name = name;
         this.creationDate = Instant.now();
-    }
-
-    public Timestamp convertInstantToTimestamp (Instant creationDate) {
-        this.creationDate = creationDate;
-        return Timestamp.from(this.creationDate);
     }
 }
