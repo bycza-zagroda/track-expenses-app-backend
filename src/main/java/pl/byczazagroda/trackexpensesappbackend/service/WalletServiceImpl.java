@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG;
+import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
+
 @Slf4j
 @Service
 @Validated
@@ -96,4 +99,14 @@ public class WalletServiceImpl implements WalletService {
         return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
     }
 
+    @Override
+    public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
+        List<WalletDTO> listOfWalletDTO;
+        try {
+            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
+        } catch (RuntimeException e) {
+            throw new ResourceNotFoundException(String.format(WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG, name));
+        }
+        return listOfWalletDTO;
+    }
 }

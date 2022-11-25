@@ -104,4 +104,18 @@ public class WalletController {
         return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
+    @GetMapping("/list/{name}")
+    ResponseEntity<List<WalletDTO>> findByName(@PathVariable String name) {
+        List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
+        HttpHeaders headers = new HttpHeaders();
+
+        if (walletsDTO.isEmpty()) {
+            headers.add("message", "There are no available wallets to view.");
+        } else {
+            headers.add("message", "The list of wallets has been successfully retrieved.");
+        }
+
+        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
+    }
+
 }
