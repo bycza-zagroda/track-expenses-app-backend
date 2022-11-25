@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.1
+  version: 0.2.0
 
 #Datasource
 spring:
@@ -12,7 +12,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    #to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
+#to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -22,6 +22,8 @@ spring:
   liquibase:
     change-log: db/dbchangelog-dev.yaml
     drop-first: true
+    database-change-log-table: DATABASECHANGELOGLOCK
+
   #Jpa/Hibernate:
   jpa:
     open-in-view: false
@@ -29,7 +31,11 @@ spring:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    #do debugowania sql
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 server:
   port: 8080
@@ -42,3 +48,15 @@ springdoc:
   swagger-ui:
     path: /docs/swagger
     enabled: true
+
+#logs the Sql statements
+logging:
+  level:
+    org.hibernate.sql: trace
+#logs the JDBC parameters passed to a query
+log4j:
+  logger:
+    org:
+      hibernate: INFO, hb
+      hibernate.SQL: trace
+      hibernate.type: trace
