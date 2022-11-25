@@ -96,8 +96,4 @@ public class WalletServiceImpl implements WalletService {
         return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
     }
 
-    @Override
-    public List<WalletDTO> findByName(String name) {
-        return getAll().stream().filter(walletDTO -> walletDTO.name().contains(name)).toList();
-    }
 }

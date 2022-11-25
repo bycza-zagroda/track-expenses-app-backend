@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import static pl.byczazagroda.trackexpensesappbackend.exception.Utility.setMessageInApiException;
 
 // klasa do zbudowania response
 
@@ -13,7 +12,7 @@ import static pl.byczazagroda.trackexpensesappbackend.exception.Utility.setMessa
  */
 @Getter
 @Setter
-public class ApiException {
+public class ApiException extends ApiExceptionBase{
     @JsonIgnore
     private String profileName;
     private String status; // "W001",

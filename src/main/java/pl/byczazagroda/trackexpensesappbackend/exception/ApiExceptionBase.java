@@ -1,14 +1,14 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
-import lombok.experimental.UtilityClass;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Utility class for Exceptions
  */
-@UtilityClass
-public class Utility {
+@Profile("prod")
+public class ApiExceptionBase {
 
-    protected static String setMessageInApiException(String profileName,String message) {
+    protected String setMessageInApiException(String profileName,String message) {
         if (profileName.equals("prod")) {
             return null;
         }
