@@ -100,9 +100,14 @@ public class WalletServiceImpl implements WalletService {
     public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
+            listOfWalletDTO = walletRepository.findWalletsByNameIsLikeIgnoreCase(name)
+                    .stream()
+                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
+                    .toList();
         } catch (RuntimeException e) {
-            throw new ResourceNotFoundException(String.format(WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG, name));
+            throw new AppRuntimeException(
+                    ErrorCode.W004,
+                    String.format("WALLETS_LIST_LIKE_%s_NOT_FOUND_EXC_MS", name));
         }
         return listOfWalletDTO;
     }

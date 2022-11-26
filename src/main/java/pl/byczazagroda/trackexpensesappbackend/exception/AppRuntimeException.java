@@ -3,7 +3,6 @@ package pl.byczazagroda.trackexpensesappbackend.exception;
 import lombok.Getter;
 import lombok.Setter;
 
-//@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Wallet not found")
 @Getter
 @Setter
 public class AppRuntimeException extends RuntimeException {
@@ -20,5 +19,4 @@ public class AppRuntimeException extends RuntimeException {
         this.businessStatusCode = error.getBusinessStatusCode();
         this.description = description;
     }
-
 }

@@ -56,9 +56,6 @@ class WalletServiceImplTest {
 
     @MockBean
     private WalletRepository walletRepository;
-    @Mock
-    private HelloWorldService helloWorldService;
-
 
     @Autowired
     private WalletServiceImpl walletService;
@@ -353,7 +350,7 @@ class WalletServiceImplTest {
         List<WalletDTO> walletListDTO = walletList.stream()
                 .map((Wallet x) -> new WalletDTO(x.getId(), x.getName(), x.getCreationDate()))
                 .toList();
-        given(walletRepository.findAll()).willReturn(walletList);
+        given(walletRepository.findWalletsByNameIsLikeIgnoreCase(walletNameSearched)).willReturn(walletList);
         walletList.forEach(wallet -> given(walletModelMapper
                 .mapWalletEntityToWalletDTO(wallet))
                 .willReturn(walletListDTO

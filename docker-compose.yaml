@@ -14,7 +14,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       DB_SERVER: database
-      DB_PORT: 3306
+      DB_PORT: 3308
 
   database:
     container_name: database
@@ -35,9 +35,10 @@ services:
         reservations:
           memory: '128M'
     ports:
-      - '3306:3306'
+      - '3308:3306'
     volumes:
       - dbstore:/var/lib/mysql
+
 
 networks:
   tea_network:

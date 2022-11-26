@@ -10,4 +10,5 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
     List<Wallet> findAllByNameLikeIgnoreCase(String name);
 
+    List<Wallet> findWalletsByNameIsLikeIgnoreCase(String name);
 }

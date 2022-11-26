@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,26 +20,24 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+
 /**
  * Controller for Wallet application.
  */
+@Validated
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/wallet")
-@RequiredArgsConstructor
-@Validated
 public class WalletController {
 
     private final WalletService walletService;
 
     @PostMapping()
-    public ResponseEntity<WalletDTO> createWallet(
+    public ResponseEntity<WalletDTO> createWallet (
             @Valid @RequestBody CreateWalletDTO createWalletDTO) {
 
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("message", "You have successfully completed the creation of a new Wallet!");
-
-        return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
     }
 
     @Operation(
@@ -53,11 +50,9 @@ public class WalletController {
                             schema = @Schema(implementation = ApiException.class)
                     )})
             })
-    @GetMapping("/map/{id}")
+    @GetMapping("/wallet/{id}")
     public ResponseEntity<WalletDTO> findOne(@Valid @PathVariable Long id) {
-
         WalletDTO one = walletService.findOne(id);
-
         return new ResponseEntity<>(one, HttpStatus.OK);
     }
 
@@ -66,56 +61,34 @@ public class WalletController {
             @Valid @RequestBody UpdateWalletDTO updateWalletDto) {
 
         WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("message", "You have successfully updated Wallet!");
-        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
     @GetMapping()
     ResponseEntity<List<WalletDTO>> getWallets() {
 
         List<WalletDTO> walletsDTO = walletService.getWallets();
-        HttpHeaders headers = new HttpHeaders();
-
-        if (walletsDTO.isEmpty()) {
-            headers.add("message", "There are no available wallets to view.");
-        } else {
-            headers.add("message", "The list of wallets has been successfully retrieved.");
-        }
-
-        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<WalletDTO> deleteWalletById(@NotNull @Min(1) @PathVariable Long id) {
-        walletService.deleteWalletById(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("message", "You have successfully completed the delete of a Wallet!");
 
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        walletService.deleteWalletById(id);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<WalletDTO> findWalletById(@NotNull @Min(1) @PathVariable Long id) {
+
         WalletDTO walletDTO = walletService.findById(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("message", "The wallet has been successfully retrieved.");
-
-        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{name}")
-    ResponseEntity<List<WalletDTO>> findByName(@PathVariable String name) {
+    @GetMapping("/wallets/{name}")
+    ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnoreCase(@PathVariable String name) {
+
         List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
-        HttpHeaders headers = new HttpHeaders();
-
-        if (walletsDTO.isEmpty()) {
-            headers.add("message", "There are no available wallets to view.");
-        } else {
-            headers.add("message", "The list of wallets has been successfully retrieved.");
-        }
-
-        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
+        return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }
-
 }

@@ -1,17 +1,14 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
-import org.springframework.context.annotation.Profile;
+import java.util.List;
 
-/**
- * Class for Exception's profile prod
- */
-@Profile("prod")
-public class ApiExceptionBase {
+public interface ApiExceptionBase {
 
-    protected String setMessageInApiException(String profileName,String message) {
-        if (profileName.equals("prod")) {
-            return null;
-        }
-        return message;
-    }
+    String returnExceptionMessage(String message);
+
+    List<String> returnExceptionMessageList(List<String> messageList);
+
+    String returnExceptionDescription(String description);
+
+    List<String> returnExceptionDescriptionList(List<String> descriptionList);
 }

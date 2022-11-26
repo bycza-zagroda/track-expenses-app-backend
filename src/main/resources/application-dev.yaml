@@ -22,7 +22,6 @@ spring:
   liquibase:
     change-log: db/dbchangelog-dev.yaml
     drop-first: true
-    database-change-log-table: DATABASECHANGELOGLOCK
 
   #Jpa/Hibernate:
   jpa:

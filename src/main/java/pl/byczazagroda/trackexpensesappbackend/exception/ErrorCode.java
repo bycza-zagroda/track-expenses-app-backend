@@ -5,6 +5,8 @@ public enum ErrorCode {
     W001("W001", "WALLET_RETRIEVING_ERROR", 200),
     W003("W003", "WALLET_NOT_FOUND", 404),
 
+    W004("W004", "WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG", 404),
+
     I001("I001", "INCOME_NOT_FOUND", 404),
 
     TEA001("TEA001", "INTERNAL_SERVER_ERROR", 500),
@@ -23,12 +25,14 @@ public enum ErrorCode {
     }
 
     public String getBusinessStatus() {
-        return businessStatus;
+        return this.businessStatus;
     }
 
     public String getBusinessMessage() {
-        return businessMessage;
+        return this.businessMessage;
     }
 
-    public Integer getBusinessStatusCode() { return businessStatusCode; }
+    public Integer getBusinessStatusCode() {
+        return this.businessStatusCode;
+    }
 }

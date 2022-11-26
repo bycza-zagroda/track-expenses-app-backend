@@ -24,7 +24,7 @@ import java.util.List;
 class GlobalControllerExceptionHandler {
 
     @Autowired
-    ApiExceptionStrategy apiExceptionStrategy;
+    private ApiExceptionBase apiExceptionBase;
 
     /**
      * This handler is not used, ConstraintViolationException is handle as Throwable exception
@@ -49,8 +49,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ErrorCode.TEA004.getBusinessStatus(),
-                        apiExceptionStrategy.returnMessage(ErrorCode.TEA004.getBusinessMessage()),
-                        apiExceptionStrategy.returnMessage(String.format("Throwable exception %s", ex.getMessage())),
+                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA004.getBusinessMessage()),
+                        apiExceptionBase.returnExceptionDescription(String.format("Throwable exception %s", ex.getMessage())),
                         ErrorCode.TEA004.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA004.getBusinessStatusCode())
         );
@@ -64,8 +64,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ex.getBusinessStatus(),
-                        apiExceptionStrategy.returnMessage(ex.getBusinessMessage()),
-                        apiExceptionStrategy.returnMessage(ex.getDescription()),
+                        apiExceptionBase.returnExceptionMessage(ex.getBusinessMessage()),
+                        apiExceptionBase.returnExceptionDescription(ex.getDescription()),
                         ex.getBusinessStatusCode()),
                 HttpStatus.valueOf(ex.getBusinessStatusCode()));
     }
@@ -81,15 +81,15 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ErrorCode.TEA002.getBusinessStatus(),
-                        apiExceptionStrategy.returnMessage(ErrorCode.TEA002.getBusinessMessage()),
-                        apiExceptionStrategy.returnMessage(String.format("no handle for url %s", ex.getRequestURL())),
+                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA002.getBusinessMessage()),
+                        apiExceptionBase.returnExceptionDescription(String.format("no handle for url %s", ex.getRequestURL())),
                         ErrorCode.TEA002.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA002.getBusinessStatusCode())
         );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValidException(
+    protected ResponseEntity<Object> handleMethodArgumentNotValidException (
             MethodArgumentNotValidException ex) {
 
         log.info("MethodArgumentNotValidException in: {}", ex.getObjectName());
@@ -97,8 +97,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiExceptionDescriptionList(
                         ErrorCode.TEA003.getBusinessStatus(),
-                        apiExceptionStrategy.returnMessage(ErrorCode.TEA003.getBusinessMessage()),
-                        apiExceptionStrategy.returnListMessage(buildBusinessDescription(ex)),
+                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        apiExceptionBase.returnExceptionDescriptionList(buildBusinessDescription(ex)),
                         ErrorCode.TEA003.getBusinessStatusCode()
                 ),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode()));
