@@ -76,7 +76,7 @@ class GlobalControllerExceptionHandler {
 
         log.error(
                 "handleNoHandlerFoundException message: {}, headers: {},  httpMethod: {}, request Url{}",
-                ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
+                ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
 
         return new ResponseEntity<>(
                 new ApiException(
