@@ -1,14 +1,14 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotDeletedException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotFoundException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ResourceNotSavedException;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -17,9 +17,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG;
-import static pl.byczazagroda.trackexpensesappbackend.exception.WalletExceptionMessages.WALLETS_LIST_NOT_FOUND_EXC_MSG;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -29,66 +28,64 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper walletModelMapper;
 
     @Override
+    public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
+
+            String walletName = createWalletDTO.name();
+            Wallet wallet = new Wallet(walletName);
+            Wallet savedWallet = walletRepository.save(wallet);
+        return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
+    }
+
+    @Override
     @Transactional
-    public WalletDTO update(UpdateWalletDTO dto) throws ResourceNotFoundException {
-        Wallet wallet = walletRepository.findById(dto.id()).orElseThrow(() -> {
-            throw new ResourceNotFoundException(String.format("Wallet with given ID: %s does not exist", dto.id()));
-        });
+    public WalletDTO updateWallet(UpdateWalletDTO dto) {
+        Wallet wallet = walletRepository.findById(dto.id())
+                .orElseThrow(() -> {
+                    throw new AppRuntimeException(
+                            ErrorCode.W003,
+                            String.format("Wallet with id: %d does not exist", dto.id()));
+                });
         wallet.setName(dto.name());
 
         return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
     }
 
     @Override
-    public WalletDTO create(CreateWalletDTO createWalletDTO) {
-        String walletName = createWalletDTO.name();
-        Wallet wallet = new Wallet(walletName);
-        Wallet savedWallet = walletRepository.save(wallet);
-        boolean isWalletExists = walletRepository.existsById(savedWallet.getId());
-
-        if (isWalletExists) {
-            return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
-        }
-        throw new ResourceNotSavedException("Sorry. Something went wrong and your Wallet was not saved. Please contact with administrator.");
+    public List<WalletDTO> getWallets() {
+        return walletRepository.findAll().stream()
+                .map(walletModelMapper::mapWalletEntityToWalletDTO)
+                .toList();
     }
 
     @Override
-    public List<WalletDTO> getAll() {
-        List<WalletDTO> walletsDTO;
-        try {
-            walletsDTO = walletRepository.findAll().stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
-        } catch (RuntimeException e) {
-            throw new ResourceNotFoundException(WALLETS_LIST_NOT_FOUND_EXC_MSG);
-        }
-        return walletsDTO;
-    }
-
-    @Override
-    public void deleteById(Long id) {
+    public void deleteWalletById(Long id) {
         if (walletRepository.existsById(id)) {
             walletRepository.deleteById(id);
         } else {
-            throw new ResourceNotDeletedException("Value does not exist in the database, please change your request");
+            throw new AppRuntimeException(
+                    ErrorCode.W003,
+                    String.format("Wallet with given id: %d does not exist", id));
         }
     }
 
     @Override
     public WalletDTO findById(Long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
-        if (wallet.isPresent()) {
-            return walletModelMapper.mapWalletEntityToWalletDTO(wallet.get());
-        } else {
-            throw new ResourceNotFoundException("Wallet with that id doesn't exist");
-        }
+        return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
     }
 
     @Override
     public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name).stream().map(walletModelMapper::mapWalletEntityToWalletDTO).toList();
+            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name)
+                    .stream()
+                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
+                    .toList();
         } catch (RuntimeException e) {
-            throw new ResourceNotFoundException(String.format(WALLETS_LIST_LIKE_NAME_NOT_FOUND_EXC_MSG, name));
+            throw new AppRuntimeException(
+                    ErrorCode.W004,
+                    String.format("WALLETS_LIST_LIKE_%s_NOT_FOUND_EXC_MS", name));
         }
         return listOfWalletDTO;
     }

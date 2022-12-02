@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -18,6 +19,9 @@ import org.testcontainers.utility.DockerImageName;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
+//@TestPropertySource(properties = {
+//        "spring.profiles.active=test"
+//})
 @DirtiesContext
 public abstract class BaseControllerTestIT {
 
@@ -40,5 +44,6 @@ public abstract class BaseControllerTestIT {
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
         registry.add("spring.datasource.driver-class-name", mySQLContainer::getDriverClassName);
+        registry.add("spring.profiles.active",() -> "test");
     }
 }

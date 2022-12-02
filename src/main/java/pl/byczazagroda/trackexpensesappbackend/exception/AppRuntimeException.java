@@ -1,23 +1,22 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
-/**
- * AppRuntimeException business exception {@code RuntimeException}.
- */
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class AppRuntimeException extends RuntimeException {
 
-    public AppRuntimeException(String message) {
-        super(message);
-    }
+    private final String businessStatus; // "W001",
+    private final String businessMessage; //  "WALLETS_RETRIEVING_ERROR",
+    private final String description; //  "Wallet with id: is not found in the database",
+    private final Integer businessStatusCode; //  404,
 
-    public AppRuntimeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AppRuntimeException(Throwable cause) {
-        super(cause);
-    }
-
-    public AppRuntimeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public AppRuntimeException(ErrorCode error, String description) {
+        super(error.getBusinessMessage());
+        this.businessStatus = error.getBusinessStatus();
+        this.businessMessage = error.getBusinessMessage();
+        this.businessStatusCode = error.getBusinessStatusCode();
+        this.description = description;
     }
 }

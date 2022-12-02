@@ -1,33 +1,48 @@
 version: '3.8'
+
 services:
   backend:
     build: .
+    container_name: backend
     restart: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
+    networks:
+      - tea_network
     ports:
       - "8080:8080"
     depends_on:
       - database
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_SERVER: database
+      DB_PORT: 3308
 
   database:
+    container_name: database
     image: mysql:8
     restart: always
+    networks:
+      - tea_network
     environment:
-      - MYSQL_PASSWORD=root
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=trackexpensesapp
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: trackexpensesapp
+      MYSQL_USER: user
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: '512M'
         reservations:
-          cpus: '0.25'
           memory: '128M'
     ports:
-      - '3306:3306'
+      - '3308:3306'
     volumes:
       - dbstore:/var/lib/mysql
+
+
+networks:
+  tea_network:
+    driver: bridge
+
 volumes:
   dbstore:
