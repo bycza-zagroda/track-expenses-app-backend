@@ -350,7 +350,7 @@ class WalletServiceImplTest {
         List<WalletDTO> walletListDTO = walletList.stream()
                 .map((Wallet x) -> new WalletDTO(x.getId(), x.getName(), x.getCreationDate()))
                 .toList();
-        given(walletRepository.findWalletsByNameIsLikeIgnoreCase(walletNameSearched)).willReturn(walletList);
+        given(walletRepository.findAllByNameLikeIgnoreCase(walletNameSearched)).willReturn(walletList);
         walletList.forEach(wallet -> given(walletModelMapper
                 .mapWalletEntityToWalletDTO(wallet))
                 .willReturn(walletListDTO

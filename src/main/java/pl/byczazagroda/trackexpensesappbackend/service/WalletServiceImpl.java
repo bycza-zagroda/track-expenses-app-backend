@@ -29,32 +29,11 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
-        Wallet savedWallet = null;
 
             String walletName = createWalletDTO.name();
             Wallet wallet = new Wallet(walletName);
-            savedWallet = walletRepository.save(wallet);
-
-//       if(walletRepository.existsById(savedWallet.getId())) { //debug tutaj i tak nie chwodzi
-
-//       }
-//       throw new AppRuntimeException(
-//               BusinessError.TEA001,
-//               String.format("Wallet was not saved: %s", savedWallet.getId())
-//           );
+            Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
-//        return null;
-    }
-
-    @Override
-    public WalletDTO findOne(Long id) {
-        return walletRepository
-                .findById(id)
-                .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                .orElseThrow(() -> new AppRuntimeException(
-                        ErrorCode.W003,
-                        String.format("Wallet with id: %d does not exist", id))
-                );
     }
 
     @Override
@@ -89,7 +68,6 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
-    //to fixme
     @Override
     public WalletDTO findById(Long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
@@ -100,7 +78,7 @@ public class WalletServiceImpl implements WalletService {
     public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO = walletRepository.findWalletsByNameIsLikeIgnoreCase(name)
+            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name)
                     .stream()
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
