@@ -1,89 +1,105 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiException;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
-
 
 /**
  * Controller for Wallet application.
  */
-@Validated
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/wallet")
+@RequiredArgsConstructor
+@Validated
 public class WalletController {
 
     private final WalletService walletService;
 
-    @PostMapping()
-    public ResponseEntity<WalletDTO> createWallet (
-            @Valid @RequestBody CreateWalletDTO createWalletDTO) {
+    @PutMapping
+    public ResponseEntity<WalletDTO> update(@Valid @RequestBody UpdateWalletDTO updateWalletDto) {
+        WalletDTO walletDTO = walletService.update(updateWalletDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "You have successfully updated Wallet!");
 
-        WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
-        return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
-    @Operation(
-            responses = {@ApiResponse(
-                    responseCode = "404",
+    @PostMapping()
+    public ResponseEntity<WalletDTO> create(@Valid @RequestBody CreateWalletDTO createWalletDTO) {
+        WalletDTO walletDTO = walletService.create(createWalletDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "You have successfully completed the creation of a new Wallet!");
 
-                    description = "wallet not found",
-                    content = {@Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ApiException.class)
-                    )})
-            })
-
-    @PutMapping
-    public ResponseEntity<WalletDTO> updateWallet(
-            @Valid @RequestBody UpdateWalletDTO updateWalletDto) {
-
-        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
-        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+        return new ResponseEntity<>(walletDTO, headers, HttpStatus.CREATED);
     }
 
     @GetMapping()
-    ResponseEntity<List<WalletDTO>> getWallets() {
+    ResponseEntity<List<WalletDTO>> getAll() {
+        List<WalletDTO> walletsDTO = walletService.getAll();
+        HttpHeaders headers = new HttpHeaders();
+        if (walletsDTO.isEmpty()) {
+            headers.add("message", "There are no available wallets to view.");
+        } else {
+            headers.add("message", "The list of wallets has been successfully retrieved.");
+        }
 
-        List<WalletDTO> walletsDTO = walletService.getWallets();
-        return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WalletDTO> deleteWalletById(@NotNull @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> deleteById(@NotNull @Min(1) @PathVariable Long id) {
+        walletService.deleteById(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "You have successfully completed the delete of a Wallet!");
 
-        walletService.deleteWalletById(id);
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@NotNull @Min(1) @PathVariable Long id) {
-
+    public ResponseEntity<WalletDTO> findById(@NotNull @Min(1) @PathVariable Long id) {
         WalletDTO walletDTO = walletService.findById(id);
-        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "The wallet has been successfully retrieved.");
+
+        return new ResponseEntity<>(walletDTO, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/wallets/{name}")
-    ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnoreCase(@PathVariable String name) {
-
+    @GetMapping("/list/{name}")
+    ResponseEntity<List<WalletDTO>> findByName(@NotBlank @NotEmpty @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") @PathVariable String name) {
         List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
-        return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+
+        if (walletsDTO.isEmpty()) {
+            headers.add("message", "There are no available wallets to view.");
+        } else {
+            headers.add("message", "The list of wallets has been successfully retrieved.");
+        }
+
+        return new ResponseEntity<>(walletsDTO, headers, HttpStatus.OK);
     }
+
 }
