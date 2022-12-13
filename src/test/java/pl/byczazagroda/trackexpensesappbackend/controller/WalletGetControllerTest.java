@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
