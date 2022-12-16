@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: "4"
+      author: dstuzynski
+      changes:
+        - createTable:
+            tableName: financial_transactions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: wallet_id
+                  type: bigint
+              - column:
+                  name: transaction_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal
+                  precision: 10
+                  scale: 2
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - addForeignKeyConstraint:
+                  baseColumnNames: wallet_id
+                  baseTableName: financial_transactions
+                  referencedColumnNames: id
+                  referencedTableName: wallets
