@@ -14,6 +14,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public class WalletServiceImpl implements WalletService {
     public List<WalletDTO> getWallets() {
         return walletRepository.findAll().stream()
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
+                .sorted(Comparator.comparing(WalletDTO::creationDate).reversed())
                 .toList();
     }
 
