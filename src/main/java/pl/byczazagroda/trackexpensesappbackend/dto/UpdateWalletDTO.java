@@ -10,5 +10,5 @@ import javax.validation.constraints.Size;
 public record UpdateWalletDTO(
         @NotNull @Min(value = 1) Long id,
         @NotBlank @NotEmpty @Size(max = 20)
-        @Pattern(regexp = "[a-z A-Z0-9]+") String name) {
+        @Pattern(regexp = "[\\w ]+") String name) {
 }
