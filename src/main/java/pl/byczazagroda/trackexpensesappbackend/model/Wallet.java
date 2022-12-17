@@ -40,7 +40,7 @@ public class Wallet implements Serializable {
 
     @NotBlank
     @Size(max = 20)
-    @Pattern(regexp = "[a-z A-Z]+", message = "invalide input. Name should contains only latin litters")
+    @Pattern(regexp = "[a-z A-Z0-9]+", message = "invalid input. Name should contains only latin litters")
     private String name;
 
     @Column(name = "creation_date")
