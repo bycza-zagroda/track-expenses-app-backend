@@ -53,9 +53,8 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDTO> getWallets() {
-        return walletRepository.findAll().stream()
+        return walletRepository.findAllByOrderByCreationDateDesc().stream()
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                .sorted(Comparator.comparing(WalletDTO::creationDate).reversed())
                 .toList();
     }
 
