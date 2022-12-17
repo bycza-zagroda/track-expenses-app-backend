@@ -14,7 +14,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +30,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
 
-            String walletName = createWalletDTO.name();
-            Wallet wallet = new Wallet(walletName);
-            Wallet savedWallet = walletRepository.save(wallet);
+        String walletName = createWalletDTO.name();
+        Wallet wallet = new Wallet(walletName);
+        Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
     }
 
