@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +18,9 @@ import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 
@@ -33,7 +36,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping()
-    public ResponseEntity<WalletDTO> createWallet (
+    public ResponseEntity<WalletDTO> createWallet(
             @Valid @RequestBody CreateWalletDTO createWalletDTO) {
 
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
@@ -67,21 +70,23 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WalletDTO> deleteWalletById(@NotNull @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> deleteWalletById(@Min(1) @NotNull @PathVariable Long id) {
 
         walletService.deleteWalletById(id);
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@NotNull @Min(1) @PathVariable Long id) {
+    public ResponseEntity<WalletDTO> findWalletById(@Min(1) @NotNull @PathVariable Long id) {
 
         WalletDTO walletDTO = walletService.findById(id);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
     @GetMapping("/wallets/{name}")
-    ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnoreCase(@PathVariable String name) {
+    ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnoreCase(
+            @PathVariable @NotBlank @Pattern(regexp = "[\\w ]+") @Length(max = 20)
+            String name) {
 
         List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
         return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
