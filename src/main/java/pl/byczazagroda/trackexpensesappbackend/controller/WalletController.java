@@ -27,7 +27,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/wallet")
+@RequestMapping("api/wallets")
 public class WalletController {
 
     private final WalletService walletService;
