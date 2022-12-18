@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ApiExceptionBase;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -14,6 +15,12 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,17 +35,17 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper walletModelMapper;
 
     @Override
-    public WalletDTO createWallet(CreateWalletDTO createWalletDTO) {
+    public WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO) {
 
-            String walletName = createWalletDTO.name();
-            Wallet wallet = new Wallet(walletName);
-            Wallet savedWallet = walletRepository.save(wallet);
+        String walletName = createWalletDTO.name();
+        Wallet wallet = new Wallet(walletName);
+        Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
     }
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(UpdateWalletDTO dto) {
+    public WalletDTO updateWallet(@Valid UpdateWalletDTO dto) {
         Wallet wallet = walletRepository.findById(dto.id())
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
@@ -52,13 +59,14 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDTO> getWallets() {
-        return walletRepository.findAll().stream()
+        return walletRepository.findAllByOrderByNameAsc().stream()
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
                 .toList();
     }
 
     @Override
-    public void deleteWalletById(Long id) {
+    public void deleteWalletById(@Valid @NotNull
+                                     @Min(value = 1, message = "Wallet id has to be greater than 0") Long id) {
         if (walletRepository.existsById(id)) {
             walletRepository.deleteById(id);
         } else {
@@ -69,13 +77,14 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletDTO findById(Long id) {
+    public WalletDTO findById(@Valid @NotNull
+                                  @Min(value = 1, message = "Wallet id has to be greater than 0") Long id) {
         Optional<Wallet> wallet = walletRepository.findById(id);
-        return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElse(null);
+        return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO).orElseThrow(()->new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %s not found", id)));
     }
 
     @Override
-    public List<WalletDTO> findAllByNameLikeIgnoreCase(String name) {
+    public List<WalletDTO> findAllByNameLikeIgnoreCase(@Valid @NotBlank() @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
             listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name)
