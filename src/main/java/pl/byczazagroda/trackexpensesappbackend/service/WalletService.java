@@ -1,6 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
@@ -19,13 +20,9 @@ public interface WalletService {
 
     List<WalletDTO> getWallets();
 
-    void deleteWalletById(@Valid @NotNull
-                          @Min(value = 1, message = "Wallet id has to be greater than 0")
-                          Long id);
+    void deleteWalletById(@Min(1) @NotNull Long id);
 
-    List<WalletDTO> findAllByNameLikeIgnoreCase(@Valid @NotBlank() @Size(max = 20) @Pattern(regexp = "[a-z A-Z]+") String name);
+    WalletDTO findById(@Min(1) @NotNull Long id);
 
-    WalletDTO findById(@Valid @NotNull
-                       @Min(value = 1, message = "Wallet id has to be greater than 0")
-                       Long id);
+    List<WalletDTO> findAllByNameLikeIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name);
 }
