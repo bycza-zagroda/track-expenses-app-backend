@@ -37,9 +37,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO) {
 
-            String walletName = createWalletDTO.name();
-            Wallet wallet = new Wallet(walletName);
-            Wallet savedWallet = walletRepository.save(wallet);
+        String walletName = createWalletDTO.name();
+        Wallet wallet = new Wallet(walletName);
+        Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
     }
 
@@ -59,7 +59,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDTO> getWallets() {
-        return walletRepository.findAll().stream()
+        return walletRepository.findAllByOrderByNameAsc().stream()
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
                 .toList();
     }
