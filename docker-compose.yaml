@@ -14,7 +14,9 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       DB_SERVER: database
-      DB_PORT: 3308
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
 
   database:
     container_name: database

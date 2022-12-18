@@ -8,8 +8,8 @@ spring:
     location: classpath:banner.txt
   datasource:
     url: jdbc:mysql://${DB_SERVER}:${DB_PORT}/trackexpensesapp?useUnicode=true&serverTimezone=UTC
-    username: root
-    password: root
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 #to zeby wyrzucaly sie castomowe wyjatki gdy nie ma endointu jeszcze
