@@ -58,7 +58,7 @@ class WalletCreateControllerTest {
                 .willReturn(new WalletDTO(ID_1L, INVALID_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/wallet")
+        ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
 
@@ -75,7 +75,7 @@ class WalletCreateControllerTest {
                 .willReturn(new WalletDTO(ID_1L, "", DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/wallet")
+        ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
 
@@ -92,7 +92,7 @@ class WalletCreateControllerTest {
                 .willReturn(new WalletDTO(ID_1L, null, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/wallet")
+        ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
 
@@ -109,7 +109,7 @@ class WalletCreateControllerTest {
                 .willReturn(new WalletDTO(ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/api/wallet")
+        ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
 
