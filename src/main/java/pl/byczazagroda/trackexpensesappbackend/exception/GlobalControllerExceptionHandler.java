@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -9,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +32,19 @@ class GlobalControllerExceptionHandler {
      * @return
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public String handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
         log.error("ConstraintViolationException: {}", e.getMessage());
-        return e.getMessage();
+        return new ResponseEntity<>(
+                new ApiException(
+                        ErrorCode.TEA003.getBusinessStatus(),
+                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        apiExceptionBase.returnExceptionDescription(String.format("Throwable exception %s", e.getMessage())),
+                        ErrorCode.TEA003.getBusinessStatusCode()),
+                HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
     @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @Order(Ordered.LOWEST_PRECEDENCE)
     public ResponseEntity<Object> handleThrowableException(Throwable ex) {
         log.error("handleThrowableException: {}", ex.getMessage());
 
