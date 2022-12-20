@@ -54,17 +54,17 @@ public class WalletController {
                     )})
             })
 
-    @PutMapping
+    @PatchMapping("/{id}")
     public ResponseEntity<WalletDTO> updateWallet(
+            @Min(1) @NotNull @PathVariable Long id,
             @Valid @RequestBody UpdateWalletDTO updateWalletDto) {
 
-        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
+        WalletDTO walletDTO = walletService.updateWallet(id, updateWalletDto);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
     @GetMapping()
     ResponseEntity<List<WalletDTO>> getWallets() {
-
         List<WalletDTO> walletsDTO = walletService.getWallets();
         return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }

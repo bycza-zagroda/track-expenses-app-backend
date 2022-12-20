@@ -16,7 +16,7 @@ public interface WalletService {
 
     WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
 
-    WalletDTO updateWallet(@Valid UpdateWalletDTO walletToUpdate);
+    WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid UpdateWalletDTO walletToUpdate);
 
     List<WalletDTO> getWallets();
 

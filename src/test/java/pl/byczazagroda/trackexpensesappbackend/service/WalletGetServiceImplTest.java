@@ -66,12 +66,12 @@ class WalletGetServiceImplTest {
     void shouldNotReturnWalletById_WhenWalletIdNotExist() {
         // given
         given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(ID_1L, NAME_1);
+        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(NAME_1);
 
         // when
 
         // then
-        assertThatThrownBy(() -> walletService.updateWallet(updateWalletDto)).isInstanceOf(AppRuntimeException.class);
+        assertThatThrownBy(() -> walletService.updateWallet(ID_1L, updateWalletDto)).isInstanceOf(AppRuntimeException.class);
     }
 
     @Test
@@ -106,7 +106,7 @@ class WalletGetServiceImplTest {
         //then
         assertThatThrownBy(() -> walletService.findById(ID_5L)).isInstanceOf(AppRuntimeException.class);
         assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() ->
-                        walletService.findById(ID_5L)).withMessage(ErrorCode.W003.getBusinessMessage());
+                walletService.findById(ID_5L)).withMessage(ErrorCode.W003.getBusinessMessage());
     }
 
     @Test

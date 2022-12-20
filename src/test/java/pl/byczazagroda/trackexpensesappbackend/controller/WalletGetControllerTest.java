@@ -35,12 +35,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WalletController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-        classes = WalletServiceImpl.class),
+                classes = WalletServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletModelMapper.class, ApiExceptionBase.class}))
 @ActiveProfiles("test")
 class WalletGetControllerTest {
@@ -80,14 +79,14 @@ class WalletGetControllerTest {
 
     @Test
     @DisplayName("when finding wallet list return empty list and response status OK")
-    //fixme The name of the test is not fully specified. It should describe the context of usage
+        //fixme The name of the test is not fully specified. It should describe the context of usage
     void shouldResponseStatusOKAndReturnEmptyList() throws Exception {
         // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/wallets")
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().is2xxSuccessful())
-                        .andReturn()
-                        .getResponse();
+                .andExpect(status().is2xxSuccessful())
+                .andReturn()
+                .getResponse();
 
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -106,7 +105,7 @@ class WalletGetControllerTest {
 
         // then
         mockMvc.perform(get("/api/wallets")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
@@ -187,7 +186,7 @@ class WalletGetControllerTest {
 
         // then
         mockMvc.perform(get("/api/wallets/wallets/{name}", walletNameSearched)
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(foundedWalletsDTO.size()));
 // Value of returned items should be greater than 0 when testing Controller for unit(!) test
