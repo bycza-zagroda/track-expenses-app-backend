@@ -41,12 +41,12 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(@Valid UpdateWalletDTO dto) {
-        Wallet wallet = walletRepository.findById(dto.id())
+    public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid UpdateWalletDTO dto) {
+        Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
                             ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", dto.id()));
+                            String.format("Wallet with id: %d does not exist", id));
                 });
         wallet.setName(dto.name());
 
