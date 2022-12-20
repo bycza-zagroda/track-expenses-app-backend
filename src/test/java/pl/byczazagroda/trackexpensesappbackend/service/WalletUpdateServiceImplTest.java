@@ -54,16 +54,16 @@ class WalletUpdateServiceImplTest {
     @DisplayName("when finding wallet by id should update wallet")
     void shouldUpdateWallet_whenFindWalletById() {
         // given
-        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(ID_1L, NAME_1);
+        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(NAME_1);
         Wallet wallet = new Wallet(NAME_2);
         wallet.setId(ID_1L);
         wallet.setCreationDate(DATE_NOW);
         WalletDTO newWalletDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
-        given(walletRepository.findById(updateWalletDto.id())).willReturn(Optional.of(wallet));
+        given(walletRepository.findById(ID_1L)).willReturn(Optional.of(wallet));
         given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(newWalletDTO);
 
         // when
-        WalletDTO walletDTO = walletService.updateWallet(updateWalletDto);
+        WalletDTO walletDTO = walletService.updateWallet(ID_1L, updateWalletDto);
 
         // then
         assertThat(walletDTO.name()).isEqualTo(updateWalletDto.name());

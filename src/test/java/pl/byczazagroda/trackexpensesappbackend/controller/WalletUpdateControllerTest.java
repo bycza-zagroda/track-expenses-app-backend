@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,12 +25,12 @@ import java.time.Instant;
 import java.util.Objects;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WalletController.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = WalletServiceImpl.class),
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletModelMapper.class, ApiExceptionBase.class}))
 @ActiveProfiles("test")
 class WalletUpdateControllerTest {
@@ -63,18 +62,18 @@ class WalletUpdateControllerTest {
     @DisplayName("when update wallet data are correct should return response status OK")
     void shouldReturnResponseStatusOK_WhenUpdateWalletDataAreCorrect() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_1L, NAME_1);
-        given(walletService.updateWallet(Mockito.any()))
-                .willReturn(new WalletDTO(updDTO.id(), updDTO.name(), DATE_NOW));
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(NAME_1);
+        given(walletService.updateWallet(ID_1L, updDTO))
+                .willReturn(new WalletDTO(ID_1L, updDTO.name(), DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", Matchers.equalTo(updDTO.id().intValue())))
+                .andExpect(jsonPath("$.id", Matchers.equalTo(ID_1L.intValue())))
                 .andExpect(jsonPath("$.name", Matchers.equalTo(updDTO.name())));
     }
 
@@ -82,12 +81,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name is empty should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsEmpty() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_1L, EMPTY_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(EMPTY_NAME);
+        given(walletService.updateWallet(ID_1L, updDTO))
                 .willReturn(new WalletDTO(ID_1L, EMPTY_NAME, DATE_NOW));
 
         //when
-        ResultActions result = mockMvc.perform(put("/api/wallets")
+        ResultActions result = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -99,18 +98,18 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name is changed return response status OK and correct response body")
     void shouldReturnStatusOKAndCorrectResponseBody_WhenWalletNameIsChanged() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_1L, NAME_1);
-        given(walletService.updateWallet(Mockito.any()))
-                .willReturn(new WalletDTO(updDTO.id(), updDTO.name(), DATE_NOW));
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(NAME_1);
+        given(walletService.updateWallet(ID_1L, updDTO))
+                .willReturn(new WalletDTO(ID_1L, updDTO.name(), DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", Matchers.equalTo(updDTO.id().intValue())))
+                .andExpect(jsonPath("$.id", Matchers.equalTo(ID_1L.intValue())))
                 .andExpect(jsonPath("$.name", Matchers.equalTo(updDTO.name())));
     }
 
@@ -118,12 +117,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name is too long should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsTooLong() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        given(walletService.updateWallet(ID_1L, updDTO))
                 .willReturn(new WalletDTO(ID_1L, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -135,12 +134,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name contains illegal letters should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameContainsIllegalLetters() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_1L, INVALID_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(INVALID_NAME);
+        given(walletService.updateWallet(ID_1L, updDTO))
                 .willReturn(new WalletDTO(ID_1L, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -149,31 +148,31 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet id is null should return response status bad request")
-    void shouldReturnResponseStatusBadRequest_WhenWalletIdIsNull() throws Exception {
+    @DisplayName("when wallet id is null should return response status server error")
+    void shouldReturnResponseStatusServerError_WhenWalletIdIsNull() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(null, INVALID_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(INVALID_NAME);
+        given(walletService.updateWallet(null, updDTO))
                 .willReturn(new WalletDTO(null, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/" + null)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
         // then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().is5xxServerError());
     }
 
     @Test
     @DisplayName("when wallet id is zero should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletIdIsZero() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(ID_0L, INVALID_NAME);
-        given(walletService.updateWallet(updDTO)).willReturn(new WalletDTO(ID_0L, EMPTY_NAME, DATE_NOW));
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(INVALID_NAME);
+        given(walletService.updateWallet(ID_0L, updDTO)).willReturn(new WalletDTO(ID_0L, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -185,12 +184,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet id is negative should return response status bad request")
     void shouldReturnResponseStatusBadRequestWhenWalletIdIsNegative() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(-ID_1L, INVALID_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(INVALID_NAME);
+        given(walletService.updateWallet(-ID_1L, updDTO))
                 .willReturn(new WalletDTO(-ID_1L, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions resultActions = mockMvc.perform(put("/api/wallets")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -202,12 +201,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name is empty should return response status bad request")
     void shouldReturnResponseStatusBadRequestWhenWalletNameIsEmpty() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(1L, EMPTY_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(EMPTY_NAME);
+        given(walletService.updateWallet(ID_1L, updDTO))
                 .willReturn(new WalletDTO(1L, EMPTY_NAME, DATE_NOW));
 
         //when
-        ResultActions result = mockMvc.perform(put("/api/wallets")
+        ResultActions result = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -219,11 +218,11 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name is too long should return response status bad request")
     void shouldReturnResponseStatusBadRequestWhenWalletNameIsTooLong() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS);
-        given(walletService.updateWallet(updDTO)).willReturn(new WalletDTO(1L, EMPTY_NAME, DATE_NOW));
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        given(walletService.updateWallet(ID_1L, updDTO)).willReturn(new WalletDTO(1L, EMPTY_NAME, DATE_NOW));
 
         // when
-        ResultActions result = mockMvc.perform(put("/api/wallets")
+        ResultActions result = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
@@ -235,12 +234,12 @@ class WalletUpdateControllerTest {
     @DisplayName("when wallet name contains illegal letters should return response status bad request")
     void shouldReturnResponseStatusBadRequestWhenWalletNameContainsIllegalLetters() throws Exception {
         // given
-        UpdateWalletDTO updDTO = new UpdateWalletDTO(1L, INVALID_NAME);
-        given(walletService.updateWallet(updDTO))
+        UpdateWalletDTO updDTO = new UpdateWalletDTO(INVALID_NAME);
+        given(walletService.updateWallet(ID_1L, updDTO))
                 .willThrow(new RuntimeException("Wallet name contains illegal letters"));
 
         // when
-        ResultActions result = mockMvc.perform(put("/api/wallets")
+        ResultActions result = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO))));
 
