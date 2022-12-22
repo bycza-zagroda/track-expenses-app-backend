@@ -9,4 +9,5 @@ import java.util.List;
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
     List<Wallet> findAllByNameLikeIgnoreCase(String name);
+    List<Wallet> findAllByOrderByNameAsc();
 }
