@@ -6,7 +6,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bycza-zagroda_track-expenses-app-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bycza-zagroda_track-expenses-app-backend)
 <br>
 [![Follow us!](https://img.shields.io/badge/FB-Bycza%20Zagroda-blue)](https://www.facebook.com/groups/byczazagroda/about/)
-[![Follow us!](https://img.shields.io/badge/DISCORD-Bycza%20Zagroda-9cf)](https://discord.gg/5xmrnugs)
+[![Follow us!](https://img.shields.io/badge/DISCORD-Bycza%20Zagroda-9cf)](https://discord.gg/kPgkDGXeQw)
 
 # track-expenses-backend
 

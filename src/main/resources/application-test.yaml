@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.1
+  version: 0.2.1
 
 #Datasource
 spring:
@@ -11,15 +11,22 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 500
+      maximum-pool-size: 5
+
+  jackson:
+    default-property-inclusion: non_empty
 
   liquibase:
     change-log: db/dbchangelog-test.yaml
+    drop-first: true
   #Jpa/Hibernate:
   jpa:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
 
     show-sql: true
 
