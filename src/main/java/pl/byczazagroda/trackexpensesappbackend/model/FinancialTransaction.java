@@ -27,14 +27,14 @@ public class FinancialTransaction {
 
     @Enumerated
     @Column(name = "transaction_type")
-    private FinancialTransactionType transactionType;
+    private FinancialTransactionType financialTransactionType;
 
     @DecimalMin("0.0")
     private BigDecimal amount;
 
-    @Column(name = "creation_date")
+    @Column(name = "transaction_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
-    private Instant transactionDatetime;
+    private Instant transactionDate;
 
     private String description;
 }
