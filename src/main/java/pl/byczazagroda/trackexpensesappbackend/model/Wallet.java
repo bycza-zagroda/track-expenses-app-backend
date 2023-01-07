@@ -12,8 +12,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Entity class for money wallet.
@@ -29,10 +29,10 @@ import java.time.Instant;
 public class Wallet implements Serializable {
 
     /**
-     * Class version 0.1.0.  SerialVersionUID needs to be updated with any change.
+     * Class version 0.3.0.  SerialVersionUID needs to be updated with any change.
      */
     @Serial
-    private static final long serialVersionUID = 100010L;
+    private static final long serialVersionUID = 100030L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +46,10 @@ public class Wallet implements Serializable {
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant creationDate;
+
+    @OneToMany(mappedBy = "wallet")
+    @JoinColumn(name = "financial_transaction_id")
+    private List<FinancialTransaction> financialTransactionList;
 
     public Wallet(String name) {
         this.name = name;
