@@ -49,7 +49,7 @@ public class Wallet implements Serializable {
 
     @OneToMany(mappedBy = "wallet")
     @JoinColumn(name = "financial_transaction_id")
-    private List<FinancialTransaction> financialTransactions;
+    private List<FinancialTransaction> financialTransactionList;
 
     public Wallet(String name) {
         this.name = name;
