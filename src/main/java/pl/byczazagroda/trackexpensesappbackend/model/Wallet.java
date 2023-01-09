@@ -48,7 +48,6 @@ public class Wallet implements Serializable {
     private Instant creationDate;
 
     @OneToMany(mappedBy = "wallet")
-    @JoinColumn(name = "financial_transaction_id")
     private List<FinancialTransaction> financialTransactionList;
 
     public Wallet(String name) {
