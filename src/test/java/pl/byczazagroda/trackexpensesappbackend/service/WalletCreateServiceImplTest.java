@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiExceptionBase;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponse;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -46,7 +46,7 @@ class WalletCreateServiceImplTest {
     public static final String TOO_LONG_NAME_MORE_THAN_20_LETTERS = "Too long name - more than 20 letters.";
 
     @MockBean
-    private ApiExceptionBase apiExceptionBase;
+    private ErrorResponse errorResponse;
 
     @MockBean
     private WalletRepository walletRepository;
