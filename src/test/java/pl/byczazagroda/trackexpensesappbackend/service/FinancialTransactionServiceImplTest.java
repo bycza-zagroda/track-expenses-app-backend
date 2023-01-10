@@ -1,6 +1,5 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import com.github.dockerjava.api.model.ErrorResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.FinancialTransactionController;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiExceptionBase;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
@@ -47,11 +45,6 @@ class FinancialTransactionServiceImplTest {
     public static final FinancialTransactionType TYPE = FinancialTransactionType.EXPENSE;
     public static final Instant DATE_NOW = Instant.now();
 
-    @MockBean
-    private ApiExceptionBase apiExceptionBase;
-
-    @MockBean
-    private ErrorResponse errorResponse;
 
     @MockBean
     private FinancialTransactionRepository financialTransactionRepository;
