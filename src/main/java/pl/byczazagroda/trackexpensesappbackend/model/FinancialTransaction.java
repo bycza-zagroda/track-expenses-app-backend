@@ -33,7 +33,7 @@ public class FinancialTransaction implements Serializable {
     @ManyToOne
     private Wallet wallet;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
     private FinancialTransactionType financialTransactionType;
 
