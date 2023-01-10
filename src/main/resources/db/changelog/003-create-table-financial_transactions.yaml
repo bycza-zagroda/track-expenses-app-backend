@@ -23,7 +23,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: amount
-                  type: decimal(10,2)
+                  type: decimal(15,2)
                   constraints:
                     nullable: false
               - column:
