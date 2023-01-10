@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiExceptionBase;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponse;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -50,7 +50,7 @@ class WalletGetServiceImplTest {
     private static final Instant DATE_NOW = Instant.now();
 
     @MockBean
-    private ApiExceptionBase apiExceptionBase;
+    private ErrorResponse errorResponse;
 
     @MockBean
     private WalletRepository walletRepository;
