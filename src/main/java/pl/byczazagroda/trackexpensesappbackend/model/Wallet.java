@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public class Wallet implements Serializable {
     private Instant creationDate;
 
     @OneToMany(mappedBy = "wallet")
-    private List<FinancialTransaction> financialTransactionList;
+    private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
     public Wallet(String name) {
         this.name = name;
