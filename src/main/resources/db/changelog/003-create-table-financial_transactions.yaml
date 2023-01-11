@@ -16,6 +16,8 @@ databaseChangeLog:
               - column:
                   name: wallet_id
                   type: bigint
+                  constraints:
+                    nullable: false
               - column:
                   name: transaction_type
                   type: varchar(255)
