@@ -61,10 +61,9 @@ class FinancialTransactionServiceImplTest {
 
 
     @Test
-    @DisplayName("when finding with proper financial transaction id should successfully find transaction")
-    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionIdy() {
+    @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
+    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
         //given
-
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
         financialTransaction1.setFinancialTransactionType(TYPE);
