@@ -24,7 +24,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
 
     @Override
-    public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(Long walletId) {
+    public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
         return financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId).stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .toList();
