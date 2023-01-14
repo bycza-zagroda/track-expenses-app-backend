@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiExceptionBase;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponse;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionService;
 import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionServiceImpl;
@@ -31,7 +31,7 @@ import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction
 
 @WebMvcTest(controllers = FinancialTransactionController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = FinancialTransactionServiceImpl.class),
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {FinancialTransactionModelMapper.class, ApiExceptionBase.class}))
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {FinancialTransactionModelMapper.class, ErrorResponse.class}))
 @ActiveProfiles("test")
 public class FinancialTransactionUpdateControllerTest {
 
