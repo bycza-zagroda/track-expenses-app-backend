@@ -12,6 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelM
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -34,6 +35,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     }
 
     @Override
+    @Transactional
     public FinancialTransactionDTO updateTransaction(
             @Min(1) @NotNull Long id,
             @Valid UpdateFinancialTransactionDTO updateTransactionDTO){
