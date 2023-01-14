@@ -8,7 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponse;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseListDescriptionDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.exception.*;
 
 import javax.validation.ConstraintViolationException;
@@ -23,7 +25,7 @@ import java.util.List;
 class GlobalExceptionHandler {
 
     @Autowired
-    private ErrorResponse errorResponse;
+    private ErrorStrategy errorStrategy;
 
     /**
      * This handler is not used, ConstraintViolationException is handle as Throwable exception
@@ -32,48 +34,48 @@ class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException e) {
         log.error("ConstraintViolationException: {}", e.getMessage());
         return new ResponseEntity<>(
-                new ApiException(
+                new ErrorResponseDTO(
                         ErrorCode.TEA003.getBusinessStatus(),
-                        errorResponse.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
-                        errorResponse.returnExceptionDescription(String.format("Throwable exception %s", e.getMessage())),
+                        errorStrategy.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        errorStrategy.returnExceptionDescription(String.format("Throwable exception %s", e.getMessage())),
                         ErrorCode.TEA003.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode())
         );
     }
 
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity<Object> handleThrowableException(Throwable ex) {
+    public ResponseEntity<ErrorResponseDTO> handleThrowableException(Throwable ex) {
         log.error("handleThrowableException: {}", ex.getMessage());
 
         return new ResponseEntity<>(
-                new ApiException(
+                new ErrorResponseDTO(
                         ErrorCode.TEA004.getBusinessStatus(),
-                        errorResponse.returnExceptionMessage(ErrorCode.TEA004.getBusinessMessage()),
-                        errorResponse.returnExceptionDescription(String.format("Throwable exception %s", ex.getMessage())),
+                        errorStrategy.returnExceptionMessage(ErrorCode.TEA004.getBusinessMessage()),
+                        errorStrategy.returnExceptionDescription(String.format("Throwable exception %s", ex.getMessage())),
                         ErrorCode.TEA004.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA004.getBusinessStatusCode())
         );
     }
 
     @ExceptionHandler(AppRuntimeException.class)
-    public ResponseEntity<Object> handleAppRuntimeException(AppRuntimeException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleAppRuntimeException(AppRuntimeException ex) {
         log.error(
                 "handleAppRuntimeException message: {}, object: {}", ex.getBusinessMessage(),
                 ex.getDescription());
         return new ResponseEntity<>(
-                new ApiException(
+                new ErrorResponseDTO(
                         ex.getBusinessStatus(),
-                        errorResponse.returnExceptionMessage(ex.getBusinessMessage()),
-                        errorResponse.returnExceptionDescription(ex.getDescription()),
+                        errorStrategy.returnExceptionMessage(ex.getBusinessMessage()),
+                        errorStrategy.returnExceptionDescription(ex.getDescription()),
                         ex.getBusinessStatusCode()),
                 HttpStatus.valueOf(ex.getBusinessStatusCode()));
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    protected ResponseEntity<Object> handleNoHandlerFoundException(
+    protected ResponseEntity<ErrorResponseDTO> handleNoHandlerFoundException(
             NoHandlerFoundException ex) {
 
         log.error(
@@ -81,26 +83,26 @@ class GlobalExceptionHandler {
                 ex.getMessage(), ex.getHeaders(), ex.getHttpMethod(), ex.getRequestURL());
 
         return new ResponseEntity<>(
-                new ApiException(
+                new ErrorResponseDTO(
                         ErrorCode.TEA002.getBusinessStatus(),
-                        errorResponse.returnExceptionMessage(ErrorCode.TEA002.getBusinessMessage()),
-                        errorResponse.returnExceptionDescription(String.format("no handle for url %s", ex.getRequestURL())),
+                        errorStrategy.returnExceptionMessage(ErrorCode.TEA002.getBusinessMessage()),
+                        errorStrategy.returnExceptionDescription(String.format("no handle for url %s", ex.getRequestURL())),
                         ErrorCode.TEA002.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA002.getBusinessStatusCode())
         );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValidException (
+    protected ResponseEntity<ErrorResponseListDescriptionDTO> handleMethodArgumentNotValidException (
             MethodArgumentNotValidException ex) {
 
         log.info("MethodArgumentNotValidException in: {}", ex.getObjectName());
 
         return new ResponseEntity<>(
-                new ApiExceptionDescriptionList(
+                new ErrorResponseListDescriptionDTO(
                         ErrorCode.TEA003.getBusinessStatus(),
-                        errorResponse.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
-                        errorResponse.returnExceptionDescriptionList(buildBusinessDescription(ex)),
+                        errorStrategy.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        errorStrategy.returnExceptionDescriptionList(buildBusinessDescription(ex)),
                         ErrorCode.TEA003.getBusinessStatusCode()
                 ),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode()));
