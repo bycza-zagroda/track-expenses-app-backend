@@ -8,5 +8,5 @@ import javax.validation.constraints.NotNull;
 public interface FinancialTransactionService {
     FinancialTransactionDTO findById(@Min(1) @NotNull Long id);
 
-    void deleteFinancialTransactionById(@Min(1) @NotNull Long id);
+    void deleteTransactionById(@Min(1) @NotNull Long id);
 }

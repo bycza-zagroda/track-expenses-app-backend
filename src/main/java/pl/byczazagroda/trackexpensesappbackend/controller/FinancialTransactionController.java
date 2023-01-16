@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/transactions/")
+@RequestMapping("api/transactions")
 public class FinancialTransactionController {
 
     private final FinancialTransactionService financialTransactionService;
@@ -30,9 +30,9 @@ public class FinancialTransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFinancialTransactionById(@Min(1) @NotNull @PathVariable Long id) {
+    public ResponseEntity<?> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id) {
 
-        financialTransactionService.deleteFinancialTransactionById(id);
+        financialTransactionService.deleteTransactionById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -30,7 +30,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     }
 
     @Override
-    public void deleteFinancialTransactionById(@Min(1) @NotNull Long id) {
+    public void deleteTransactionById(@Min(1) @NotNull Long id) {
         if (financialTransactionRepository.existsById(id)) {
             financialTransactionRepository.deleteById(id);
         } else {
