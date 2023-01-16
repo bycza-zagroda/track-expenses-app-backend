@@ -14,7 +14,7 @@ Leaders deal with assignment to the tasks. On Discord channel
 leaders are here to help you in case of any questions about the task or to receive any help.
 
 ## How to work with GitHub
-Create a branch, commits, pull/push, draft pull request, pull request → please read the technical instruction step by step '[How to work with GitHub](githubwork/GITHUB_WORK.md)'.
+Create a branch, commits, pull/push, draft pull request, pull request → please read the technical instruction step by step '[How to work with GitHub](https://github.com/bycza-zagroda/track-expenses-app-documentation/blob/develop/githubwork/GITHUB_WORK.md)'.
 
 ## Our values/our pledge
 [Code of Conduct](CODE_OF_CONDUCT.md)

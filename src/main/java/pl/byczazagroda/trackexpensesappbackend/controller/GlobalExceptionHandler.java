@@ -1,29 +1,29 @@
-package pl.byczazagroda.trackexpensesappbackend.exception;
+package pl.byczazagroda.trackexpensesappbackend.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponse;
+import pl.byczazagroda.trackexpensesappbackend.exception.*;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GlobalExceptionHandlerController exception handler for all application exceptions.
+ * GlobalExceptionHandler Controller exception handler for all application exceptions.
  */
 @Slf4j
 @RestControllerAdvice
-class GlobalControllerExceptionHandler {
+class GlobalExceptionHandler {
 
     @Autowired
-    private ApiExceptionBase apiExceptionBase;
+    private ErrorResponse errorResponse;
 
     /**
      * This handler is not used, ConstraintViolationException is handle as Throwable exception
@@ -37,8 +37,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ErrorCode.TEA003.getBusinessStatus(),
-                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
-                        apiExceptionBase.returnExceptionDescription(String.format("Throwable exception %s", e.getMessage())),
+                        errorResponse.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        errorResponse.returnExceptionDescription(String.format("Throwable exception %s", e.getMessage())),
                         ErrorCode.TEA003.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode())
         );
@@ -51,8 +51,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ErrorCode.TEA004.getBusinessStatus(),
-                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA004.getBusinessMessage()),
-                        apiExceptionBase.returnExceptionDescription(String.format("Throwable exception %s", ex.getMessage())),
+                        errorResponse.returnExceptionMessage(ErrorCode.TEA004.getBusinessMessage()),
+                        errorResponse.returnExceptionDescription(String.format("Throwable exception %s", ex.getMessage())),
                         ErrorCode.TEA004.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA004.getBusinessStatusCode())
         );
@@ -66,8 +66,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ex.getBusinessStatus(),
-                        apiExceptionBase.returnExceptionMessage(ex.getBusinessMessage()),
-                        apiExceptionBase.returnExceptionDescription(ex.getDescription()),
+                        errorResponse.returnExceptionMessage(ex.getBusinessMessage()),
+                        errorResponse.returnExceptionDescription(ex.getDescription()),
                         ex.getBusinessStatusCode()),
                 HttpStatus.valueOf(ex.getBusinessStatusCode()));
     }
@@ -83,8 +83,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiException(
                         ErrorCode.TEA002.getBusinessStatus(),
-                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA002.getBusinessMessage()),
-                        apiExceptionBase.returnExceptionDescription(String.format("no handle for url %s", ex.getRequestURL())),
+                        errorResponse.returnExceptionMessage(ErrorCode.TEA002.getBusinessMessage()),
+                        errorResponse.returnExceptionDescription(String.format("no handle for url %s", ex.getRequestURL())),
                         ErrorCode.TEA002.getBusinessStatusCode()),
                 HttpStatus.valueOf(ErrorCode.TEA002.getBusinessStatusCode())
         );
@@ -99,8 +99,8 @@ class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(
                 new ApiExceptionDescriptionList(
                         ErrorCode.TEA003.getBusinessStatus(),
-                        apiExceptionBase.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
-                        apiExceptionBase.returnExceptionDescriptionList(buildBusinessDescription(ex)),
+                        errorResponse.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
+                        errorResponse.returnExceptionDescriptionList(buildBusinessDescription(ex)),
                         ErrorCode.TEA003.getBusinessStatusCode()
                 ),
                 HttpStatus.valueOf(ErrorCode.TEA003.getBusinessStatusCode()));

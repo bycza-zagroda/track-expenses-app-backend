@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.2.0
+  version: 0.3.0
 
 #Datasource
 spring:
@@ -26,9 +26,9 @@ spring:
   #Jpa/Hibernate:
   jpa:
     open-in-view: false
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
     #do debugowania sql
     show-sql: true

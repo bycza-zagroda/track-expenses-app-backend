@@ -1,8 +1,8 @@
-package pl.byczazagroda.trackexpensesappbackend.exception;
+package pl.byczazagroda.trackexpensesappbackend.dto.error;
 
 import java.util.List;
 
-public interface ApiExceptionBase {
+public interface ErrorResponse {
 
     String returnExceptionMessage(String message);
 
