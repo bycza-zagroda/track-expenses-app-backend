@@ -27,6 +27,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01,
                         String.format("Financial transaction with id: %d not found", id)));
+    }
 
     @Override
     public void deleteFinancialTransactionById(@Min(1) @NotNull Long id) {
