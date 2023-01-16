@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
@@ -17,6 +18,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionServi
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @RestController
@@ -25,6 +27,13 @@ import javax.validation.constraints.NotNull;
 public class FinancialTransactionController {
 
     private final FinancialTransactionService financialTransactionService;
+
+
+    @GetMapping()
+    ResponseEntity<List<FinancialTransactionDTO>> getFinancialTransactionsByWalletId(@RequestParam @Min(1) @NotNull Long walletId) {
+        List<FinancialTransactionDTO> financialTransactionDTOList = financialTransactionService.getFinancialTransactionsByWalletId(walletId);
+        return new ResponseEntity<>(financialTransactionDTOList, HttpStatus.OK);
+    }
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionDTO> createFinancialTransaction(

@@ -16,6 +16,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -45,6 +46,13 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
+    }
+
+    @Override
+    public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
+        return financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId).stream()
+                .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                .toList();
     }
 
     @Override
