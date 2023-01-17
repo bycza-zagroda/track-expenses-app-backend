@@ -87,7 +87,7 @@ public class FinancialTransactionUpdateControllerTest {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(AMOUNT_NEGATIVE, Instant.now(), DESCRIPTION);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
-                .willReturn(new FinancialTransactionDTO(ID_1L, AMOUNT_NEGATIVE, "Fuel", EXPENSE, Instant.now()));
+                .willReturn(new FinancialTransactionDTO(ID_1L, AMOUNT_NEGATIVE, DESCRIPTION, EXPENSE, Instant.now()));
 
         //when
         ResultActions result = mockMvc.perform(patch("/api/transactions/1")
@@ -138,7 +138,7 @@ public class FinancialTransactionUpdateControllerTest {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(BAD_AMOUNT_AFTER_DECIMAL_POINT, Instant.now(), DESCRIPTION);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
-                .willReturn(new FinancialTransactionDTO(ID_1L, BAD_AMOUNT_AFTER_DECIMAL_POINT, "Fuel", EXPENSE, Instant.now()));
+                .willReturn(new FinancialTransactionDTO(ID_1L, BAD_AMOUNT_AFTER_DECIMAL_POINT, DESCRIPTION, EXPENSE, Instant.now()));
 
         //when
         ResultActions result = mockMvc.perform(patch("/api/transactions/1")
