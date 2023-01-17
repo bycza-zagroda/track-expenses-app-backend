@@ -37,9 +37,9 @@ public class FinancialTransactionUpdateControllerTest {
 
     public static final long ID_1L = 1L;
 
-    public static final BigDecimal POSITIVE_AMOUNT = new BigDecimal(1000);
+    public static final BigDecimal AMOUNT_POSITIVE = new BigDecimal(1000);
 
-    public static final BigDecimal NEGATIVE_AMOUNT = new BigDecimal(-1000);
+    public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal(-1000);
 
     public static final String DESCRIPTION_IS_TOO_LONG = "Name of description is too long - more than 255 letters" +
             " Name of description is too long - more than 255 letters." +
@@ -66,7 +66,7 @@ public class FinancialTransactionUpdateControllerTest {
     @DisplayName("when update financial transaction data are correct should return response status OK")
     void shouldReturnResponseStatusOK_WhenUpdateFinancialTransactionDataAreCorrect() throws Exception {
         //given
-        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, Instant.now(), DESCRIPTION);
+        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, Instant.now(), DESCRIPTION);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
                 .willReturn(new FinancialTransactionDTO(ID_1L, updateTransactionDTO.amount(), updateTransactionDTO.description(), EXPENSE, Instant.now()));
 
@@ -83,9 +83,9 @@ public class FinancialTransactionUpdateControllerTest {
     @DisplayName("when amount is negative value should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenAmountIsNegativeValue() throws Exception {
         //given
-        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(NEGATIVE_AMOUNT, Instant.now(), DESCRIPTION);
+        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(AMOUNT_NEGATIVE, Instant.now(), DESCRIPTION);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
-                .willReturn(new FinancialTransactionDTO(ID_1L, NEGATIVE_AMOUNT, "Fuel", EXPENSE, Instant.now()));
+                .willReturn(new FinancialTransactionDTO(ID_1L, AMOUNT_NEGATIVE, "Fuel", EXPENSE, Instant.now()));
 
         //when
         ResultActions result = mockMvc.perform(patch("/api/transactions/1")
@@ -100,9 +100,9 @@ public class FinancialTransactionUpdateControllerTest {
     @DisplayName("when length of transaction description is too long should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenLengthOfTransactionDescriptionIsTooLong() throws Exception {
         //given
-        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, Instant.now(), DESCRIPTION_IS_TOO_LONG);
+        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, Instant.now(), DESCRIPTION_IS_TOO_LONG);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
-                .willReturn(new FinancialTransactionDTO(ID_1L, POSITIVE_AMOUNT, DESCRIPTION_IS_TOO_LONG, EXPENSE, Instant.now()));
+                .willReturn(new FinancialTransactionDTO(ID_1L, AMOUNT_POSITIVE, DESCRIPTION_IS_TOO_LONG, EXPENSE, Instant.now()));
 
         //when
         ResultActions result = mockMvc.perform(patch("/api/transactions/1")
@@ -117,9 +117,9 @@ public class FinancialTransactionUpdateControllerTest {
     @DisplayName("when transaction description is empty should return response status OK")
     void shouldReturnResponseStatusOK_WhenTransactionDescriptionIsEmpty() throws Exception {
         //given
-        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, Instant.now(), EMPTY_DESCRIPTION);
+        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, Instant.now(), EMPTY_DESCRIPTION);
         given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
-                .willReturn(new FinancialTransactionDTO(ID_1L, POSITIVE_AMOUNT, EMPTY_DESCRIPTION, EXPENSE, Instant.now()));
+                .willReturn(new FinancialTransactionDTO(ID_1L, AMOUNT_POSITIVE, EMPTY_DESCRIPTION, EXPENSE, Instant.now()));
 
         //when
         ResultActions result = mockMvc.perform(patch("/api/transactions/1")

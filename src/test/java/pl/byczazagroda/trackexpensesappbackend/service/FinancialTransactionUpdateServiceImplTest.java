@@ -39,9 +39,9 @@ class FinancialTransactionUpdateServiceImplTest {
 
     public static final long ID_LOWER_THEN_1 = 0L;
 
-    public static final BigDecimal POSITIVE_AMOUNT = new BigDecimal(110.595959);
+    public static final BigDecimal AMOUNT_POSITIVE = new BigDecimal(110.595959);
 
-    public static final BigDecimal NEGATIVE_AMOUNT = new BigDecimal(-99.01);
+    public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal(-99.01);
 
     public static final FinancialTransactionType TYPE = FinancialTransactionType.EXPENSE;
 
@@ -78,15 +78,15 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldUpdateFinancialTransaction_whenFindTransactionById() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, DATE_NOW, DESCRIPTION_2);
+                new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, DATE_NOW, DESCRIPTION_2);
         FinancialTransaction transaction = new FinancialTransaction();
         transaction.setId(ID_1L);
-        transaction.setAmount(POSITIVE_AMOUNT);
+        transaction.setAmount(AMOUNT_POSITIVE);
         transaction.setDescription(DESCRIPTION_1);
         transaction.setFinancialTransactionType(TYPE);
         transaction.setTransactionDate(DATE_NOW);
         FinancialTransactionDTO newTransactionDTO =
-                new FinancialTransactionDTO(ID_1L, POSITIVE_AMOUNT, DESCRIPTION_2, TYPE, DATE_NOW);
+                new FinancialTransactionDTO(ID_1L, AMOUNT_POSITIVE, DESCRIPTION_2, TYPE, DATE_NOW);
 
         //when
         when(financialTransactionRepository.findById(ID_1L))
@@ -105,7 +105,7 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldNotReturnFinancialTransactionById_WhenIdIsLowerThenOne() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, DATE_NOW, DESCRIPTION_1);
+                new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, DATE_NOW, DESCRIPTION_1);
 
         //when
 
@@ -119,7 +119,7 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldNotUpdateTransaction_WhenTransactionAmountValueIsNegative() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(NEGATIVE_AMOUNT, DATE_NOW, DESCRIPTION_1);
+                new UpdateFinancialTransactionDTO(AMOUNT_NEGATIVE, DATE_NOW, DESCRIPTION_1);
 
         //when
 
@@ -133,7 +133,7 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldNotUpdateTransaction_WhenTransactionDescriptionIsTooLong() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, DATE_NOW, DESCRIPTION_IS_TOO_LONG);
+                new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, DATE_NOW, DESCRIPTION_IS_TOO_LONG);
 
         //when
 
@@ -147,15 +147,15 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldUpdateFinancialTransaction_WhenTransactionDescriptionIsEmpty() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(POSITIVE_AMOUNT, DATE_NOW, EMPTY_DESCRIPTION);
+                new UpdateFinancialTransactionDTO(AMOUNT_POSITIVE, DATE_NOW, EMPTY_DESCRIPTION);
         FinancialTransaction transaction = new FinancialTransaction();
         transaction.setId(ID_1L);
-        transaction.setAmount(POSITIVE_AMOUNT);
+        transaction.setAmount(AMOUNT_POSITIVE);
         transaction.setDescription(DESCRIPTION_1);
         transaction.setFinancialTransactionType(TYPE);
         transaction.setTransactionDate(DATE_NOW);
         FinancialTransactionDTO newTransactionDTO =
-                new FinancialTransactionDTO(ID_1L, POSITIVE_AMOUNT, EMPTY_DESCRIPTION, TYPE, DATE_NOW);
+                new FinancialTransactionDTO(ID_1L, AMOUNT_POSITIVE, EMPTY_DESCRIPTION, TYPE, DATE_NOW);
 
         //when
         when(financialTransactionRepository.findById(ID_1L))
