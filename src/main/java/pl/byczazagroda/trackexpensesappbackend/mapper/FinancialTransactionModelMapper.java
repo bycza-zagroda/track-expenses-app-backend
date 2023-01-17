@@ -6,7 +6,5 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 
 @Mapper(componentModel = "spring")
 public interface FinancialTransactionModelMapper {
-
     FinancialTransactionDTO mapFinancialTransactionEntityToFinancialTransactionDTO(FinancialTransaction transaction);
 }
-
