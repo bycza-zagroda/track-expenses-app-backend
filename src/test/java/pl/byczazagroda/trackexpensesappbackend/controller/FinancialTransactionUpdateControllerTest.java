@@ -41,6 +41,8 @@ public class FinancialTransactionUpdateControllerTest {
 
     public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal(-1000);
 
+    public static final BigDecimal BAD_AMOUNT_AFTER_DECIMAL_POINT = new BigDecimal(990.1234);
+
     public static final String DESCRIPTION_IS_TOO_LONG = "Name of description is too long - more than 255 letters" +
             " Name of description is too long - more than 255 letters." +
             " Name of description is too long - more than 255 letters" +
@@ -128,5 +130,22 @@ public class FinancialTransactionUpdateControllerTest {
 
         //then
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("when amount after the decimal point is too long should return response status bad request")
+    void shouldReturnResponseStatusBadRequest_WhenAmountAfterDecimalPointIsTooLong() throws Exception {
+        //given
+        UpdateFinancialTransactionDTO updateTransactionDTO = new UpdateFinancialTransactionDTO(BAD_AMOUNT_AFTER_DECIMAL_POINT, Instant.now(), DESCRIPTION);
+        given(financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO))
+                .willReturn(new FinancialTransactionDTO(ID_1L, BAD_AMOUNT_AFTER_DECIMAL_POINT, "Fuel", EXPENSE, Instant.now()));
+
+        //when
+        ResultActions result = mockMvc.perform(patch("/api/transactions/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateTransactionDTO))));
+
+        //then
+        result.andExpect(status().isBadRequest());
     }
 }

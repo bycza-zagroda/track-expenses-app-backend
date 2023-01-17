@@ -43,6 +43,8 @@ class FinancialTransactionUpdateServiceImplTest {
 
     public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal(-99.01);
 
+    public static final BigDecimal BAD_AMOUNT_AFTER_DECIMAL_POINT = new BigDecimal(990.1234);
+
     public static final FinancialTransactionType TYPE = FinancialTransactionType.EXPENSE;
 
     private static final Instant DATE_NOW = Instant.now();
@@ -167,5 +169,19 @@ class FinancialTransactionUpdateServiceImplTest {
 
         //then
         assertThat(transactionDTO.description()).isEqualTo(updateTransactionDTO.description());
+    }
+
+    @Test
+    @DisplayName("when amount after the decimal point is too long should not updated transaction")
+    void shouldNotUpdateTransaction_WhenAmountAfterDecimalPointIsTooLong() {
+        //given
+        UpdateFinancialTransactionDTO updateTransactionDTO =
+                new UpdateFinancialTransactionDTO(BAD_AMOUNT_AFTER_DECIMAL_POINT, DATE_NOW, DESCRIPTION_1);
+
+        //when
+
+        //then
+        Assertions.assertThrows(ConstraintViolationException.class,
+                () -> financialTransactionService.updateTransaction(ID_1L, updateTransactionDTO));
     }
 }
