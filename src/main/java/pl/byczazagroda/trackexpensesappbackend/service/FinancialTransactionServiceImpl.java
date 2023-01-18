@@ -35,12 +35,13 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                     ErrorCode.W003,
                     String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransaction financialTransaction = new FinancialTransaction();
-        financialTransaction.setTransactionDate(Instant.now());
-        financialTransaction.setAmount(createFinancialTransactionDTO.amount());
-        financialTransaction.setWallet(wallet);
-        financialTransaction.setFinancialTransactionType(createFinancialTransactionDTO.financialTransactionType());
-        financialTransaction.setDescription(createFinancialTransactionDTO.description());
+        FinancialTransaction financialTransaction = FinancialTransaction.builder()
+                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
+                .transactionDate(Instant.now())
+                .description(createFinancialTransactionDTO.description())
+                .wallet(wallet)
+                .amount(createFinancialTransactionDTO.amount())
+                .build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
