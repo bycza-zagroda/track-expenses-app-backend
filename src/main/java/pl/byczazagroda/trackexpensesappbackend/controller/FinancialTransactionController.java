@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/transactions/")
+@RequestMapping("api/transactions")
 public class FinancialTransactionController {
 
     private final FinancialTransactionService financialTransactionService;
