@@ -150,4 +150,14 @@ class FinancialTransactionServiceImplTest {
         //then
         Assertions.assertEquals(financialTransactionDTO, foundTransaction);
     }
+
+    @Test
+    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
+        //given
+        //when
+        when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L));
+    }
 }
