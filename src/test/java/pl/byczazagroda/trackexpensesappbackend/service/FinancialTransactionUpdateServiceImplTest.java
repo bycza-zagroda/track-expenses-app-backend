@@ -39,11 +39,11 @@ class FinancialTransactionUpdateServiceImplTest {
 
     public static final long ID_LOWER_THEN_1 = 0L;
 
-    public static final BigDecimal AMOUNT_POSITIVE = new BigDecimal(110.595959);
+    public static final BigDecimal AMOUNT_POSITIVE = new BigDecimal("1.10");
 
-    public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal(-99.01);
+    public static final BigDecimal AMOUNT_NEGATIVE = new BigDecimal("-2.20");
 
-    public static final BigDecimal BAD_AMOUNT_AFTER_DECIMAL_POINT = new BigDecimal(990.1234);
+    public static final BigDecimal AMOUNT_WITH_WRONG_DECIMAL_PART = new BigDecimal("9.9999999");
 
     public static final FinancialTransactionType TYPE = FinancialTransactionType.EXPENSE;
 
@@ -176,7 +176,7 @@ class FinancialTransactionUpdateServiceImplTest {
     void shouldNotUpdateTransaction_WhenAmountAfterDecimalPointIsTooLong() {
         //given
         UpdateFinancialTransactionDTO updateTransactionDTO =
-                new UpdateFinancialTransactionDTO(BAD_AMOUNT_AFTER_DECIMAL_POINT, DATE_NOW, DESCRIPTION_1);
+                new UpdateFinancialTransactionDTO(AMOUNT_WITH_WRONG_DECIMAL_PART, DATE_NOW, DESCRIPTION_1);
 
         //when
 
