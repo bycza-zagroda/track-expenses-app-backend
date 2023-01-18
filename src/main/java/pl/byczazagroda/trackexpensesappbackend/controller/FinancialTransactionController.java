@@ -44,6 +44,7 @@ public class FinancialTransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FinancialTransactionDTO> findTransactionById(@Min(1) @NotNull @PathVariable Long id) {
+
         FinancialTransactionDTO financialTransaction = financialTransactionService.findById(id);
         return new ResponseEntity<>(financialTransaction, HttpStatus.OK);
 
