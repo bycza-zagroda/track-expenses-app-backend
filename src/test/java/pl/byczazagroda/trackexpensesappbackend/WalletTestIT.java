@@ -11,8 +11,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class WalletTestIT extends BaseControllerTestIT {
-
+class WalletTestIT extends BaseControllerTestIT {
     @Autowired
     private WalletRepository walletRepository;
 
