@@ -39,8 +39,8 @@ public class FinancialTransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id) {
+    public ResponseEntity<Void> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id) {
         financialTransactionService.deleteTransactionById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
