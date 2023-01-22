@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseListDescriptionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDescriptionListDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.exception.*;
 
@@ -93,13 +93,13 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponseListDescriptionDTO> handleMethodArgumentNotValidException (
+    protected ResponseEntity<ErrorResponseDescriptionListDTO> handleMethodArgumentNotValidException (
             MethodArgumentNotValidException ex) {
 
         log.info("MethodArgumentNotValidException in: {}", ex.getObjectName());
 
         return new ResponseEntity<>(
-                new ErrorResponseListDescriptionDTO(
+                new ErrorResponseDescriptionListDTO(
                         ErrorCode.TEA003.getBusinessStatus(),
                         errorStrategy.returnExceptionMessage(ErrorCode.TEA003.getBusinessMessage()),
                         errorStrategy.returnExceptionDescriptionList(buildBusinessDescription(ex)),
