@@ -152,6 +152,7 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
+    @DisplayName("when deleting financial transaction that does not exist should throw an exception")
     void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
         //given
         //when
