@@ -1,6 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +20,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "financial_transactions")
 public class FinancialTransaction implements Serializable {
 

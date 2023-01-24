@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,9 +56,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        financialTransaction.setAmount(updateTransactionDTO.amount());
-        financialTransaction.setDescription(updateTransactionDTO.description());
-        financialTransaction.setTransactionDate(updateTransactionDTO.transactionDate());
+        financialTransaction.builder()
+                .amount(updateTransactionDTO.amount())
+                .description(updateTransactionDTO.description())
+                .transactionDate(Instant.now())
+                .build();
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction);
     }
