@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
+import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface FinancialTransactionService {
+    FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO);
 
     List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId);
 
