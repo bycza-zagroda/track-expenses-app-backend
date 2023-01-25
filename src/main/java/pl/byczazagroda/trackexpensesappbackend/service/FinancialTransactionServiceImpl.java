@@ -73,7 +73,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             financialTransactionRepository.deleteById(id);
         } else {
             throw new AppRuntimeException(
-                    ErrorCode.FT01,
+                    ErrorCode.FT001,
                     String.format("FinancialTransaction with given id: %d does not exist", id));
         }
     }
