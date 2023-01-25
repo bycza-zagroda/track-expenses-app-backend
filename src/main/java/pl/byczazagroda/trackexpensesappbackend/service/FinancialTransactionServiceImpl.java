@@ -3,8 +3,8 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
@@ -46,7 +46,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 .build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
-        
+
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
     }
 
@@ -55,13 +55,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         List<FinancialTransaction> financialTransactionsList = financialTransactionRepository
                 .findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
-        if (financialTransactionsList.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            return financialTransactionsList.stream()
-                    .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
-                    .toList();
-        }
+        return financialTransactionsList.isEmpty() ? Collections.emptyList() : financialTransactionsList.stream()
+                .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
+
     }
 
     @Override
@@ -89,15 +85,15 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     @Transactional
     public FinancialTransactionDTO updateTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO updateTransactionDTO){
+            @Valid UpdateFinancialTransactionDTO updateTransactionDTO) {
 
         FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
-                .orElseThrow(()-> {
+                .orElseThrow(() -> {
                     throw new AppRuntimeException(ErrorCode.FT001,
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        financialTransaction.builder()
+        FinancialTransaction.builder()
                 .amount(updateTransactionDTO.amount())
                 .description(updateTransactionDTO.description())
                 .transactionDate(Instant.now())
