@@ -22,8 +22,6 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.List;
 
 
 @Service
@@ -50,17 +48,21 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 .build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
+        
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
     }
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
-        List<FinancialTransaction> financialTransactionsList = financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId);
+        List<FinancialTransaction> financialTransactionsList = financialTransactionRepository
+                .findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
         if (financialTransactionsList.isEmpty()) {
             return Collections.emptyList();
         } else {
-            return financialTransactionsList.stream().map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
+            return financialTransactionsList.stream()
+                    .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                    .toList();
         }
     }
 
