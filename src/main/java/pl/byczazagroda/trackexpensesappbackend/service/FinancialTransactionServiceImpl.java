@@ -16,8 +16,9 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,17 +33,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
         Long walletId = createFinancialTransactionDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
-            throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with id: %d does not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
-                .transactionDate(Instant.now())
-                .description(createFinancialTransactionDTO.description())
-                .wallet(wallet)
-                .amount(createFinancialTransactionDTO.amount())
-                .build();
+        FinancialTransaction financialTransaction = FinancialTransaction.builder().financialTransactionType(createFinancialTransactionDTO.financialTransactionType()).transactionDate(Instant.now()).description(createFinancialTransactionDTO.description()).wallet(wallet).amount(createFinancialTransactionDTO.amount()).build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
@@ -53,19 +46,15 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         List<FinancialTransaction> financialTransactionsList = financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
         if (financialTransactionsList.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         } else {
-            return financialTransactionsList.stream()
-                    .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
-                    .toList();
+            return financialTransactionsList.stream().map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
         }
     }
 
     @Override
     public FinancialTransactionDTO findById(@Min(1) @NotNull Long id) {
         Optional<FinancialTransaction> financialTransaction = financialTransactionRepository.findById(id);
-        return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01,
-                        String.format("Financial transaction with id: %d not found", id)));
+        return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01, String.format("Financial transaction with id: %d not found", id)));
     }
 }
