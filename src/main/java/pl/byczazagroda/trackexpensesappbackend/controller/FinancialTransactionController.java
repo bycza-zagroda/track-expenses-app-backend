@@ -3,6 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,12 @@ public class FinancialTransactionController {
         FinancialTransactionDTO financialTransaction = financialTransactionService.findById(id);
         return new ResponseEntity<>(financialTransaction, HttpStatus.OK);
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id) {
+        financialTransactionService.deleteTransactionById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")

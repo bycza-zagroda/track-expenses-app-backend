@@ -68,6 +68,17 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     }
 
     @Override
+    public void deleteTransactionById(@Min(1) @NotNull Long id) {
+        if (financialTransactionRepository.existsById(id)) {
+            financialTransactionRepository.deleteById(id);
+        } else {
+            throw new AppRuntimeException(
+                    ErrorCode.FT001,
+                    String.format("FinancialTransaction with given id: %d does not exist", id));
+        }
+    }
+
+    @Override
     @Transactional
     public FinancialTransactionDTO updateTransaction(
             @Min(1) @NotNull Long id,
