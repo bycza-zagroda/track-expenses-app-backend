@@ -20,7 +20,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -57,7 +56,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         List<FinancialTransaction> financialTransactionsList = financialTransactionRepository
                 .findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
-        return financialTransactionsList.isEmpty() ? Collections.emptyList() : financialTransactionsList.stream()
+        return financialTransactionsList.stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
 
     }
