@@ -103,7 +103,7 @@ class FinancialTransactionServiceImplTest {
 
         //then
         assertThatThrownBy(() -> financialTransactionService.findById(ID_10L)).isInstanceOf(AppRuntimeException.class);
-        assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() -> financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT01.getBusinessMessage());
+        assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() -> financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT001.getBusinessMessage());
 
     }
 
@@ -123,6 +123,17 @@ class FinancialTransactionServiceImplTest {
 
         //then
         Assertions.assertEquals(financialTransactionDTO, foundTransaction);
+    }
+
+    @Test
+    @DisplayName("when deleting financial transaction that does not exist should throw an exception")
+    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
+        //given
+        //when
+        when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L));
     }
 
     private FinancialTransaction createFinancialTransaction() {

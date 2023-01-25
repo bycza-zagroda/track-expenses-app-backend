@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,8 +20,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @Table(name = "financial_transactions")
 public class FinancialTransaction implements Serializable {
 
@@ -48,5 +49,6 @@ public class FinancialTransaction implements Serializable {
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant transactionDate;
 
+    @Size(max = 255)
     private String description;
 }
