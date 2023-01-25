@@ -20,6 +20,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.List;
 
 
@@ -36,9 +39,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
         Long walletId = createFinancialTransactionDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
-            throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with id: %d does not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
@@ -57,11 +58,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         List<FinancialTransaction> financialTransactionsList = financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
         if (financialTransactionsList.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         } else {
-            return financialTransactionsList.stream()
-                    .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
-                    .toList();
+            return financialTransactionsList.stream().map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
         }
     }
 
