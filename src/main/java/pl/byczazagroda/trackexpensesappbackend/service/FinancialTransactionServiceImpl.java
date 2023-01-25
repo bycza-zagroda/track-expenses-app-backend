@@ -35,7 +35,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransaction financialTransaction = FinancialTransaction.builder().financialTransactionType(createFinancialTransactionDTO.financialTransactionType()).transactionDate(Instant.now()).description(createFinancialTransactionDTO.description()).wallet(wallet).amount(createFinancialTransactionDTO.amount()).build();
+        FinancialTransaction financialTransaction = FinancialTransaction.builder()
+                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
+                .transactionDate(Instant.now()).description(createFinancialTransactionDTO.description())
+                .wallet(wallet).amount(createFinancialTransactionDTO.amount())
+                .build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
@@ -43,18 +47,24 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
-        List<FinancialTransaction> financialTransactionsList = financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId);
+        List<FinancialTransaction> financialTransactionsList = financialTransactionRepository
+                .findAllByWalletIdOrderByTransactionDateDesc(walletId);
 
         if (financialTransactionsList.isEmpty()) {
             return Collections.emptyList();
         } else {
-            return financialTransactionsList.stream().map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
+            return financialTransactionsList.stream()
+                    .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                    .toList();
         }
     }
 
     @Override
     public FinancialTransactionDTO findById(@Min(1) @NotNull Long id) {
         Optional<FinancialTransaction> financialTransaction = financialTransactionRepository.findById(id);
-        return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01, String.format("Financial transaction with id: %d not found", id)));
+        return financialTransaction
+                .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01,
+                        String.format("Financial transaction with id: %d not found", id)));
     }
 }
