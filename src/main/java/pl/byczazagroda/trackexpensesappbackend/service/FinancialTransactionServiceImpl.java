@@ -63,7 +63,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO findById(@Min(1) @NotNull Long id) {
         Optional<FinancialTransaction> financialTransaction = financialTransactionRepository.findById(id);
         return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT01,
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001,
                         String.format("Financial transaction with id: %d not found", id)));
     }
 
@@ -75,7 +75,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
                 .orElseThrow(()-> {
-                    throw new AppRuntimeException(ErrorCode.FT01,
+                    throw new AppRuntimeException(ErrorCode.FT001,
                             String.format("Financial transaction with id: %d not found", id));
                 });
 

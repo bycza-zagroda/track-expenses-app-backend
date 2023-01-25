@@ -103,7 +103,7 @@ class FinancialTransactionServiceImplTest {
 
         //then
         assertThatThrownBy(() -> financialTransactionService.findById(ID_10L)).isInstanceOf(AppRuntimeException.class);
-        assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() -> financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT01.getBusinessMessage());
+        assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() -> financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT001.getBusinessMessage());
 
     }
 
