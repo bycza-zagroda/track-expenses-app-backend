@@ -14,5 +14,5 @@ public record UpdateFinancialTransactionDTO(
         @PositiveOrZero @Digits(integer = 13, fraction = 2) BigDecimal amount,
         @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss") Instant transactionDate,
         @Size(max = 255) String description,
-        @NotNull FinancialTransactionType financialTransactionType) {
+        @NotNull FinancialTransactionType transactionType) {
 }

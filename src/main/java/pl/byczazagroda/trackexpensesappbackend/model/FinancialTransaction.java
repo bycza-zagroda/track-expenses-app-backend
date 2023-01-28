@@ -40,7 +40,7 @@ public class FinancialTransaction implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
-    private FinancialTransactionType financialTransactionType;
+    private FinancialTransactionType transactionType;
 
     @DecimalMin("0.0")
     private BigDecimal amount;
