@@ -91,4 +91,4 @@ Proszę przeczytać [DEFINITION_OF_DONE.pl.md](docs/definition/DEFINITION_OF_DON
 Społeczność [**_bycza-zagroda_**](https://github.com/orgs/bycza-zagroda/people) ❤
 
 ## Licencja
-Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](docs/LICENSE)
+Projekt jest objęty licencją [_Apache License Version 2.0, January 2004_](docs/LICENSE))
