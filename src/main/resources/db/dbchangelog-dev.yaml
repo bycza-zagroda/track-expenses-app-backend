@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/002-insert-into-wallets.yaml
   - include:
       file: db/changelog/003-create-table-financial_transactions.yaml
+  - include:
+      file: db/changelog/004-insert-into-financial_transactions.yaml
