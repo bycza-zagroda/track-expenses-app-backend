@@ -59,12 +59,12 @@ public class Wallet implements Serializable {
     }
 
     public void addFinancialTransaction(FinancialTransaction financialTransaction) {
-        financialTransactionList.add(financialTransaction);
+        this.financialTransactionList.add(financialTransaction);
         financialTransaction.setWallet(this);
     }
 
     public void removeFinancialTransaction(FinancialTransaction financialTransaction) {
-        financialTransactionList.remove(financialTransaction);
+        this.financialTransactionList.remove(financialTransaction);
         financialTransaction.setWallet(null);
     }
 }
