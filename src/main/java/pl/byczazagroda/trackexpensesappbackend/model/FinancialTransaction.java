@@ -15,6 +15,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -35,7 +36,7 @@ public class FinancialTransaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     private Wallet wallet;
 
     @Enumerated(EnumType.STRING)
@@ -51,4 +52,16 @@ public class FinancialTransaction implements Serializable {
 
     @Size(max = 255)
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FinancialTransaction )) return false;
+        return id != null && id.equals(((FinancialTransaction) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
