@@ -16,7 +16,7 @@ databaseChangeLog:
                   name: wallet_id
                   type: id
               - column:
-                  name: type
+                  name: transaction_type
                   type: varchar(255)
               - column:
                   name: amount
