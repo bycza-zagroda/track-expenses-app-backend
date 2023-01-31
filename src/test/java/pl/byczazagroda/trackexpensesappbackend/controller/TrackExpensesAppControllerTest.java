@@ -18,4 +18,5 @@ class TrackExpensesAppControllerTest {
         String result = trackExpensesAppController.sayHello();
         assertTrue(result.startsWith("TrackExpensesApp by"));
     }
+
 }
