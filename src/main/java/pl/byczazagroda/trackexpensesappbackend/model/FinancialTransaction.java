@@ -55,8 +55,12 @@ public class FinancialTransaction implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FinancialTransaction )) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FinancialTransaction )) {
+            return false;
+        }
         return id != null && id.equals(((FinancialTransaction) o).getId());
     }
 
