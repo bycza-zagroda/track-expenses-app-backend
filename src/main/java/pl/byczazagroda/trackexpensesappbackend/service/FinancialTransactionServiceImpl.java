@@ -41,7 +41,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                     String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .transactionType(createFinancialTransactionDTO.transactionType())
+                .type(createFinancialTransactionDTO.type())
                 .transactionDate(Instant.now())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)

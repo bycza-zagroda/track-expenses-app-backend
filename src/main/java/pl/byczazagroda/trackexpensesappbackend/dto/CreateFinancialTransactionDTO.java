@@ -11,5 +11,5 @@ import java.math.BigDecimal;
 public record CreateFinancialTransactionDTO(@Min(1) @NotNull Long walletId,
                                             @Digits(integer = 13, fraction = 2) @PositiveOrZero BigDecimal amount,
                                             String description,
-                                            @NotNull FinancialTransactionType transactionType) {
+                                            @NotNull FinancialTransactionType type) {
 }

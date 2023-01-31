@@ -57,7 +57,7 @@ class FinancialTransactionServiceImplTest {
 
         FinancialTransaction financialTransaction2 = new FinancialTransaction();
         financialTransaction2.setId(ID_2L);
-        financialTransaction2.setTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction2.setType(FinancialTransactionType.EXPENSE);
         financialTransaction2.setTransactionDate(DATE_NOW);
 
         FinancialTransactionDTO financialTransactionDTO2 = new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSE, DATE_NOW);
@@ -95,7 +95,7 @@ class FinancialTransactionServiceImplTest {
         //given
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
-        financialTransaction.setTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction.setType(FinancialTransactionType.EXPENSE);
         financialTransaction.setTransactionDate(DATE_NOW);
 
         //when
@@ -139,7 +139,7 @@ class FinancialTransactionServiceImplTest {
     private FinancialTransaction createFinancialTransaction() {
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
-        financialTransaction1.setTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction1.setType(FinancialTransactionType.EXPENSE);
         financialTransaction1.setTransactionDate(DATE_NOW);
         return financialTransaction1;
     }
