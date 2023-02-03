@@ -16,7 +16,7 @@ public interface FinancialTransactionService {
 
     FinancialTransactionDTO findById(@Min(1) @NotNull Long id);
 
-    FinancialTransactionDTO updateTransaction(@Min(1) @NotNull Long id, @Valid UpdateFinancialTransactionDTO updateTransactionDTO);
+    FinancialTransactionDTO updateFinancialTransaction(@Min(1) @NotNull Long id, @Valid UpdateFinancialTransactionDTO updateFinancialTransactionDTO);
 
     void deleteTransactionById(@Min(1) @NotNull Long id);
 }

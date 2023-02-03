@@ -80,9 +80,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     @Transactional
-    public FinancialTransactionDTO updateTransaction(
+    public FinancialTransactionDTO updateFinancialTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO updateTransactionDTO){
+            @Valid UpdateFinancialTransactionDTO updateFinancialTransactionDTO){
 
         FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
                 .orElseThrow(()-> {
@@ -91,8 +91,8 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 });
 
         financialTransaction.builder()
-                .amount(updateTransactionDTO.amount())
-                .description(updateTransactionDTO.description())
+                .amount(updateFinancialTransactionDTO.amount())
+                .description(updateFinancialTransactionDTO.description())
                 .transactionDate(Instant.now())
                 .build();
 
