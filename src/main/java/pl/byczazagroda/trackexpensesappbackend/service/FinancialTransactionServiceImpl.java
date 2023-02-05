@@ -42,7 +42,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
-                .transactionDate(Instant.now())
+                .transactionDate(createFinancialTransactionDTO.transactionDate())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
                 .amount(createFinancialTransactionDTO.amount())
