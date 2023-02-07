@@ -34,9 +34,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
         Long walletId = createFinancialTransactionDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
-            throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with id: %d does not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
