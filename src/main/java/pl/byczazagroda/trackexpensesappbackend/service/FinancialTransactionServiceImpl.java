@@ -58,7 +58,6 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         return financialTransactionsList.stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO).toList();
-
     }
 
     @Override
