@@ -89,7 +89,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        entity.setFinancialTransactionType(uDTO.financialTransactionType());
+        entity.setType(uDTO.type());
         entity.setAmount(uDTO.amount());
         entity.setDescription(uDTO.description());
         entity.setTransactionDate(uDTO.transactionDate());
