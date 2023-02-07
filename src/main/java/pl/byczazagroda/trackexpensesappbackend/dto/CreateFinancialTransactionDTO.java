@@ -7,9 +7,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public record CreateFinancialTransactionDTO(@Min(1) @NotNull Long walletId,
                                             @Digits(integer = 13, fraction = 2) @PositiveOrZero BigDecimal amount,
-                                            String description,
+                                            String description, Instant transactionDate,
                                             @NotNull FinancialTransactionType financialTransactionType) {
 }
