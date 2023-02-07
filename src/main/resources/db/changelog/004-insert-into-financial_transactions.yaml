@@ -4,7 +4,7 @@ databaseChangeLog:
       author: iwona007
       changes:
         - loadData:
-            file: db/changelog/data/financialTransaction.csv
+            file: db/changelog/data/financial_transactions.csv
             tableName: financial_transactions
             separator: ','
             encoding: UTF-8
