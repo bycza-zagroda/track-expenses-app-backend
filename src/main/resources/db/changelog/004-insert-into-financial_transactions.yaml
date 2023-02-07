@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: "6"
+      author: iwona007
+      changes:
+        - loadData:
+            file: db/changelog/data/financial_transactions.csv
+            tableName: financial_transactions
+            separator: ','
+            encoding: UTF-8
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: wallet_id
+                  type: id
+              - column:
+                  name: transaction_type
+                  type: varchar(255)
+              - column:
+                  name: amount
+                  type: decimal(15,2)
+              - column:
+                  name: transaction_date
+                  type: timestamp
+              - column:
+                  name: description
+                  type: varchar(255)
