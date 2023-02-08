@@ -38,8 +38,8 @@ public class WalletController {
     @PostMapping()
     public ResponseEntity<WalletDTO> createWallet(
             @Valid @RequestBody CreateWalletDTO createWalletDTO) {
-
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
+
         return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
     }
 

@@ -48,11 +48,23 @@ public class Wallet implements Serializable {
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant creationDate;
 
-    @OneToMany(mappedBy = "wallet")
+    @OneToMany(mappedBy = "wallet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
     public Wallet(String name) {
         this.name = name;
         this.creationDate = Instant.now();
+    }
+
+    public void addFinancialTransaction(FinancialTransaction financialTransaction) {
+        this.financialTransactionList.add(financialTransaction);
+        financialTransaction.setWallet(this);
+    }
+
+    public void removeFinancialTransaction(FinancialTransaction financialTransaction) {
+        this.financialTransactionList.remove(financialTransaction);
+        financialTransaction.setWallet(null);
     }
 }

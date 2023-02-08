@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
 import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDescriptionListDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
@@ -30,12 +32,13 @@ class GlobalExceptionHandler {
     /**
      * This handler is not used, ConstraintViolationException is handle as Throwable exception
      *
-     * @param e
-     * @return
+     * @param e ConstraintViolationException
+     * @return ResponseEntity<Object>
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException e) {
         log.error("ConstraintViolationException: {}", e.getMessage());
+
         return new ResponseEntity<>(
                 new ErrorResponseDTO(
                         ErrorCode.TEA003.getBusinessStatus(),
@@ -111,11 +114,7 @@ class GlobalExceptionHandler {
     private List<String> buildBusinessDescription(MethodArgumentNotValidException ex) {
         List<String> businessDescription = new ArrayList<>();
         ex.getBindingResult().getFieldErrors().forEach(m -> {
-            String description = String.format(
-                    "error: field: %s, default message: %s, rejected value: %s",
-                    m.getField(),
-                    m.getDefaultMessage(),
-                    m.getRejectedValue());
+            String description = String.format("error: field: %s, default message: %s, rejected value: %s", m.getField(), m.getDefaultMessage(), m.getRejectedValue());
 
             log.error(description);
             businessDescription.add(description);
