@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public record FinancialTransactionDTO(Long id, BigDecimal amount, String description,
-                                      FinancialTransactionType financialTransactionType, Instant transactionDate) {
+                                      FinancialTransactionType type, Instant transactionDate) {
 }

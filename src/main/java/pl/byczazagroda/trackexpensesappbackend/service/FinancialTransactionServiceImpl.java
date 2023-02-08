@@ -37,7 +37,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
+                .type(createFinancialTransactionDTO.type())
                 .transactionDate(createFinancialTransactionDTO.transactionDate())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
@@ -79,19 +79,19 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     @Transactional
     public FinancialTransactionDTO updateFinancialTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO updateFinancialTransactionDTO) {
+            @Valid UpdateFinancialTransactionDTO uDTO) {
 
-        FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
+        FinancialTransaction entity = financialTransactionRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(ErrorCode.FT001,
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        financialTransaction.setFinancialTransactionType(updateFinancialTransactionDTO.financialTransactionType());
-        financialTransaction.setAmount(updateFinancialTransactionDTO.amount());
-        financialTransaction.setDescription(updateFinancialTransactionDTO.description());
-        financialTransaction.setTransactionDate(updateFinancialTransactionDTO.transactionDate());
+        entity.setType(uDTO.type());
+        entity.setAmount(uDTO.amount());
+        entity.setDescription(uDTO.description());
+        entity.setTransactionDate(uDTO.transactionDate());
 
-        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction);
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
 }
