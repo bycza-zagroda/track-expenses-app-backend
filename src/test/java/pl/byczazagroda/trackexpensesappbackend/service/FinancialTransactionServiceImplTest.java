@@ -38,7 +38,7 @@ class FinancialTransactionServiceImplTest {
     public static final long ID_10L = 10L;
     public static final Instant DATE_NOW = Instant.now();
 
-    @MockBean
+    @Mock
     private ErrorStrategy errorStrategy;
 
     @Mock
