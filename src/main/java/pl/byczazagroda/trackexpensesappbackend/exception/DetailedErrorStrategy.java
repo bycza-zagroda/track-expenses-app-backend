@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.dto.error;
+package pl.byczazagroda.trackexpensesappbackend.exception;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Component
 @Profile({"dev", "test"})
-public class DetailedErrorResponseImpl implements ErrorResponse {
+public class DetailedErrorStrategy implements ErrorStrategy {
     @Override
     public String returnExceptionMessage(String message) {
         return message;
