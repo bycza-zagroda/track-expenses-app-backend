@@ -94,4 +94,5 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
+
 }
