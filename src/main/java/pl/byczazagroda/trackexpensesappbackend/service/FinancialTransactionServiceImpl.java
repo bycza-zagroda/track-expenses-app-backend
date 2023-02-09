@@ -3,8 +3,8 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
@@ -20,8 +20,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.time.Instant;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +34,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
         Long walletId = createFinancialTransactionDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
-            throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with id: %d does not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
-                .transactionDate(Instant.now())
+                .type(createFinancialTransactionDTO.type())
+                .transactionDate(createFinancialTransactionDTO.transactionDate())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
                 .amount(createFinancialTransactionDTO.amount())
@@ -61,10 +57,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public FinancialTransactionDTO findById(@Min(1) @NotNull Long id) {
-        Optional<FinancialTransaction> financialTransaction = financialTransactionRepository.findById(id);
-        return financialTransaction.map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+        FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001,
-                        String.format("Financial transaction with id: %d not found", id)));
+                String.format("Financial transaction with id: %d not found", id)));
+
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction);
     }
 
     @Override
@@ -80,22 +77,22 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     @Transactional
-    public FinancialTransactionDTO updateTransaction(
+    public FinancialTransactionDTO updateFinancialTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO updateTransactionDTO){
+            @Valid UpdateFinancialTransactionDTO uDTO) {
 
-        FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
-                .orElseThrow(()-> {
+        FinancialTransaction entity = financialTransactionRepository.findById(id)
+                .orElseThrow(() -> {
                     throw new AppRuntimeException(ErrorCode.FT001,
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        financialTransaction.builder()
-                .amount(updateTransactionDTO.amount())
-                .description(updateTransactionDTO.description())
-                .transactionDate(Instant.now())
-                .build();
+        entity.setType(uDTO.type());
+        entity.setAmount(uDTO.amount());
+        entity.setDescription(uDTO.description());
+        entity.setTransactionDate(uDTO.transactionDate());
 
-        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction);
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
+
 }

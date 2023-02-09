@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ApiException;
+import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 
 import javax.validation.Valid;
@@ -38,8 +38,8 @@ public class WalletController {
     @PostMapping()
     public ResponseEntity<WalletDTO> createWallet(
             @Valid @RequestBody CreateWalletDTO createWalletDTO) {
-
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
+
         return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
     }
 
@@ -50,7 +50,7 @@ public class WalletController {
                     description = "wallet not found",
                     content = {@Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ApiException.class)
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
                     )})
             })
 

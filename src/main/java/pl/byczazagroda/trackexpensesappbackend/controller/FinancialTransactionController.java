@@ -29,6 +29,7 @@ import java.util.List;
 @RequestMapping("api/transactions")
 public class FinancialTransactionController {
 
+
     private final FinancialTransactionService financialTransactionService;
 
 
@@ -62,9 +63,9 @@ public class FinancialTransactionController {
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionDTO> updateTransactionById(
             @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody UpdateFinancialTransactionDTO updateTransactionDTO) {
+            @Valid @RequestBody UpdateFinancialTransactionDTO updateFinancialTransactionDTO) {
 
-        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateTransaction(id, updateTransactionDTO);
+        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(id, updateFinancialTransactionDTO);
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
     }
 }

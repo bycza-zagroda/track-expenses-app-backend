@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
+
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
@@ -36,6 +38,8 @@ class FinancialTransactionServiceImplTest {
     public static final long ID_10L = 10L;
     public static final Instant DATE_NOW = Instant.now();
 
+    @Mock
+    private ErrorStrategy errorStrategy;
 
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
@@ -57,7 +61,7 @@ class FinancialTransactionServiceImplTest {
 
         FinancialTransaction financialTransaction2 = new FinancialTransaction();
         financialTransaction2.setId(ID_2L);
-        financialTransaction2.setFinancialTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction2.setType(FinancialTransactionType.EXPENSE);
         financialTransaction2.setTransactionDate(DATE_NOW);
 
         FinancialTransactionDTO financialTransactionDTO2 = new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSE, DATE_NOW);
@@ -95,7 +99,7 @@ class FinancialTransactionServiceImplTest {
         //given
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
-        financialTransaction.setFinancialTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction.setType(FinancialTransactionType.EXPENSE);
         financialTransaction.setTransactionDate(DATE_NOW);
 
         //when
@@ -139,7 +143,7 @@ class FinancialTransactionServiceImplTest {
     private FinancialTransaction createFinancialTransaction() {
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
-        financialTransaction1.setFinancialTransactionType(FinancialTransactionType.EXPENSE);
+        financialTransaction1.setType(FinancialTransactionType.EXPENSE);
         financialTransaction1.setTransactionDate(DATE_NOW);
         return financialTransaction1;
     }
