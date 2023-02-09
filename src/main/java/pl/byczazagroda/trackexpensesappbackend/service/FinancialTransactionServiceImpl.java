@@ -38,7 +38,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .type(createFinancialTransactionDTO.type())
-                .transactionDate(createFinancialTransactionDTO.transactionDate())
+                .date(createFinancialTransactionDTO.transactionDate())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
                 .amount(createFinancialTransactionDTO.amount())
@@ -50,7 +50,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
-        return financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId).stream()
+        return financialTransactionRepository.findAllByWalletIdOrderByDateDesc(walletId).stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .toList();
     }
@@ -90,7 +90,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         entity.setType(uDTO.type());
         entity.setAmount(uDTO.amount());
         entity.setDescription(uDTO.description());
-        entity.setTransactionDate(uDTO.transactionDate());
+        entity.setDate(uDTO.transactionDate());
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }

@@ -62,7 +62,7 @@ class FinancialTransactionServiceImplTest {
         FinancialTransaction financialTransaction2 = new FinancialTransaction();
         financialTransaction2.setId(ID_2L);
         financialTransaction2.setType(FinancialTransactionType.EXPENSE);
-        financialTransaction2.setTransactionDate(DATE_NOW);
+        financialTransaction2.setDate(DATE_NOW);
 
         FinancialTransactionDTO financialTransactionDTO2 = new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSE, DATE_NOW);
 
@@ -81,7 +81,7 @@ class FinancialTransactionServiceImplTest {
 
 
         //when
-        when(financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(ID_1L)).thenReturn(financialTransactionsList);
+        when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(ID_1L)).thenReturn(financialTransactionsList);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction1)).thenReturn(financialTransactionDTO1);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction2)).thenReturn(financialTransactionDTO2);
 
@@ -100,7 +100,7 @@ class FinancialTransactionServiceImplTest {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
         financialTransaction.setType(FinancialTransactionType.EXPENSE);
-        financialTransaction.setTransactionDate(DATE_NOW);
+        financialTransaction.setDate(DATE_NOW);
 
         //when
         given(financialTransactionRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
@@ -144,7 +144,7 @@ class FinancialTransactionServiceImplTest {
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
         financialTransaction1.setType(FinancialTransactionType.EXPENSE);
-        financialTransaction1.setTransactionDate(DATE_NOW);
+        financialTransaction1.setDate(DATE_NOW);
         return financialTransaction1;
     }
 

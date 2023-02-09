@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransaction, Long> {
-    List<FinancialTransaction> findAllByWalletIdOrderByTransactionDateDesc(Long id);
+    List<FinancialTransaction> findAllByWalletIdOrderByDateDesc(Long id);
 }
