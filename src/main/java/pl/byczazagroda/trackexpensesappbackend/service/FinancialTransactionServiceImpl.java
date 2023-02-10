@@ -38,7 +38,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .type(createFinancialTransactionDTO.type())
-                .date(createFinancialTransactionDTO.transactionDate())
+                .date(createFinancialTransactionDTO.date())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
                 .amount(createFinancialTransactionDTO.amount())
@@ -90,7 +90,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         entity.setType(uDTO.type());
         entity.setAmount(uDTO.amount());
         entity.setDescription(uDTO.description());
-        entity.setDate(uDTO.transactionDate());
+        entity.setDate(uDTO.date());
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
