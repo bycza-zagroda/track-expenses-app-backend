@@ -8,14 +8,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -36,7 +44,7 @@ public class FinancialTransaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Wallet wallet;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +56,7 @@ public class FinancialTransaction implements Serializable {
 
     @Column(name = "transaction_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
-    private Instant transactionDate;
+    private Instant date;
 
     @Size(max = 255)
     private String description;
@@ -58,7 +66,7 @@ public class FinancialTransaction implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FinancialTransaction )) {
+        if (!(o instanceof FinancialTransaction)) {
             return false;
         }
         return id != null && id.equals(((FinancialTransaction) o).getId());
