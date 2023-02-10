@@ -18,9 +18,6 @@ import org.testcontainers.utility.DockerImageName;
 @AutoConfigureMockMvc
 @Testcontainers
 @ActiveProfiles("test")
-//@TestPropertySource(properties = {
-//        "spring.profiles.active=test"
-//})
 @DirtiesContext
 public abstract class BaseIntegrationTestIT {
 
