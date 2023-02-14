@@ -38,7 +38,6 @@ import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode.W003;
 import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +64,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
-    void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException() {
+    void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException(){
         //given
         CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
@@ -75,13 +74,13 @@ class FinancialTransactionServiceImplTest {
                 AppRuntimeException.class,
                 () -> financialTransactionService.createFinancialTransaction(createFinancialTransactionDTO)
         );
-        assertEquals(W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
+        assertEquals(ErrorCode.W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(walletRepository, never()).save(any());
     }
 
     @Test
     @DisplayName("create financial transaction when valid parameters are given")
-    void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO() {
+    void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO(){
         //given
         CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
@@ -106,7 +105,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("create financial transaction with empty description")
-    void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction() {
+    void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction(){
         //given
         CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
@@ -132,7 +131,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
-    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
+    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven(){
         //given
         FinancialTransaction financialTransaction1 = createFinancialTransaction();
         financialTransaction1.setId(ID_1L);
@@ -174,7 +173,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("when financial transaction id doesn't exist should not return transaction")
-    void shouldNotReturnFinancialTransactionById_WhenIdNotExist() {
+    void shouldNotReturnFinancialTransactionById_WhenIdNotExist(){
         //given
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
@@ -192,7 +191,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("when finding with proper financial transaction id should successfully find transaction")
-    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId() {
+    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId(){
         //given
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
@@ -210,7 +209,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("when deleting financial transaction that does not exist should throw an exception")
-    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
+    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist(){
         //given
         //when
         when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
@@ -219,7 +218,7 @@ class FinancialTransactionServiceImplTest {
         Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L));
     }
 
-    private FinancialTransaction createFinancialTransaction() {
+    private FinancialTransaction createFinancialTransaction(){
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
         financialTransaction1.setFinancialTransactionType(FinancialTransactionType.EXPENSE);
