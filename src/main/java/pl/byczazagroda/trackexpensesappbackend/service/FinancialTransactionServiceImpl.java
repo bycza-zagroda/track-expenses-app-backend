@@ -19,9 +19,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +34,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
         Long walletId = createFinancialTransactionDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
-            throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with id: %d does not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .financialTransactionType(createFinancialTransactionDTO.financialTransactionType())
-                .transactionDate(createFinancialTransactionDTO.transactionDate())
+                .type(createFinancialTransactionDTO.type())
+                .date(createFinancialTransactionDTO.date())
                 .description(createFinancialTransactionDTO.description())
                 .wallet(wallet)
                 .amount(createFinancialTransactionDTO.amount())
@@ -54,7 +50,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
-        return financialTransactionRepository.findAllByWalletIdOrderByTransactionDateDesc(walletId).stream()
+        return financialTransactionRepository.findAllByWalletIdOrderByDateDesc(walletId).stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .toList();
     }
@@ -81,22 +77,22 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     @Transactional
-    public FinancialTransactionDTO updateTransaction(
+    public FinancialTransactionDTO updateFinancialTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO updateTransactionDTO){
+            @Valid UpdateFinancialTransactionDTO uDTO) {
 
-        FinancialTransaction financialTransaction = financialTransactionRepository.findById(id)
-                .orElseThrow(()-> {
+        FinancialTransaction entity = financialTransactionRepository.findById(id)
+                .orElseThrow(() -> {
                     throw new AppRuntimeException(ErrorCode.FT001,
                             String.format("Financial transaction with id: %d not found", id));
                 });
 
-        financialTransaction.builder()
-                .amount(updateTransactionDTO.amount())
-                .description(updateTransactionDTO.description())
-                .transactionDate(Instant.now())
-                .build();
+        entity.setType(uDTO.type());
+        entity.setAmount(uDTO.amount());
+        entity.setDescription(uDTO.description());
+        entity.setDate(uDTO.date());
 
-        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction);
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
+
 }
