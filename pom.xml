@@ -14,7 +14,7 @@
 
     <groupId>pl.byczazagroda</groupId>
     <artifactId>track-expenses-app-backend</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <name>track-expenses-app-backend</name>
     <description>Open source project track-expenses-app-backend</description>
 
