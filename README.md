@@ -17,8 +17,7 @@
 * [About project](#about-project)
 * [Initial assumptions of the application](#initial-assumptions-of-the-application)
 * [Prerequisites](#prerequisites)
-* [How to start](#how-to-start)
-  - [Back-end repository](#back-end-repository)
+* [How to run](#how-to-run)
 * [Tech stack](#tech-stack)
   - [Development](#development)
   - [Testing](#testing)
@@ -52,11 +51,63 @@ The following tools are required to start the application:
 - [Postman](https://www.postman.com/)
 - [Docker](https://docs.docker.com/get-docker/) - please refer to [Setting up Docker]()
 
-## How to start
-Please clone the repository for back-end and front-end by https or ssh.
+## How to run
 
-#### Back-end repository
-- git clone: https://github.com/bycza-zagroda/track-expenses-app-backend.git
+### 1. Clone the repository
+Please clone the repository by https or ssh (below we use the https method).
+```
+git clone https://github.com/bycza-zagroda/track-expenses-app-backend.git
+```
+
+### 2. Run the database
+You need a working mysql server to run this application.
+You can use your local server installation or use the docker compose file from this project.
+
+**Remember:** if you are using your local server instance, change parameters for the database connection.
+
+To run only mysql server from our docker compose configuration please enter to the directory
+```
+cd track-expenses-app-backend
+```
+
+and run
+```
+docker-compose up -d database
+```
+Wait until the database server starts completely, it may take a while.
+
+### 3. Run the project
+
+Next, you can run the project using Maven:
+```
+./mvnw spring-boot:run \
+-Dspring-boot.run.profiles=dev \
+-Dspring-boot.run.arguments="
+--DB_SERVER=localhost 
+--DB_PORT=3308 
+--DB_NAME=trackexpensesapp 
+--DB_PASSWORD=root 
+--DB_USER=root"
+```
+Or, first, you can package as jar:
+```
+./mvnw package
+```
+Then, run:
+```
+java -jar target/track-expenses-app-backend-*.jar \
+--spring.profiles.active=dev \
+--DB_SERVER=localhost \
+--DB_PORT=3308 \
+--DB_NAME=trackexpensesapp \
+--DB_PASSWORD=root \
+--DB_USER=root 
+```
+
+Now you can navigate to http://localhost:8080 in your browser.
+
+
+
 
 ## Tech stack
 
