@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
@@ -37,8 +37,8 @@ public class WalletController {
 
     @PostMapping()
     public ResponseEntity<WalletDTO> createWallet(
-            @Valid @RequestBody CreateWalletDTO createWalletDTO) {
-        WalletDTO walletDTO = walletService.createWallet(createWalletDTO);
+            @Valid @RequestBody WalletCreateDTO walletCreateDTO) {
+        WalletDTO walletDTO = walletService.createWallet(walletCreateDTO);
 
         return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
     }
@@ -57,9 +57,9 @@ public class WalletController {
     @PatchMapping("/{id}")
     public ResponseEntity<WalletDTO> updateWallet(
             @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody UpdateWalletDTO updateWalletDto) {
+            @Valid @RequestBody WalletUpdateDTO walletUpdateDto) {
 
-        WalletDTO walletDTO = walletService.updateWallet(id, updateWalletDto);
+        WalletDTO walletDTO = walletService.updateWallet(id, walletUpdateDto);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 

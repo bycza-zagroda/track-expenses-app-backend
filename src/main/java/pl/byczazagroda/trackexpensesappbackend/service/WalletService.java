@@ -3,8 +3,8 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 
 import javax.validation.Valid;
@@ -14,9 +14,9 @@ import java.util.List;
 @Validated
 public interface WalletService {
 
-    WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO);
+    WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO);
 
-    WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid UpdateWalletDTO walletToUpdate);
+    WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO walletToUpdate);
 
     List<WalletDTO> getWallets();
 
