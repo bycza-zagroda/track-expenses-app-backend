@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PatchMapping;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionService;
 
 import javax.validation.Valid;
@@ -41,8 +41,8 @@ public class FinancialTransactionController {
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionDTO> createFinancialTransaction(
-            @Valid @RequestBody CreateFinancialTransactionDTO createFinancialTransactionDTO) {
-        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.createFinancialTransaction(createFinancialTransactionDTO);
+            @Valid @RequestBody FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO);
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.CREATED);
     }
 
@@ -63,9 +63,9 @@ public class FinancialTransactionController {
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionDTO> updateTransactionById(
             @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody UpdateFinancialTransactionDTO updateFinancialTransactionDTO) {
+            @Valid @RequestBody FinancialTransactionUpdateDTO financialTransactionUpdateDTO) {
 
-        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(id, updateFinancialTransactionDTO);
+        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(id, financialTransactionUpdateDTO);
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
     }
 }

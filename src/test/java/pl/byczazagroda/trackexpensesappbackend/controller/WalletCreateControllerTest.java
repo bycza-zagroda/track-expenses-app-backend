@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -53,7 +53,7 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name contains illegal letters should return response status bad request")
     void shouldNotCreateWalletAndReturnResponseStatusBadRequestStatus_WhenWalletNameContainsIllegalLetters() throws Exception {
         // given
-        CreateWalletDTO dto = new CreateWalletDTO(INVALID_NAME);
+        WalletCreateDTO dto = new WalletCreateDTO(INVALID_NAME);
         given(walletService.createWallet(dto))
                 .willReturn(new WalletDTO(ID_1L, INVALID_NAME, DATE_NOW));
 
@@ -70,7 +70,7 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is empty should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsEmpty() throws Exception {
         // given
-        CreateWalletDTO dto = new CreateWalletDTO("");
+        WalletCreateDTO dto = new WalletCreateDTO("");
         given(walletService.createWallet(dto))
                 .willReturn(new WalletDTO(ID_1L, "", DATE_NOW));
 
@@ -87,7 +87,7 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is null should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsNull() throws Exception {
         // given
-        CreateWalletDTO dto = new CreateWalletDTO(null);
+        WalletCreateDTO dto = new WalletCreateDTO(null);
         given(walletService.createWallet(dto))
                 .willReturn(new WalletDTO(ID_1L, null, DATE_NOW));
 
@@ -104,7 +104,7 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is too long should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsTooLong() throws Exception {
         // given
-        CreateWalletDTO dto = new CreateWalletDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        WalletCreateDTO dto = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
         given(walletService.createWallet(dto))
                 .willReturn(new WalletDTO(ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS, DATE_NOW));
 

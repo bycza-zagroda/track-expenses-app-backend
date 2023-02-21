@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -61,7 +61,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet data are correct should create wallet successfully")
     void shouldCreateWalletSuccessfully_WhenWalletDataAreCorrect() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(NAME_1);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_1);
         Wallet wallet = new Wallet(NAME_1);
         wallet.setId(ID_1L);
         wallet.setCreationDate(DATE_NOW);
@@ -71,7 +71,7 @@ class WalletCreateServiceImplTest {
         when(walletRepository.save(any(Wallet.class))).thenReturn(wallet);
         when(walletRepository.existsById(ID_1L)).thenReturn(true);
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(walletDTO);
-        WalletDTO returnedWalletDTO = walletService.createWallet(createWalletDTO);
+        WalletDTO returnedWalletDTO = walletService.createWallet(walletCreateDTO);
 
         // then
         Assertions.assertEquals(wallet.getId(), returnedWalletDTO.id());
@@ -83,59 +83,59 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name is empty should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsEmpty() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(NAME_EMPTY);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_EMPTY);
 
         // when
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(walletCreateDTO));
     }
 
     @Test
     @DisplayName("when wallet name is blank should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsBlank() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(NAME_BLANK);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_BLANK);
 
         // when
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(walletCreateDTO));
     }
 
     @Test
     @DisplayName("when wallet name is null should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsNull() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(null);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(null);
 
         // when
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(walletCreateDTO));
     }
 
     @Test
     @DisplayName("when wallet name is too long should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsTooLong() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
 
         // when
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(walletCreateDTO));
     }
 
     @Test
     @DisplayName("when wallet name contains illegal letters should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameContainsIllegalLetters() {
         // given
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO(INVALID_NAME);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(INVALID_NAME);
 
         // when
 
         // then
-        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(createWalletDTO));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> walletService.createWallet(walletCreateDTO));
     }
 }

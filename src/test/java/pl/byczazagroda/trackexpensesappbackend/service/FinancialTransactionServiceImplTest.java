@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
@@ -70,13 +70,13 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
     void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException(){
         //given
-        CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
 
         //when & then
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
-                () -> financialTransactionService.createFinancialTransaction(createFinancialTransactionDTO)
+                () -> financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO)
         );
         assertEquals(ErrorCode.W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(walletRepository, never()).save(any());
@@ -86,7 +86,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction when valid parameters are given")
     void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO(){
         //given
-        CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createFinancialTransaction();
@@ -95,7 +95,7 @@ class FinancialTransactionServiceImplTest {
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any())).thenReturn(financialTransactionDTO);
 
         //when
-        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(createFinancialTransactionDTO);
+        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO);
 
         //then
         assertAll(
@@ -111,7 +111,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction with empty description")
     void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction(){
         //given
-        CreateFinancialTransactionDTO createFinancialTransactionDTO = new CreateFinancialTransactionDTO(ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createFinancialTransaction();
@@ -120,7 +120,7 @@ class FinancialTransactionServiceImplTest {
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any())).thenReturn(financialTransactionDTO);
 
         //when
-        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(createFinancialTransactionDTO);
+        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO);
 
         //then
         assertAll(

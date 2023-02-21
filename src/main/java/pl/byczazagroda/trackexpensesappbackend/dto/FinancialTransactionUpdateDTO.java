@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record UpdateFinancialTransactionDTO(
+public record FinancialTransactionUpdateDTO(
         @PositiveOrZero @Digits(integer = 13, fraction = 2) BigDecimal amount,
         @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss") Instant date,
         @Size(max = 255) String description,

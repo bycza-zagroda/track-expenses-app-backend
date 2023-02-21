@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -31,9 +31,9 @@ public class WalletServiceImpl implements WalletService {
     private final WalletModelMapper walletModelMapper;
 
     @Override
-    public WalletDTO createWallet(@Valid CreateWalletDTO createWalletDTO) {
+    public WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO) {
 
-        String walletName = createWalletDTO.name();
+        String walletName = walletCreateDTO.name();
         Wallet wallet = new Wallet(walletName);
         Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
@@ -41,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid UpdateWalletDTO dto) {
+    public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO dto) {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(

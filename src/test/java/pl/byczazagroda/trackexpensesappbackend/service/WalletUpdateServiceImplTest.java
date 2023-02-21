@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -54,7 +54,7 @@ class WalletUpdateServiceImplTest {
     @DisplayName("when finding wallet by id should update wallet")
     void shouldUpdateWallet_whenFindWalletById() {
         // given
-        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(NAME_1);
+        WalletUpdateDTO walletUpdateDto = new WalletUpdateDTO(NAME_1);
         Wallet wallet = new Wallet(NAME_2);
         wallet.setId(ID_1L);
         wallet.setCreationDate(DATE_NOW);
@@ -63,10 +63,10 @@ class WalletUpdateServiceImplTest {
         given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(newWalletDTO);
 
         // when
-        WalletDTO walletDTO = walletService.updateWallet(ID_1L, updateWalletDto);
+        WalletDTO walletDTO = walletService.updateWallet(ID_1L, walletUpdateDto);
 
         // then
-        assertThat(walletDTO.name()).isEqualTo(updateWalletDto.name());
+        assertThat(walletDTO.name()).isEqualTo(walletUpdateDto.name());
     }
 
 }

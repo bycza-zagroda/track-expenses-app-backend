@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,11 +26,11 @@ class WalletTestIT extends BaseIntegrationTestIT {
     @DisplayName("It should create wallet")
     void shouldCreateWallet() throws Exception {
 
-        CreateWalletDTO createWalletDTO = new CreateWalletDTO("Test name");
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO("Test name");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/wallets")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createWalletDTO)))
+                        .content(objectMapper.writeValueAsString(walletCreateDTO)))
                 .andExpect(status().isCreated());
 
         Assertions.assertEquals(1, walletRepository.findAll().size());
