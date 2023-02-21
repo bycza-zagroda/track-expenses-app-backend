@@ -4,9 +4,9 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pl.byczazagroda.trackexpensesappbackend.dto.CreateFinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateFinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
@@ -31,17 +31,17 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final WalletRepository walletRepository;
 
     @Override
-    public FinancialTransactionDTO createFinancialTransaction(@Valid CreateFinancialTransactionDTO createFinancialTransactionDTO) {
-        Long walletId = createFinancialTransactionDTO.walletId();
+    public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+        Long walletId = financialTransactionCreateDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .type(createFinancialTransactionDTO.type())
-                .date(createFinancialTransactionDTO.date())
-                .description(createFinancialTransactionDTO.description())
+                .type(financialTransactionCreateDTO.type())
+                .date(financialTransactionCreateDTO.date())
+                .description(financialTransactionCreateDTO.description())
                 .wallet(wallet)
-                .amount(createFinancialTransactionDTO.amount())
+                .amount(financialTransactionCreateDTO.amount())
                 .build();
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
@@ -79,7 +79,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     @Transactional
     public FinancialTransactionDTO updateFinancialTransaction(
             @Min(1) @NotNull Long id,
-            @Valid UpdateFinancialTransactionDTO uDTO) {
+            @Valid FinancialTransactionUpdateDTO uDTO) {
 
         FinancialTransaction entity = financialTransactionRepository.findById(id)
                 .orElseThrow(() -> {

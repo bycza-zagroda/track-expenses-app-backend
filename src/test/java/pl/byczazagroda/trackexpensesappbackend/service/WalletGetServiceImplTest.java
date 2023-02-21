@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
-import pl.byczazagroda.trackexpensesappbackend.dto.UpdateWalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
@@ -66,12 +66,12 @@ class WalletGetServiceImplTest {
     void shouldNotReturnWalletById_WhenWalletIdNotExist() {
         // given
         given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-        UpdateWalletDTO updateWalletDto = new UpdateWalletDTO(NAME_1);
+        WalletUpdateDTO walletUpdateDto = new WalletUpdateDTO(NAME_1);
 
         // when
 
         // then
-        assertThatThrownBy(() -> walletService.updateWallet(ID_1L, updateWalletDto)).isInstanceOf(AppRuntimeException.class);
+        assertThatThrownBy(() -> walletService.updateWallet(ID_1L, walletUpdateDto)).isInstanceOf(AppRuntimeException.class);
     }
 
     @Test
