@@ -57,8 +57,8 @@ public class FinancialTransactionCategoryController{
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<FinancialTransactionCategoryDTO> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
+    public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
         //TODO Necessary code implementation
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
