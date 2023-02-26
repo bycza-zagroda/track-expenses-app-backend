@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCounterDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
@@ -28,10 +29,10 @@ import java.util.List;
 public class FinancialTransactionCategoryController{
 
     @GetMapping("/{id}")
-    ResponseEntity<FinancialTransactionCategoryDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
+    ResponseEntity<FinancialTransactionCategoryCounterDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
         //TODO Necessary code implementation
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = null;
-        return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
+        FinancialTransactionCategoryCounterDTO financialTransactionCategoryCounterDTO = null;
+        return new ResponseEntity<>(financialTransactionCategoryCounterDTO, HttpStatus.OK);
     }
 
     @GetMapping()
