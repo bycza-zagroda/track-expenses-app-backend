@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Krisu93
       changes:
         - createTable:
-            tableName: financial_transactions_categories
+            tableName: financial_transaction_categories
             columns:
               - column:
                   name: id
