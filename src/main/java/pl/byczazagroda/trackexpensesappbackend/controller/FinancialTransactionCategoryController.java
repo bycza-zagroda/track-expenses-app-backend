@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCategoryService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -27,6 +28,7 @@ import java.util.List;
 @RequestMapping("api/categories")
 public class FinancialTransactionCategoryController{
 
+    private final FinancialTransactionCategoryService financialTransactionCategoryService;
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
         //TODO Necessary code implementation
@@ -49,10 +51,11 @@ public class FinancialTransactionCategoryController{
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(@Min(1) @NotNull @PathVariable Long id,
-                                                                                              @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO){
-        //TODO Necessary code implementation
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = null;
+    public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
+            @Min(1) @NotNull @PathVariable Long id,
+            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO){
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO
+                = financialTransactionCategoryService.updateFinancialTransactionCategory(id,financialTransactionCategoryUpdateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
