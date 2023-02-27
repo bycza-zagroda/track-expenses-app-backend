@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
         - loadData:
             file: db/changelog/data/financial_transaction_categories.csv
-            tableName: financial_transactions_categories
+            tableName: financial_transaction_categories
             separator: ','
             encoding: UTF-8
             columns:
