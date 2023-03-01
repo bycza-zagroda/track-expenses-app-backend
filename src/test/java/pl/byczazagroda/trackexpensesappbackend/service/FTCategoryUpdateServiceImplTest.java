@@ -19,36 +19,39 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategor
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class FTCategoryUpdateServiceImplTest {
+
     private static final long VALID_ID = 1L;
+
     private static final long INVALID_ID = 10L;
 
     private static final String NAME = "test_name";
-    private static final FinancialTransactionType TYPE = FinancialTransactionType.INCOME;
+
+    private static final FinancialTransactionType TYPE_INCOME = FinancialTransactionType.INCOME;
 
     private static final FinancialTransactionCategory VALID_CATEGORY
             = FinancialTransactionCategory.builder()
             .id(VALID_ID)
             .name(NAME)
-            .type(TYPE)
-            .creation_date(new Date())
+            .type(TYPE_INCOME)
+            .creationDate(Instant.now())
             .build();
 
     private static final FinancialTransactionCategoryDTO VALID_CATEGORY_DTO
-            = new FinancialTransactionCategoryDTO(VALID_ID,NAME,TYPE);
+            = new FinancialTransactionCategoryDTO(VALID_ID,NAME, TYPE_INCOME);
+
     private static final FinancialTransactionCategoryUpdateDTO VALID_UPDATE_CATEGORY_DTO
-            = new FinancialTransactionCategoryUpdateDTO(NAME,TYPE);
+            = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME);
 
     @Mock
     private FinancialTransactionCategoryRepository repository;
 
     @Mock
     private FinancialTransactionCategoryModelMapper mapper;
-
 
     @InjectMocks
     private FinancialTransactionCategoryServiceImpl service;
@@ -62,12 +65,12 @@ public class FTCategoryUpdateServiceImplTest {
     }
 
     @Test
-    @DisplayName("update FT Category if id is correct and return the category object")
+    @DisplayName("update the FT category and return the category object if the ID is correct")
     void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity(){
-        FinancialTransactionCategoryDTO entity
+        FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID,VALID_UPDATE_CATEGORY_DTO);
-        Assertions.assertEquals(entity,VALID_CATEGORY_DTO);
-        Mockito.verify(repository,Mockito.times(1)).save(VALID_CATEGORY);
+        Assertions.assertEquals(dto,VALID_CATEGORY_DTO);
+        Mockito.verify(repository, Mockito.times(1)).save(VALID_CATEGORY);
     }
 
     @Test
@@ -78,7 +81,7 @@ public class FTCategoryUpdateServiceImplTest {
                 ()->service.updateFinancialTransactionCategory(INVALID_ID,VALID_UPDATE_CATEGORY_DTO)
         );
         Assertions.assertEquals(ErrorCode.FTC001.getBusinessStatusCode(),exception.getBusinessStatusCode());
-        Mockito.verify(repository,Mockito.never()).save(ArgumentMatchers.any());
+        Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
     }
 
     @Test
@@ -86,4 +89,5 @@ public class FTCategoryUpdateServiceImplTest {
     void testUpdateFTCategoryById_WhenFTCisAssignedToFinancialTransaction_ThenThrowAnError(){
 //        TODO implement test
     }
+
 }

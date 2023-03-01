@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public interface FinancialTransactionCategoryService {
 
-    FinancialTransactionCategoryDTO updateFinancialTransactionCategory(@Min(1) @NotNull Long id, @Valid FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO);
+    FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
+            @Min(1) @NotNull Long id, @Valid FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO);
 
 }

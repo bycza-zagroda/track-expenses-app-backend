@@ -14,15 +14,16 @@ import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService
-{
-    private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
-    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
+public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
 
+    private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+
+    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
     @Override
     @Transactional
-    public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+    public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
+            Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
         FinancialTransactionCategory financialTransactionCategory
                 = financialTransactionCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
@@ -34,4 +35,5 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 //        TODO check if category is currently assigned to any financial transaction then throw an error that u cannot update it
         return financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(updated);
     }
+
 }

@@ -1,11 +1,28 @@
 package pl.byczazagroda.trackexpensesappbackend.model;
 
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serial;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -13,22 +30,27 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@Table(name = "financial_transactions_categories")
-public class FinancialTransactionCategory {
+@Table(name = "financial_transaction_categories")
+public class FinancialTransactionCategory implements Serializable {
+
     /**
-     * Class version 0.1.0.  SerialVersionUID needs to be updated with any change.
+     * Class version 0.2.0.  SerialVersionUID needs to be updated with any change.
      */
     @Serial
-    private static final long serialVersionUID = 100000L;
+    private static final long serialVersionUID = 100002L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
+    @Size(min = 1, max = 30)
+    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String name;
 
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
-    private Date creation_date;
+    private Instant creationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
@@ -36,21 +58,7 @@ public class FinancialTransactionCategory {
 
     @PrePersist
     protected void onCreate() {
-        creation_date = new Date();
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FinancialTransactionCategory)) {
-            return false;
-        }
-        return id != null && id.equals(((FinancialTransactionCategory) o).getId());
+        creationDate = Instant.now();
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

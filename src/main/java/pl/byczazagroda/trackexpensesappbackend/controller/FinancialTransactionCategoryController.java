@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/categories")
-public class FinancialTransactionCategoryController{
+public class FinancialTransactionCategoryController {
 
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
     @GetMapping("/{id}")
@@ -64,4 +64,5 @@ public class FinancialTransactionCategoryController{
         //TODO Necessary code implementation
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
