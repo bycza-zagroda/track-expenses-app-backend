@@ -15,6 +15,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
+import javax.security.auth.login.LoginException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -28,8 +29,8 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     private final FinancialTransactionRepository financialTransactionRepository;
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
+    //tu jest lipa WalletService powinnien to obsługiwać
     private final WalletRepository walletRepository;
-
     @Override
     public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
         Long walletId = financialTransactionCreateDTO.walletId();
@@ -50,6 +51,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
+        if (!walletRepository.existsById(walletId)){
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
+        }
         return financialTransactionRepository.findAllByWalletIdOrderByDateDesc(walletId).stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .toList();

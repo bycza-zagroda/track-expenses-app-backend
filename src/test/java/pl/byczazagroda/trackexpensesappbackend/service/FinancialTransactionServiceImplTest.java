@@ -163,6 +163,7 @@ class FinancialTransactionServiceImplTest {
 
 
         //when
+        when(walletRepository.existsById(ID_1L)).thenReturn(true);
         when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(ID_1L)).thenReturn(financialTransactionsList);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction1)).thenReturn(financialTransactionDTO1);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction2)).thenReturn(financialTransactionDTO2);
