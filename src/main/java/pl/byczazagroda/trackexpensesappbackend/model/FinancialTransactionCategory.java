@@ -17,7 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
@@ -34,31 +34,38 @@ import java.time.Instant;
 public class FinancialTransactionCategory implements Serializable {
 
     /**
-     * Class version 0.2.0.  SerialVersionUID needs to be updated with any change.
+     * Class version 0.5.0.  SerialVersionUID needs to be updated with any change.
      */
     @Serial
-    private static final long serialVersionUID = 100002L;
+    private static final long serialVersionUID = 100050L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    @Size(min = 1, max = 30)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
+    @Size(max = 30)
+    @NotBlank
+    @Pattern(regexp = "^\\w+$")
     private String name;
+
+    @Column(name = "transaction_type")
+    @Enumerated(EnumType.STRING)
+    private FinancialTransactionType type;
 
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant creationDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type")
-    private FinancialTransactionType type;
-
     @PrePersist
     protected void onCreate() {
         creationDate = Instant.now();
+    }
+
+    @SuppressWarnings("unused")
+    public FinancialTransactionCategory(String name, FinancialTransactionType type) {
+        this.name = name;
+        this.type = type;
+        this.creationDate = Instant.now();
     }
 
 }
