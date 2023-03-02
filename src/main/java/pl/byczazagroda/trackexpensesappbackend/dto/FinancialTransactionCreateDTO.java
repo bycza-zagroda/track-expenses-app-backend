@@ -11,6 +11,7 @@ import java.time.Instant;
 
 public record FinancialTransactionCreateDTO(@Min(1) @NotNull Long walletId,
                                             @Digits(integer = 13, fraction = 2) @PositiveOrZero BigDecimal amount,
-                                            String description, Instant date,
+                                            @NotNull String description,
+                                            @NotNull Instant date,
                                             @NotNull FinancialTransactionType type) {
 }

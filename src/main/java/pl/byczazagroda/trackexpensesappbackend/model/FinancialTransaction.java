@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
@@ -55,6 +56,7 @@ public class FinancialTransaction implements Serializable {
     private BigDecimal amount;
 
     @Column(name = "transaction_date")
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant date;
 
