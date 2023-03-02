@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
@@ -35,9 +37,12 @@ public class FinancialTransactionCategory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 255)
+    @Size(max = 30)
+    @NotBlank
+    @Pattern(regexp = "[\\w ]+")
     private String name;
 
+    @Column(name = "transaction_type")
     @Enumerated(EnumType.STRING)
     private FinancialTransactionType type;
 
