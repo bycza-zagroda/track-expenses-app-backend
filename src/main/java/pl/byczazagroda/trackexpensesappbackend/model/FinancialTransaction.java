@@ -38,7 +38,7 @@ public class FinancialTransaction implements Serializable {
      * Class version 0.3.0.  SerialVersionUID needs to be updated with any change.
      */
     @Serial
-    private static final long serialVersionUID = 100030L;
+    private static final long serialVersionUID = 100040L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class FinancialTransaction implements Serializable {
     @Column(name = "transaction_type")
     private FinancialTransactionType type;
 
-    @DecimalMin("0.0")
+    @DecimalMin("0.01")
     private BigDecimal amount;
 
     @Column(name = "transaction_date")
