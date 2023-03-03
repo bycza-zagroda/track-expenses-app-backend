@@ -16,6 +16,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryD
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCategoryService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -28,6 +29,8 @@ import java.util.List;
 @RequestMapping("api/categories")
 public class FinancialTransactionCategoryController{
 
+    private final FinancialTransactionCategoryService financialTransactionCategoryService;
+
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id){
         //TODO Necessary code implementation
@@ -37,8 +40,7 @@ public class FinancialTransactionCategoryController{
 
     @GetMapping()
     ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(){
-        //TODO Necessary code implementation
-        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = null;
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = financialTransactionCategoryService.getFinancialTransactionCategories();
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }
 
