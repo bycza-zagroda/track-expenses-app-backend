@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: "8"
+      author: Krisu93
+      changes:
+        - loadData:
+            file: db/changelog/data/financial_transaction_categories.csv
+            tableName: financial_transaction_categories
+            separator: ','
+            encoding: UTF-8
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(20)
+              - column:
+                  name: creation_date
+                  type: timestamp
+              - column:
+                  name: transaction_type
+                  type: varchar(255)
