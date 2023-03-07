@@ -30,10 +30,10 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                         String.format("Financial transaction category with id: %d not found", id)));
         financialTransactionCategory.setName(financialTransactionCategoryUpdateDTO.name());
         financialTransactionCategory.setType(financialTransactionCategoryUpdateDTO.type());
-        FinancialTransactionCategory updated
+        FinancialTransactionCategory updatedEntity
                 = financialTransactionCategoryRepository.save(financialTransactionCategory);
 //        TODO check if category is currently assigned to any financial transaction then throw an error that u cannot update it
-        return financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(updated);
+        return financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(updatedEntity);
     }
 
 }

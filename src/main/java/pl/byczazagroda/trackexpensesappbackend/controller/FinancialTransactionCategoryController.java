@@ -56,7 +56,7 @@ public class FinancialTransactionCategoryController {
             @Min(1) @NotNull @PathVariable Long id,
             @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO){
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
-                = financialTransactionCategoryService.updateFinancialTransactionCategory(id,financialTransactionCategoryUpdateDTO);
+                = financialTransactionCategoryService.updateFinancialTransactionCategory(id, financialTransactionCategoryUpdateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 

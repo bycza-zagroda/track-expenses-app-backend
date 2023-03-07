@@ -60,8 +60,7 @@ public class FinancialTransactionCategory implements Serializable {
     protected void onCreate() {
         creationDate = Instant.now();
     }
-
-    @SuppressWarnings("unused")
+    
     public FinancialTransactionCategory(String name, FinancialTransactionType type) {
         this.name = name;
         this.type = type;

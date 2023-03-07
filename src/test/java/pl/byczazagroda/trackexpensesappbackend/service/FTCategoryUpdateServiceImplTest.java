@@ -41,7 +41,7 @@ public class FTCategoryUpdateServiceImplTest {
             .build();
 
     private static final FinancialTransactionCategoryDTO VALID_CATEGORY_DTO
-            = new FinancialTransactionCategoryDTO(VALID_ID,NAME, TYPE_INCOME);
+            = new FinancialTransactionCategoryDTO(VALID_ID, NAME, TYPE_INCOME);
 
     private static final FinancialTransactionCategoryUpdateDTO VALID_UPDATE_CATEGORY_DTO
             = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME);
@@ -57,31 +57,31 @@ public class FTCategoryUpdateServiceImplTest {
 
     @Test
     @DisplayName("update the FT category and return the category object if the ID is correct")
-    void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity(){
+    void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
         Mockito.when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
         Mockito.when(repository.save(VALID_CATEGORY)).thenReturn(VALID_CATEGORY);
         Mockito.when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(ArgumentMatchers.any())).thenReturn(VALID_CATEGORY_DTO);
         FinancialTransactionCategoryDTO dto
-                = service.updateFinancialTransactionCategory(VALID_ID,VALID_UPDATE_CATEGORY_DTO);
-        Assertions.assertEquals(dto,VALID_CATEGORY_DTO);
+                = service.updateFinancialTransactionCategory(VALID_ID, VALID_UPDATE_CATEGORY_DTO);
+        Assertions.assertEquals(dto, VALID_CATEGORY_DTO);
         Mockito.verify(repository, Mockito.times(1)).save(VALID_CATEGORY);
     }
 
     @Test
     @DisplayName("do not update FT Category if id is incorrect instead throw AppRuntimeException and does not update entity")
-    void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError(){
+    void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
         Mockito.when(repository.findById(INVALID_ID)).thenReturn(Optional.empty());
         AppRuntimeException exception = Assertions.assertThrows(
                 AppRuntimeException.class,
-                ()->service.updateFinancialTransactionCategory(INVALID_ID,VALID_UPDATE_CATEGORY_DTO)
+                () -> service.updateFinancialTransactionCategory(INVALID_ID, VALID_UPDATE_CATEGORY_DTO)
         );
-        Assertions.assertEquals(ErrorCode.FTC001.getBusinessStatusCode(),exception.getBusinessStatusCode());
+        Assertions.assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
         Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
     }
 
     @Test
     @DisplayName("do not update FT Category if it is assigned to any financial transactions")
-    void testUpdateFTCategoryById_WhenFTCisAssignedToFinancialTransaction_ThenThrowAnError(){
+    void testUpdateFTCategoryById_WhenFTCisAssignedToFinancialTransaction_ThenThrowAnError() {
 //        TODO implement test
     }
 
