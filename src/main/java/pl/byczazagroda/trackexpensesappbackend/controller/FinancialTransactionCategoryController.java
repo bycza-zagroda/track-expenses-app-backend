@@ -33,33 +33,37 @@ public class FinancialTransactionCategoryController {
 
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
-        FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO = financialTransactionCategoryService.getFinancialTransactionCategoryById(id);
+        //TODO Necessary code implementation
+        FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO = null;
         return new ResponseEntity<>(financialTransactionCategoryDetailedDTO, HttpStatus.OK);
     }
 
     @GetMapping()
     ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories() {
-        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = financialTransactionCategoryService.getFinancialTransactionCategories();
+        //TODO Necessary code implementation
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = null;
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(@Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
+    public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
+            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
+                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(@Min(1) @NotNull @PathVariable Long id,
                                                                                               @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialTransactionCategoryService.updateFinancialTransactionCategory(id, financialTransactionCategoryUpdateDTO);
+        //TODO Necessary code implementation
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = null;
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
-        financialTransactionCategoryService.deleteFinancialTransactionCategoryById(id);
+        //TODO Necessary code implementation
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 }
