@@ -31,18 +31,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {FinancialTransactionCategoryModelMapper.class, ErrorStrategy.class}))
 @ActiveProfiles("test")
 class FinancialTransactionCategoryControllerTest {
+        
     @Autowired
     private MockMvc mockMvc;
+        
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;
 
     @Test
-    @DisplayName("when finding all financial transaction categories " +
+    @DisplayName("when getting all financial transaction categories " +
             "should return financial transaction category DTOs list and response status OK")
     void shouldResponseStatusOKAndFinancialTransactionCategoryDTOsList() throws Exception {
 
         // given
-        List<FinancialTransactionCategoryDTO> listDTOs = createListOfFinancialTransactionCategoryDTOs();
+        List<FinancialTransactionCategoryDTO> categoriesListDTO = createListOfFinancialTransactionCategoryDTOs();
         given(financialTransactionCategoryService.getFinancialTransactionCategories())
                 .willReturn(listDTOs);
 
@@ -57,11 +59,12 @@ class FinancialTransactionCategoryControllerTest {
 
     }
 
-    private List<FinancialTransactionCategoryDTO> createListOfFinancialTransactionCategoryDTOs() {
+    private static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOList() {
         FinancialTransactionCategoryDTO categoryFirstDTO = new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
         FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
         FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
 
         return List.of(categoryFirstDTO, categorySecondDTO, categoryThirdDTO);
+            
     }
 }
