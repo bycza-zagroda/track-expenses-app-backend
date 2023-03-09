@@ -64,7 +64,7 @@ class FinancialTransactionCategoryControllerTest {
         FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
         FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
 
-        return List.of(categoryFirstDTO, categorySecondDTO, categoryThirdDTO);
-            
+        return List.of(categoryFirstDTO, categorySecondDTO, categoryThirdDTO);       
     }
+    
 }
