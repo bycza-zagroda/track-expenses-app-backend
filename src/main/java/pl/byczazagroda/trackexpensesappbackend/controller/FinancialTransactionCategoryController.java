@@ -23,10 +23,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Validated
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/categories")
+@RequiredArgsConstructor
+@Validated
 public class FinancialTransactionCategoryController {
 
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
@@ -47,7 +47,7 @@ public class FinancialTransactionCategoryController {
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
-            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);

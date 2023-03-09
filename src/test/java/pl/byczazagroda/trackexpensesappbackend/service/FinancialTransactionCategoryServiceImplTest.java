@@ -21,7 +21,9 @@ import static org.mockito.Mockito.when;
 public class FinancialTransactionCategoryServiceImplTest {
 
     public static final long ID_1L = 1L;
+
     public static final String CATEGORY_NAME = "Name";
+
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;
 
     @Mock
@@ -33,8 +35,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     @Mock
     private FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
-    @Test
     @DisplayName("create financial transaction category when valid parameters are provided")
+    @Test
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
