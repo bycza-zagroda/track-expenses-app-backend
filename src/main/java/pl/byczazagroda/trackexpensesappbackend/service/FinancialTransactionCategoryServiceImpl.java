@@ -15,6 +15,7 @@ import java.util.List;
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
 
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    
     private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
     @Override
