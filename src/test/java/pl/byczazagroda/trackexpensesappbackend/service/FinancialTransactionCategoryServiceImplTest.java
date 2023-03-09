@@ -61,4 +61,5 @@ class FinancialTransactionCategoryServiceImplTest {
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(1), categorySecondDTO);
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(2), categoryThirdDTO);
     }
+    
 }
