@@ -16,8 +16,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT {
 
@@ -28,7 +28,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
     WalletRepository walletRepository;
 
     @BeforeEach
-    public void clearDb(){
+    public void clearTestDB() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
     }
@@ -68,7 +68,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
         return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(BigDecimal.valueOf(2.0))
-                .date(Instant.ofEpochMilli(1641828224000L))
+                .date(Instant.ofEpochMilli(0L))
                 .type(FinancialTransactionType.INCOME)
                 .description("test description")
                 .build());
