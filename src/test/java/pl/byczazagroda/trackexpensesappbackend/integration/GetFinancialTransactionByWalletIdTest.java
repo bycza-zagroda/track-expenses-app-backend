@@ -16,8 +16,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT {
 
@@ -48,6 +48,16 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
                 .andExpect(jsonPath("$.[0].date").value(financialTransaction.getDate().toString()));
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
+    }
+
+    @Test
+    public void testGetFinancialTransactionsByWalletID_whenWalletIdIsIncorrect_thenReturnErrorResponseDTO() throws Exception {
+        mockMvc.perform(get("/api/transactions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .queryParam("walletId", "1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        Assertions.assertEquals(0, financialTransactionRepository.count());
+        Assertions.assertEquals(0, walletRepository.count());
     }
 
     private Wallet createTestWallet() {
