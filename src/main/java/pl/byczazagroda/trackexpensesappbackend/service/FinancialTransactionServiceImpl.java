@@ -15,7 +15,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
-import javax.security.auth.login.LoginException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -29,7 +28,6 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     private final FinancialTransactionRepository financialTransactionRepository;
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
-    //tu jest lipa WalletService powinnien to obsługiwać
     private final WalletRepository walletRepository;
     @Override
     public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
