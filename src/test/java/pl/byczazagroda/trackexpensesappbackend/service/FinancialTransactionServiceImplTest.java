@@ -40,7 +40,7 @@ import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSES;
+import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
 
 @ExtendWith(MockitoExtension.class)
 class FinancialTransactionServiceImplTest {
@@ -70,7 +70,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
     void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException(){
         //given
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSES);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
 
         //when & then
@@ -86,12 +86,12 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction when valid parameters are given")
     void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO(){
         //given
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSES);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createFinancialTransaction();
         when(financialTransactionRepository.save(any())).thenReturn(financialTransaction);
-        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSES, DATE_NOW);
+        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any())).thenReturn(financialTransactionDTO);
 
         //when
@@ -111,12 +111,12 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction with empty description")
     void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction(){
         //given
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, EMPTY, DATE_NOW, EXPENSES);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createFinancialTransaction();
         when(financialTransactionRepository.save(any())).thenReturn(financialTransaction);
-        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSES, DATE_NOW);
+        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSE, DATE_NOW);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any())).thenReturn(financialTransactionDTO);
 
         //when
@@ -139,14 +139,14 @@ class FinancialTransactionServiceImplTest {
         //given
         FinancialTransaction financialTransaction1 = createFinancialTransaction();
         financialTransaction1.setId(ID_1L);
-        FinancialTransactionDTO financialTransactionDTO1 = new FinancialTransactionDTO(ID_1L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSES, DATE_NOW);
+        FinancialTransactionDTO financialTransactionDTO1 = new FinancialTransactionDTO(ID_1L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSE, DATE_NOW);
 
         FinancialTransaction financialTransaction2 = new FinancialTransaction();
         financialTransaction2.setId(ID_2L);
-        financialTransaction2.setType(FinancialTransactionType.EXPENSES);
+        financialTransaction2.setType(FinancialTransactionType.EXPENSE);
         financialTransaction2.setDate(DATE_NOW);
 
-        FinancialTransactionDTO financialTransactionDTO2 = new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSES, DATE_NOW);
+        FinancialTransactionDTO financialTransactionDTO2 = new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc", FinancialTransactionType.EXPENSE, DATE_NOW);
 
         List<FinancialTransaction> financialTransactionsList = new ArrayList<>();
         financialTransactionsList.add(financialTransaction1);
@@ -181,7 +181,7 @@ class FinancialTransactionServiceImplTest {
         //given
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
-        financialTransaction.setType(FinancialTransactionType.EXPENSES);
+        financialTransaction.setType(FinancialTransactionType.EXPENSE);
         financialTransaction.setDate(DATE_NOW);
 
         //when
@@ -200,7 +200,7 @@ class FinancialTransactionServiceImplTest {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(ID_1L);
 
-        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, BigDecimal.valueOf(20), "description", FinancialTransactionType.EXPENSES, DATE_NOW);
+        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(ID_1L, BigDecimal.valueOf(20), "description", FinancialTransactionType.EXPENSE, DATE_NOW);
 
         //when
         when(financialTransactionRepository.findById(ID_1L)).thenReturn(Optional.of(financialTransaction));
@@ -225,7 +225,7 @@ class FinancialTransactionServiceImplTest {
     private FinancialTransaction createFinancialTransaction(){
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
-        financialTransaction1.setType(FinancialTransactionType.EXPENSES);
+        financialTransaction1.setType(FinancialTransactionType.EXPENSE);
         financialTransaction1.setDate(DATE_NOW);
         return financialTransaction1;
     }
