@@ -44,7 +44,7 @@ class FinancialTransactionCategoryControllerTest {
     void shouldResponseStatusOKAndFinancialTransactionCategoryDTOsList() throws Exception {
 
         // given
-        List<FinancialTransactionCategoryDTO> categoriesListDTO = createListOfFinancialTransactionCategoryDTOs();
+        List<FinancialTransactionCategoryDTO> categoriesListDTO = createFinancialTransactionCategoryDTOList();
         given(financialTransactionCategoryService.getFinancialTransactionCategories())
                 .willReturn(listDTOs);
 
