@@ -70,7 +70,7 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WalletDTO> deleteWalletById(@Min(1) @NotNull @PathVariable Long id) {
+    public ResponseEntity<Void> deleteWalletById(@Min(1) @NotNull @PathVariable Long id) {
 
         walletService.deleteWalletById(id);
         return new ResponseEntity<>(HttpStatus.OK);
