@@ -46,7 +46,7 @@ class FinancialTransactionCategoryControllerTest {
         // given
         List<FinancialTransactionCategoryDTO> categoriesListDTO = createFinancialTransactionCategoryDTOList();
         given(financialTransactionCategoryService.getFinancialTransactionCategories())
-                .willReturn(listDTOs);
+                .willReturn(categoriesListDTO);
 
         // when
 
