@@ -32,6 +32,8 @@ public class FinancialTransactionCategoryController {
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
 
 
+    private final FinancialTransactionCategoryService financialTransactionCategoryService;
+
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
         //TODO Necessary code implementation
