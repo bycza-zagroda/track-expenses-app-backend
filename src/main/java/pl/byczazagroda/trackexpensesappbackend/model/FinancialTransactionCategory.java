@@ -20,10 +20,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
+
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@Setter
 @Table(name = "financial_transaction_categories")
 public class FinancialTransactionCategory implements Serializable {
 
@@ -37,9 +38,9 @@ public class FinancialTransactionCategory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30)
     @NotBlank
     @Pattern(regexp = "[\\w ]+")
+    @Size(max = 30, message = "{validation.name.size.too_long}")
     private String name;
 
     @Column(name = "transaction_type")
