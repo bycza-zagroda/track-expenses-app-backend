@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 
 @Repository
-public interface FinancialTransactionCategoryRepository extends JpaRepository<FinancialTransactionCategory,Long> {
+public interface FinancialTransactionCategoryRepository extends JpaRepository<FinancialTransactionCategory, Long> {
 }
