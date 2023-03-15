@@ -34,7 +34,7 @@ public class DeleteWalletByIdTest extends BaseIntegrationTestIT {
         walletRepository.deleteAll();
     }
 
-    @DisplayName("Should delete wallet from database and return status isOk")
+    @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord () throws Exception {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
@@ -44,14 +44,15 @@ public class DeleteWalletByIdTest extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
-    @DisplayName("Should return is Not Found error when Id does not exist")
+    @DisplayName("Should return is Not Found error when Id does not exist a database")
     @Test
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", 1L).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
         Assertions.assertEquals(0, walletRepository.count());
     }
 
