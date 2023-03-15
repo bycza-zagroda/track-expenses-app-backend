@@ -1,29 +1,24 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
-
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import static org.mockito.Mockito.when;
 
 
@@ -36,10 +31,6 @@ public class FinancialTransactionCategoryServiceImplTest {
 
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;
 
-
-
-@ExtendWith(MockitoExtension.class)
-class FinancialTransactionCategoryServiceImplTest {
 
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
