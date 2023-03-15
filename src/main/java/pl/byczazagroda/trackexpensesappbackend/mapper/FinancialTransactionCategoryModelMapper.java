@@ -6,6 +6,5 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategor
 
 @Mapper(componentModel = "spring")
 public interface FinancialTransactionCategoryModelMapper {
-    FinancialTransactionCategoryDTO mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
-            FinancialTransactionCategory financialTransactionCategory);
+    FinancialTransactionCategoryDTO mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(FinancialTransactionCategory category);
 }
