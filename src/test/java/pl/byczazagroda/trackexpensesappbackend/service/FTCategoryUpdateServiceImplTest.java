@@ -79,10 +79,4 @@ public class FTCategoryUpdateServiceImplTest {
         Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
     }
 
-    @Test
-    @DisplayName("do not update FT Category if it is assigned to any financial transactions")
-    void testUpdateFTCategoryById_WhenFTCisAssignedToFinancialTransaction_ThenThrowAnError() {
-//        TODO implement test
-    }
-
 }

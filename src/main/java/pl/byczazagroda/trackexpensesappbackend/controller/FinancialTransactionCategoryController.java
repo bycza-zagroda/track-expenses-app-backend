@@ -31,7 +31,6 @@ public class FinancialTransactionCategoryController {
 
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
 
-    private final FinancialTransactionCategoryService financialTransactionCategoryService;
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
         //TODO Necessary code implementation
@@ -56,7 +55,7 @@ public class FinancialTransactionCategoryController {
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
             @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO){
+            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
                 = financialTransactionCategoryService.updateFinancialTransactionCategory(id, financialTransactionCategoryUpdateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
