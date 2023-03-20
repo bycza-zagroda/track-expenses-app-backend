@@ -12,34 +12,28 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WalletController.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = WalletServiceImpl.class),
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletModelMapper.class, ErrorStrategy.class}))
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                WalletModelMapper.class, ErrorStrategy.class
+        }))
 @ActiveProfiles("test")
 class WalletGetAllControllerTest {
-
-    private static final String NAME_1 = "wallet name one";
-    private static final String NAME_2 = "wallet name two";
-    private static final String NAME_3 = "wallet name three";
-    private static final String NAME_4 = "wallet name four";
-    private static final String NAME_5 = "wallet name five";
 
     @MockBean
     private WalletService walletService;
@@ -49,32 +43,29 @@ class WalletGetAllControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Test
-    @DisplayName("Get all five wallets")
+    @DisplayName("when getting all wallets should return wallets DTOs list and response status OK")
     @BeforeEach
-    void getAllWallets() throws Exception {
+    void shouldResponseStatusOKAndWalletDTOsList() throws Exception {
         //given
-        List<WalletCreateDTO> expectedWallets = List.of(new WalletCreateDTO(NAME_1), new WalletCreateDTO(NAME_2), new WalletCreateDTO(NAME_3), new WalletCreateDTO(NAME_4), new WalletCreateDTO(NAME_5));
-        expectedWallets.forEach(walletDTO -> {
-            try {
-                mockMvc.perform(MockMvcRequestBuilders.post("/api/wallets")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))))
-                        .andExpect(status().isCreated());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+        List<WalletDTO> walletsListDTO = createWalletCDTOList();
+        given(walletService.getWallets()).willReturn(walletsListDTO);
 
         // when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets")
-                .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        resultActions.andExpect(status().isOk())
-                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(5))
-                 .andDo(print());
+        mockMvc.perform(get("/api/wallets").accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
+    }
+
+    List<WalletDTO> createWalletCDTOList() {
+        return List.of(
+                new WalletDTO(1L, "wallet name one", Instant.ofEpochSecond(0)),
+                new WalletDTO(2L, "wallet name second", Instant.ofEpochSecond(0)),
+                new WalletDTO(3L, "wallet name third", Instant.ofEpochSecond(0))
+        );
     }
 
 }
