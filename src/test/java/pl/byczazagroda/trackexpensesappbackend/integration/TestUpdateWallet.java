@@ -17,11 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class TestUpdateWallet extends BaseIntegrationTestIT {
-    @Autowired
-    WalletRepository walletRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    WalletRepository walletRepository;
 
     @BeforeEach
     public void clearTestDB() {
