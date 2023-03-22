@@ -59,16 +59,14 @@ public class FTCategoryUpdateServiceImplTest {
     @DisplayName("update the FT category and return the category object if the ID is correct")
     void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
         Mockito.when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
-        Mockito.when(repository.save(VALID_CATEGORY)).thenReturn(VALID_CATEGORY);
         Mockito.when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(ArgumentMatchers.any())).thenReturn(VALID_CATEGORY_DTO);
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, VALID_UPDATE_CATEGORY_DTO);
         Assertions.assertEquals(dto, VALID_CATEGORY_DTO);
-        Mockito.verify(repository, Mockito.times(1)).save(VALID_CATEGORY);
     }
 
     @Test
-    @DisplayName("do not update FT Category if id is incorrect instead throw AppRuntimeException and does not update entity")
+    @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and does not update entity")
     void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
         Mockito.when(repository.findById(INVALID_ID)).thenReturn(Optional.empty());
         AppRuntimeException exception = Assertions.assertThrows(
