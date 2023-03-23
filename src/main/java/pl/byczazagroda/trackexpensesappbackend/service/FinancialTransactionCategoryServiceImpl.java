@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
@@ -39,6 +41,16 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         return financialTransactionCategoryRepository.findAll().stream()
                 .map(financialTransactionCategoryModelMapper::mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO)
                 .toList();
+    }
+
+    @Override
+    public void deleteFinancialTransactionCategory(long id) {
+        if(!financialTransactionCategoryRepository.existsById(id)) {
+            throw new AppRuntimeException(
+                    ErrorCode.FTC001,
+                    String.format("Financial transaction category with given id: %d does not exist", id));
+        }
+        financialTransactionCategoryRepository.deleteById(id);
     }
 
 }
