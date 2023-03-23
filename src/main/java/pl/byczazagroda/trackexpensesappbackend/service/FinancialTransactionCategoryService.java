@@ -21,5 +21,8 @@ public interface FinancialTransactionCategoryService {
             @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO);
 
     List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories();
+
+    void deleteFinancialTransactionCategory(long id);
+
 }
 

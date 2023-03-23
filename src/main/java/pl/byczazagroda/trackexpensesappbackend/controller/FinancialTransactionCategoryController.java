@@ -63,7 +63,7 @@ public class FinancialTransactionCategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
-        //TODO Necessary code implementation
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

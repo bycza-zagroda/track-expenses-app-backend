@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -16,14 +18,16 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @Service
 @Validated
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
 
+    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
+    
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
-    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(@Valid
@@ -34,6 +38,16 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
         return financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(savedEntity);
+    }
+
+    @Override
+    public void deleteFinancialTransactionCategory(long id) {
+        if(!financialTransactionCategoryRepository.existsById(id)) {
+            throw new AppRuntimeException(
+                    ErrorCode.FTC001,
+                    String.format("Financial transaction category with given id: %d does not exist", id));
+        }
+        financialTransactionCategoryRepository.deleteById(id);
     }
       
     @Override
