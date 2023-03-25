@@ -45,12 +45,13 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     @Override
     public void deleteFinancialTransactionCategory(long id) {
-        if(!financialTransactionCategoryRepository.existsById(id)) {
+        if(financialTransactionCategoryRepository.existsById(id)) {
+            financialTransactionCategoryRepository.deleteById(id);
+        } else {
             throw new AppRuntimeException(
                     ErrorCode.FTC001,
                     String.format("Financial transaction category with given id: %d does not exist", id));
         }
-        financialTransactionCategoryRepository.deleteById(id);
     }
 
 }
