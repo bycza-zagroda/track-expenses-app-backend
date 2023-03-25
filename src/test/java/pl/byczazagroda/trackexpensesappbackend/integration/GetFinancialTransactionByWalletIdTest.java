@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
     }
 
     @Test
+    @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
     public void testGetFinancialTransactionsByWalletID_whenWalletIdIsCorrect_thenReturnListOfFinancialTransactionDTO() throws Exception {
         Wallet wallet = createTestWallet();
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
@@ -51,6 +53,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
     }
 
     @Test
+    @DisplayName("when wallet id is correct returns error response dto and has 404 status code")
     public void testGetFinancialTransactionsByWalletID_whenWalletIdIsIncorrect_thenReturnErrorResponseDTO() throws Exception {
         mockMvc.perform(get("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
