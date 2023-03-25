@@ -12,6 +12,8 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategor
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -44,7 +46,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     @Override
-    public void deleteFinancialTransactionCategory(long id) {
+    public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id) {
         if(financialTransactionCategoryRepository.existsById(id)) {
             financialTransactionCategoryRepository.deleteById(id);
         } else {

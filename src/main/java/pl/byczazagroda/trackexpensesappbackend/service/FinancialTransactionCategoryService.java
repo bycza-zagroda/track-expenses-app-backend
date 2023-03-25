@@ -4,6 +4,8 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,7 +20,7 @@ public interface FinancialTransactionCategoryService {
 
     List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories();
 
-    void deleteFinancialTransactionCategory(long id);
+    void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id);
 
 }
 
