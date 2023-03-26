@@ -1,13 +1,10 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
@@ -20,6 +17,14 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCa
 
 import java.time.Instant;
 import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class FTCategoryUpdateServiceImplTest {
@@ -58,23 +63,23 @@ public class FTCategoryUpdateServiceImplTest {
     @Test
     @DisplayName("update the FT category and return the category object if the ID is correct")
     void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
-        Mockito.when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
-        Mockito.when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(ArgumentMatchers.any())).thenReturn(VALID_CATEGORY_DTO);
+        when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
+        when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any())).thenReturn(VALID_CATEGORY_DTO);
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, VALID_UPDATE_CATEGORY_DTO);
-        Assertions.assertEquals(dto, VALID_CATEGORY_DTO);
+        assertEquals(dto, VALID_CATEGORY_DTO);
     }
 
     @Test
     @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and does not update entity")
     void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
-        Mockito.when(repository.findById(INVALID_ID)).thenReturn(Optional.empty());
-        AppRuntimeException exception = Assertions.assertThrows(
+        when(repository.findById(INVALID_ID)).thenReturn(empty());
+        AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
                 () -> service.updateFinancialTransactionCategory(INVALID_ID, VALID_UPDATE_CATEGORY_DTO)
         );
-        Assertions.assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
-        Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
+        assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
+        verify(repository, never()).save(any());
     }
 
 }
