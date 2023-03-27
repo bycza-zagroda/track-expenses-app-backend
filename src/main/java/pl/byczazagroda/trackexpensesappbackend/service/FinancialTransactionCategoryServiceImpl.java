@@ -44,7 +44,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     @Override
     public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id) {
-        if(financialTransactionCategoryRepository.existsById(id)) {
+        if (financialTransactionCategoryRepository.existsById(id)) {
             financialTransactionCategoryRepository.deleteById(id);
         } else {
             throw new AppRuntimeException(
