@@ -60,8 +60,7 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
                 .content(objectMapper.writeValueAsString(updatedWallet)));
 
         // then
-        response.andExpect(status().isNotFound())
-                .andDo(print());
+        response.andExpect(status().isNotFound());
     }
 
 }
