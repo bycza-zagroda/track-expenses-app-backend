@@ -33,7 +33,7 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
         Wallet savedWallet = new Wallet("TestWallet");
         walletRepository.save(savedWallet);
 
-        Wallet updatedWallet = new Wallet("UpdatedWallet");
+        WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
         // when
         ResultActions response = mockMvc.perform(patch("/api/wallets/{id}", savedWallet.getId())
@@ -43,7 +43,7 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
         // then
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.name").value(updatedWallet.getName()));
+                .andExpect(jsonPath("$.name").value(updatedWallet.name()));
 
         Assertions.assertEquals(1, walletRepository.count());
     }
@@ -52,7 +52,7 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
     void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         //given
         long walletId = 3L;
-        Wallet updatedWallet = new Wallet("UpdatedWallet");
+        WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
         // when
         ResultActions response = mockMvc.perform(patch("/api/wallets/{id}", walletId)
