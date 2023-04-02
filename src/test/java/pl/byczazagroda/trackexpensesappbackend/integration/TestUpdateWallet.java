@@ -23,11 +23,10 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
 
     @BeforeEach
     public void clearTestDB() {
-
         walletRepository.deleteAll();
     }
 
-    @DisplayName("It should return updated wallet DTO")
+    @DisplayName("It should return updated wallet DTO when ID is correct")
     @Test
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
@@ -49,7 +48,7 @@ class TestUpdateWallet extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("It should return AppRuntimeException with message WALLET_NOT_FOUND")
+    @DisplayName("It should return AppRuntimeException with message WALLET_NOT_FOUND when ID is incorrect")
     @Test
     void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         //given
