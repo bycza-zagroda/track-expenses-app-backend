@@ -20,6 +20,7 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
 
     static private final String WALLET_NAME = "wallet";
     static private final String WALLET_NAME_TOO_LONG = "The quick, brown fox jumps over";
+    
     @Autowired
     WalletRepository walletRepository;
 
@@ -62,7 +63,7 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()));
-        //check if wallet has been added to database
+
         Assertions.assertEquals(1, walletRepository.count());
     }
 
