@@ -52,7 +52,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                     String.format("Financial transaction category with given id: %d does not exist", id));
         }
     }
-      
+
     @Override
     public List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories() {
         return financialTransactionCategoryRepository.findAll().stream()
