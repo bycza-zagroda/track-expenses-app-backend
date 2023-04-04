@@ -10,13 +10,16 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface FinancialTransactionService {
+
     FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO);
 
     List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId);
 
     FinancialTransactionDTO findById(@Min(1) @NotNull Long id);
 
-    FinancialTransactionDTO updateFinancialTransaction(@Min(1) @NotNull Long id, @Valid FinancialTransactionUpdateDTO financialTransactionUpdateDTO);
+    FinancialTransactionDTO updateFinancialTransaction(@Min(1) @NotNull Long id,
+                                                       @Valid FinancialTransactionUpdateDTO financialTransactionUpdateDTO);
 
     void deleteTransactionById(@Min(1) @NotNull Long id);
+
 }

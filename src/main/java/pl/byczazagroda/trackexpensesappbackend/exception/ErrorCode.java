@@ -37,4 +37,5 @@ public enum ErrorCode {
     public Integer getBusinessStatusCode() {
         return this.businessStatusCode;
     }
+
 }
