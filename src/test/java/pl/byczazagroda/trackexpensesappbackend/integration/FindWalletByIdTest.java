@@ -13,7 +13,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class FindWalletByIdTest extends BaseIntegrationTestIT {
 
@@ -31,7 +30,6 @@ public class FindWalletByIdTest extends BaseIntegrationTestIT {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(wallet.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(wallet.getName()));
@@ -43,9 +41,9 @@ public class FindWalletByIdTest extends BaseIntegrationTestIT {
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/{id}", 1L).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn();
         Assertions.assertEquals(0, walletRepository.count());
     }
+
 }
