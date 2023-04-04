@@ -15,12 +15,11 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRe
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
 
     static private final String WALLET_NAME = "wallet";
-    static private final String WALLET_NAME_TOO_LONG = "walletttttttttttttttttttttttttttttttttttttttttttttt";
+    static private final String WALLET_NAME_TOO_LONG = "The quick, brown fox jumps over";
     @Autowired
     WalletRepository walletRepository;
 
@@ -42,7 +41,6 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
         Wallet wallet3 = walletRepository.save(new Wallet("WALLET"));
         Wallet wallet4 = walletRepository.save(new Wallet("Bag"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(wallet1.getId()))
@@ -61,7 +59,6 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
         Wallet wallet1 = walletRepository.save(new Wallet("Wallet"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME_TOO_LONG).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()));
@@ -74,8 +71,8 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
         Wallet wallet4 = walletRepository.save(new Wallet("Bag"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(0)));
     }
+
 }
