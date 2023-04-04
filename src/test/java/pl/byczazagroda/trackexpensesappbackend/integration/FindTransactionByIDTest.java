@@ -19,8 +19,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
 public class FindTransactionByIDTest extends BaseIntegrationTestIT {
 
     @Autowired
@@ -42,7 +40,6 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()))
@@ -58,7 +55,6 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()))
