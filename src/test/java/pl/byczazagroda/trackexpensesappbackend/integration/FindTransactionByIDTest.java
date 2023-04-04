@@ -45,6 +45,7 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
+
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
@@ -59,7 +60,7 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT001.getBusinessStatusCode()));
-        //check if database is not empty
+
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
