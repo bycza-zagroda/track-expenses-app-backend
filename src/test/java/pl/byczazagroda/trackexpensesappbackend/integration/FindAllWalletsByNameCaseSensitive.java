@@ -51,7 +51,6 @@ public class FindAllWalletsByNameCaseSensitive extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value(wallet2.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()));
 
-        //check if database has 4 records
         Assertions.assertEquals(4, walletRepository.count());
     }
 
