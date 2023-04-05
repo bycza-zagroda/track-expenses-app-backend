@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/001-create-table-wallets.yaml
+  - include:
+      file: db/changelog/003-create-table-financial_transactions.yaml
