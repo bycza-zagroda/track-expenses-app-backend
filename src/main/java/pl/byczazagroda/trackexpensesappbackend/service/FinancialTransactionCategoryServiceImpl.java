@@ -5,27 +5,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
 
 @RequiredArgsConstructor
 @Service
 @Validated
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
 
-    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
-    
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
+    private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(@Valid
@@ -46,6 +46,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     @Override
+
     public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id) {
         if (financialTransactionCategoryRepository.existsById(id)) {
             financialTransactionCategoryRepository.deleteById(id);
@@ -56,4 +57,18 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         }
     }
 
+    @Transactional
+    public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
+            Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+        FinancialTransactionCategory financialTransactionCategory
+                = financialTransactionCategoryRepository.findById(id)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                        String.format("Financial transaction category with id: %d not found", id)));
+        financialTransactionCategory.setName(financialTransactionCategoryUpdateDTO.name());
+        financialTransactionCategory.setType(financialTransactionCategoryUpdateDTO.type());
+        return financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
+    }
+
 }
+
