@@ -17,8 +17,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT {
 
@@ -36,7 +36,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
 
     @Test
     @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
-    public void testGetFinancialTransactionsByWalletID_whenWalletIdIsCorrect_thenReturnListOfFinancialTransactionDTO() throws Exception {
+    public void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
         Wallet wallet = createTestWallet();
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
         mockMvc.perform(get("/api/transactions")
@@ -48,17 +48,19 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
                 .andExpect(jsonPath("$.[0].description").value(financialTransaction.getDescription()))
                 .andExpect(jsonPath("$.[0].type").value(financialTransaction.getType().name()))
                 .andExpect(jsonPath("$.[0].date").value(financialTransaction.getDate().toString()));
+
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
     }
 
     @Test
     @DisplayName("when wallet id is correct returns error response dto and has 404 status code")
-    public void testGetFinancialTransactionsByWalletID_whenWalletIdIsIncorrect_thenReturnErrorResponseDTO() throws Exception {
+    public void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         mockMvc.perform(get("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .queryParam("walletId", "1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(0, walletRepository.count());
     }
