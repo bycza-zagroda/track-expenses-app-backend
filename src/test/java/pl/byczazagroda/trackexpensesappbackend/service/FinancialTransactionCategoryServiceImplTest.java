@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
@@ -19,7 +20,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -97,6 +99,27 @@ public class FinancialTransactionCategoryServiceImplTest {
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryFirstDTO);
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(1), categorySecondDTO);
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(2), categoryThirdDTO);
+    }
+
+    @Test
+    @DisplayName("when financial transaction category exists should delete it successfully")
+    void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
+        //when
+        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(true);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L);
+
+        //then
+        verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
+    }
+
+    @Test
+    @DisplayName("when financial transaction category doesn't exist should throw an exception")
+    void shouldFailToDeleteFinancialTransactionCategory_WhenIdNotExists() {
+        //when
+        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L));
     }
     
 }
