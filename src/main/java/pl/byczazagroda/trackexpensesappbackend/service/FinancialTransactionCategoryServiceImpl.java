@@ -14,6 +14,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCa
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,6 +46,17 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     @Override
+
+    public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id) {
+        if (financialTransactionCategoryRepository.existsById(id)) {
+            financialTransactionCategoryRepository.deleteById(id);
+        } else {
+            throw new AppRuntimeException(
+                    ErrorCode.FTC001,
+                    String.format("Financial transaction category with given id: %d does not exist", id));
+        }
+    }
+
     @Transactional
     public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
             Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
@@ -58,3 +71,4 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
 }
+
