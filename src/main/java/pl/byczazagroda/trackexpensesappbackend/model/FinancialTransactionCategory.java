@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 
 @Entity
@@ -56,6 +58,9 @@ public class FinancialTransactionCategory implements Serializable {
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private Instant creationDate;
+
+    @OneToMany(mappedBy = "financialTransactionCategory")
+    private List<FinancialTransaction> financialTransactions;
 
     @PrePersist
     protected void onCreate() {
