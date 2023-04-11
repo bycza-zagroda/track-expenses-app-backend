@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: "7"
+      author: Krisu93
+      changes:
+        - createTable:
+            tableName: financial_transaction_categories
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
