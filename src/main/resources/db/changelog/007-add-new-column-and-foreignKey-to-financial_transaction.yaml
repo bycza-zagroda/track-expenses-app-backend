@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: "9"
+      author: pmackowiak
+      changes:
+        - addColumn:
+            tableName: financial_transactions
+            columns:
+              - column:
+                  name: financial_transaction_category_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            constraintName: fk_financial_transaction_categories_id
+            baseColumnNames: financial_transaction_category_id
+            baseTableName: financial_transactions
+            referencedTableName: financial_transaction_categories
+            referencedColumnNames: id
