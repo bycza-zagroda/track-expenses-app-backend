@@ -6,10 +6,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/003-create-table-financial_transactions.yaml
   - include:
-      file: db/changelog/004-insert-into-financial_transactions.yaml
-  - include:
       file: db/changelog/005-create-table-financial_transaction_categories.yaml
   - include:
       file: db/changelog/006-insert-into-financial_transaction_categories.yaml
   - include:
       file: db/changelog/007-add-new-column-and-foreignKey-to-financial_transaction.yaml
+  - include:
+      file: db/changelog/004-insert-into-financial_transactions.yaml
