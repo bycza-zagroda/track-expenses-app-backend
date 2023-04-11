@@ -33,8 +33,8 @@ public class FinancialTransactionCategoryController {
 
     @GetMapping("/{id}")
     ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
-        //TODO Necessary code implementation
-        FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO = null;
+        FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO =
+                financialTransactionCategoryService.findById(id);
         return new ResponseEntity<>(financialTransactionCategoryDetailedDTO, HttpStatus.OK);
     }
 
