@@ -68,7 +68,7 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
         return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(new BigDecimal("5.0"))
-                .date(Instant.ofEpochMilli(1L))
+                .date(Instant.ofEpochSecond(1L))
                 .type(FinancialTransactionType.INCOME)
                 .description(description)
                 .build());
