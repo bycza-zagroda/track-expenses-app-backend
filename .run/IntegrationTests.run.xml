@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test-TrackExpensesAppBackendApplication.run" type="JUnit" factoryName="JUnit" singleton="false">
+  <configuration default="false" name="IntegrationTests" type="JUnit" factoryName="JUnit" singleton="false">
     <module name="track-expenses-app-backend" />
     <extension name="coverage">
       <pattern>
@@ -10,10 +10,13 @@
     <option name="PACKAGE_NAME" value="pl.byczazagroda.trackexpensesappbackend" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="package" />
+    <option name="TEST_OBJECT" value="pattern" />
     <envs>
       <env name="--spring.profiles.active" value="test" />
     </envs>
+    <patterns>
+      <pattern testClass="^.*IT$" />
+    </patterns>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
