@@ -20,7 +20,7 @@ import java.time.Instant;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT {
+public class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
 
     @Autowired
     FinancialTransactionRepository financialTransactionRepository;
@@ -73,7 +73,7 @@ public class GetFinancialTransactionByWalletIdTest extends BaseIntegrationTestIT
         return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(BigDecimal.valueOf(2.0))
-                .date(Instant.ofEpochMilli(0L))
+                .date(Instant.ofEpochSecond(1L))
                 .type(FinancialTransactionType.INCOME)
                 .description("test description")
                 .build());
