@@ -102,7 +102,8 @@ public class FinancialTransactionCategoryServiceImplTest {
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryThird))
                 .thenReturn(categoryThirdDTO);
 
-        List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList = financialTransactionCategoryService.getFinancialTransactionCategories();
+        List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
+                financialTransactionCategoryService.getFinancialTransactionCategories();
 
         //then
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryFirstDTO);
@@ -128,7 +129,8 @@ public class FinancialTransactionCategoryServiceImplTest {
         when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(false);
 
         //then
-        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L));
+        Assertions.assertThrows(AppRuntimeException.class,
+                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L));
     }
 
     @Test
@@ -143,20 +145,25 @@ public class FinancialTransactionCategoryServiceImplTest {
         financialTransactionCategory.setType(FinancialTransactionType.INCOME);
         BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
 
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(id,"example name", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
+                new FinancialTransactionCategoryDTO(id,"example name", FinancialTransactionType.INCOME);
 
         //when
         when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
-        when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id)).thenReturn(numberOfFinancialTransactions);
+        when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id))
+                .thenReturn(numberOfFinancialTransactions);
         when(financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory))
                 .thenReturn(financialTransactionCategoryDTO);
 
-        FinancialTransactionCategoryDetailedDTO foundFinancialTransactionCategory = financialTransactionCategoryService.findById(id);
+        FinancialTransactionCategoryDetailedDTO foundFinancialTransactionCategory =
+                financialTransactionCategoryService.findById(id);
 
         //then
-        Assertions.assertEquals(financialTransactionCategoryDTO, foundFinancialTransactionCategory.financialTransactionCategoryDTO());
-        Assertions.assertEquals(numberOfFinancialTransactions, foundFinancialTransactionCategory.financialTransactionsCounter());
+        Assertions.assertEquals(financialTransactionCategoryDTO,
+                foundFinancialTransactionCategory.financialTransactionCategoryDTO());
+        Assertions.assertEquals(numberOfFinancialTransactions,
+                foundFinancialTransactionCategory.financialTransactionsCounter());
     }
 
     @Test
