@@ -61,7 +61,7 @@ public class FinancialTransaction implements Serializable {
     @Size(max = 255)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private FinancialTransactionCategory financialTransactionCategory;
 
     @Override
