@@ -33,7 +33,11 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +71,10 @@ class FinancialTransactionServiceImplTest{
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
 
         //when & then
-        AppRuntimeException exception = assertThrows(AppRuntimeException.class, ()->financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO));
+        AppRuntimeException exception = assertThrows(
+                AppRuntimeException.class,
+                () -> financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO)
+        );
         assertEquals(ErrorCode.W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(walletRepository, never()).save(any());
     }
