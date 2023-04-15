@@ -117,7 +117,7 @@ class FinancialTransactionServiceImplTest{
 
         when(financialTransactionRepository.save(any())).thenReturn(financialTransaction);
         FinancialTransactionDTO financialTransactionDTO =
-                new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSE, DATE_NOW);
+                new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSE, DATE_NOW, null);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any()))
                 .thenReturn(financialTransactionDTO);
 
@@ -147,7 +147,7 @@ class FinancialTransactionServiceImplTest{
 
         FinancialTransactionDTO financialTransactionDTO2 =
                 new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc",
-                        FinancialTransactionType.EXPENSE, DATE_NOW);
+                        FinancialTransactionType.EXPENSE, DATE_NOW, null);
 
         List<FinancialTransaction> financialTransactionsList = new ArrayList<>();
         financialTransactionsList.add(financialTransaction1);
@@ -202,7 +202,7 @@ class FinancialTransactionServiceImplTest{
         FinancialTransaction financialTransaction = createEntityFinancialTransaction();
         FinancialTransactionDTO financialTransactionDTO =
                 new FinancialTransactionDTO(ID_1L, BigDecimal.valueOf(20), "description",
-                        FinancialTransactionType.EXPENSE, DATE_NOW);
+                        FinancialTransactionType.EXPENSE, DATE_NOW, null);
 
         //when
         when(financialTransactionRepository.findById(ID_1L)).thenReturn(Optional.of(financialTransaction));
@@ -240,6 +240,6 @@ class FinancialTransactionServiceImplTest{
     }
 
     private FinancialTransactionDTO createFinancialTransactionDTO(){
-        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW);
+        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, null);
     }
 }
