@@ -21,23 +21,23 @@ import java.time.Instant;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
+class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
 
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @BeforeEach
-    public void clearTestDB() {
+    void clearTestDB() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
     }
 
     @Test
     @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
-    public void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
+    void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
         Wallet wallet = createTestWallet();
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
         mockMvc.perform(get("/api/transactions")
@@ -56,7 +56,7 @@ public class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
 
     @Test
     @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
-    public void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
+    void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         mockMvc.perform(get("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .queryParam("walletId", "1"))
@@ -82,5 +82,4 @@ public class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
                 .description("test description")
                 .build());
     }
-
 }
