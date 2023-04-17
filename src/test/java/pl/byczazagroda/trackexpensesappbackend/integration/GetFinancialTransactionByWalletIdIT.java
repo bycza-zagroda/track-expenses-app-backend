@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -54,12 +55,15 @@ public class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("when wallet id is correct returns error response dto and has 404 status code")
+    @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
     public void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         mockMvc.perform(get("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .queryParam("walletId", "1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
 
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(0, walletRepository.count());
