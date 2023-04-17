@@ -4,6 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDetailedDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
 
 import javax.validation.Valid;
@@ -19,6 +20,8 @@ public interface FinancialTransactionCategoryService {
 
     FinancialTransactionCategoryDTO createFinancialTransactionCategory(
             @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO);
+
+    FinancialTransactionCategoryDetailedDTO findById(@Min(1) @NotNull Long id);
 
     List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories();
 
