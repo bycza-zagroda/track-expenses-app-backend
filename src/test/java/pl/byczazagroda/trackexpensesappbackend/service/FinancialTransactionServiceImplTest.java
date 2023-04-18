@@ -33,7 +33,11 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +71,10 @@ class FinancialTransactionServiceImplTest{
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
 
         //when & then
-        AppRuntimeException exception = assertThrows(AppRuntimeException.class, ()->financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO));
+        AppRuntimeException exception = assertThrows(
+                AppRuntimeException.class,
+                () -> financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO)
+        );
         assertEquals(ErrorCode.W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(walletRepository, never()).save(any());
     }
@@ -110,7 +117,7 @@ class FinancialTransactionServiceImplTest{
 
         when(financialTransactionRepository.save(any())).thenReturn(financialTransaction);
         FinancialTransactionDTO financialTransactionDTO =
-                new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSE, DATE_NOW);
+                new FinancialTransactionDTO(ID_1L, ONE, EMPTY, EXPENSE, DATE_NOW, null);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any()))
                 .thenReturn(financialTransactionDTO);
 
@@ -140,7 +147,7 @@ class FinancialTransactionServiceImplTest{
 
         FinancialTransactionDTO financialTransactionDTO2 =
                 new FinancialTransactionDTO(ID_2L, BigDecimal.ONE, "desc",
-                        FinancialTransactionType.EXPENSE, DATE_NOW);
+                        FinancialTransactionType.EXPENSE, DATE_NOW, null);
 
         List<FinancialTransaction> financialTransactionsList = new ArrayList<>();
         financialTransactionsList.add(financialTransaction1);
@@ -195,7 +202,7 @@ class FinancialTransactionServiceImplTest{
         FinancialTransaction financialTransaction = createEntityFinancialTransaction();
         FinancialTransactionDTO financialTransactionDTO =
                 new FinancialTransactionDTO(ID_1L, BigDecimal.valueOf(20), "description",
-                        FinancialTransactionType.EXPENSE, DATE_NOW);
+                        FinancialTransactionType.EXPENSE, DATE_NOW, null);
 
         //when
         when(financialTransactionRepository.findById(ID_1L)).thenReturn(Optional.of(financialTransaction));
@@ -233,6 +240,6 @@ class FinancialTransactionServiceImplTest{
     }
 
     private FinancialTransactionDTO createFinancialTransactionDTO(){
-        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW);
+        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, null);
     }
 }
