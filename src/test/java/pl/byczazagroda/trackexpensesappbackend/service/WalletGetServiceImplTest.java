@@ -84,6 +84,7 @@ class WalletGetServiceImplTest {
         WalletDTO expectedDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
 
         //when
+        when(walletRepository.existsById(ID_1L)).thenReturn(true);
         when(walletRepository.findById(ID_1L)).thenReturn(Optional.of(wallet));
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(expectedDTO);
         WalletDTO foundWallet = walletService.findById(ID_1L);

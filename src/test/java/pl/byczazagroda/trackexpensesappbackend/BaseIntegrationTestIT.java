@@ -32,6 +32,7 @@ public abstract class BaseIntegrationTestIT {
             .withDatabaseName("trackexpensesapptest")
             .withUsername("root")
             .withPassword("root")
+            .withUrlParam("serverTimezone", "UTC")
             .withReuse(true);
 
     @DynamicPropertySource

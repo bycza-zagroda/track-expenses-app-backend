@@ -1,0 +1,30 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Dev-TrackExpensesAppBackendApplication " type="Application" factoryName="Application" singleton="true">
+        <envs>
+            <env name="DB_PASSWORD" value="root" />
+            <env name="DB_USER" value="root" />
+            <env name="DB_SERVER" value="localhost" />
+            <env name="DB_PORT" value="3308" />
+            <env name="DB_NAME" value="trackexpensesapp" />
+        </envs>
+        <option name="MAIN_CLASS_NAME" value="pl.byczazagroda.trackexpensesappbackend.TrackExpensesAppBackendApplication" />
+        <module name="track-expenses-app-backend" />
+        <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
+        <shortenClasspath name="ARGS_FILE" />
+        <option name="VM_PARAMETERS" value="-ea --add-opens java.base/java.lang=ALL-UNNAMED" />
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="pl.byczazagroda.trackexpensesappbackend.*" />
+                <option name="ENABLED" value="true" />
+            </pattern>
+        </extension>
+        <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+            <option name="credential" />
+            <option name="region" />
+            <option name="useCurrentConnection" value="false" />
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+</component>

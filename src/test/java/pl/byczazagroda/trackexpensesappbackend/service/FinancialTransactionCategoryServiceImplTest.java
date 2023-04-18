@@ -9,16 +9,24 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDetailedDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -40,6 +48,9 @@ public class FinancialTransactionCategoryServiceImplTest {
 
     @Mock
     private FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
+
+    @Mock
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @DisplayName("create financial transaction category when valid parameters are provided")
     @Test
@@ -91,12 +102,78 @@ public class FinancialTransactionCategoryServiceImplTest {
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryThird))
                 .thenReturn(categoryThirdDTO);
 
-        List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList = financialTransactionCategoryService.getFinancialTransactionCategories();
+        List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
+                financialTransactionCategoryService.getFinancialTransactionCategories();
 
         //then
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryFirstDTO);
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(1), categorySecondDTO);
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(2), categoryThirdDTO);
     }
-    
+
+    @Test
+    @DisplayName("when financial transaction category exists should delete it successfully")
+    void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
+        //when
+        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(true);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L);
+
+        //then
+        verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
+    }
+
+    @Test
+    @DisplayName("when financial transaction category doesn't exist should throw an exception")
+    void shouldFailToDeleteFinancialTransactionCategory_WhenIdNotExists() {
+        //when
+        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(AppRuntimeException.class,
+                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L));
+    }
+
+    @Test
+    @DisplayName("when finding with proper financial transaction category id " +
+            "should successfully find financial transaction category and number of financial transaction")
+    void shouldSuccessfullyFindFinancialTransactionCategory_WhenFindingWithProperFinancialTransactionCategoryId() {
+        //given
+        Long id = 1L;
+        FinancialTransactionCategory financialTransactionCategory = new FinancialTransactionCategory();
+        financialTransactionCategory.setId(id);
+        financialTransactionCategory.setName("example name");
+        financialTransactionCategory.setType(FinancialTransactionType.INCOME);
+        BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
+
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
+                new FinancialTransactionCategoryDTO(id,"example name", FinancialTransactionType.INCOME);
+
+        //when
+        when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
+        when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id))
+                .thenReturn(numberOfFinancialTransactions);
+        when(financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory))
+                .thenReturn(financialTransactionCategoryDTO);
+
+        FinancialTransactionCategoryDetailedDTO foundFinancialTransactionCategory =
+                financialTransactionCategoryService.findById(id);
+
+        //then
+        Assertions.assertEquals(financialTransactionCategoryDTO,
+                foundFinancialTransactionCategory.financialTransactionCategoryDTO());
+        Assertions.assertEquals(numberOfFinancialTransactions,
+                foundFinancialTransactionCategory.financialTransactionsCounter());
+    }
+
+    @Test
+    @DisplayName("when financial transaction category doesn't exist should throw an exception")
+    void shouldFailToReadFinancialTransactionCategoryById_WhenIdDoNotExists() {
+        //when
+        when(financialTransactionCategoryRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        //then
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.findById(1L));
+    }
+
 }
