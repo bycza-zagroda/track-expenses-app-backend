@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 
 import javax.validation.constraints.Digits;
@@ -11,6 +12,8 @@ import java.time.Instant;
 
 public record FinancialTransactionCreateDTO(@Min(1) @NotNull Long walletId,
                                             @Digits(integer = 13, fraction = 2) @PositiveOrZero BigDecimal amount,
-                                            String description, Instant date,
+                                            String description,
+                                            @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern="yyyy-MM-dd HH:mm:ss", timezone = "UTC")
+                                            Instant date,
                                             @NotNull FinancialTransactionType type) {
 }
