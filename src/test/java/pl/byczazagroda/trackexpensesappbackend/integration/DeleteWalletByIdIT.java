@@ -19,9 +19,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-class DeleteWalletByIdTest extends BaseIntegrationTestIT {
+class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 
     @Autowired
     WalletRepository walletRepository;
@@ -36,7 +34,7 @@ class DeleteWalletByIdTest extends BaseIntegrationTestIT {
 
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
-    void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord () throws Exception {
+    void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         createTestFinancialTransaction(wallet);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", wallet.getId()).accept(MediaType.APPLICATION_JSON))
@@ -55,11 +53,11 @@ class DeleteWalletByIdTest extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
-    private void createTestFinancialTransaction(Wallet wallet){
+    private void createTestFinancialTransaction(Wallet wallet) {
         financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(new BigDecimal("2.0"))
-                .date(Instant.ofEpochMilli(0L))
+                .date(Instant.ofEpochSecond(1L))
                 .type(FinancialTransactionType.INCOME)
                 .description("Test transaction")
                 .build());
