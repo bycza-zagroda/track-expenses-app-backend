@@ -29,7 +29,6 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final FinancialTransactionRepository financialTransactionRepository;
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
     private final WalletRepository walletRepository;
-
     @Override
     public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
         Long walletId = financialTransactionCreateDTO.walletId();
@@ -50,6 +49,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(@Min(1) @NotNull Long walletId) {
+        if (!walletRepository.existsById(walletId)){
+            throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
+        }
         return financialTransactionRepository.findAllByWalletIdOrderByDateDesc(walletId).stream()
                 .map(financialTransactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .toList();

@@ -1,3 +1,9 @@
 databaseChangeLog:
   - include:
       file: db/changelog/001-create-table-wallets.yaml
+  - include:
+      file: db/changelog/003-create-table-financial_transactions.yaml
+  - include:
+      file: db/changelog/005-create-table-financial_transaction_categories.yaml
+  - include:
+      file: db/changelog/007-add-new-column-and-foreignKey-to-financial_transaction.yaml
