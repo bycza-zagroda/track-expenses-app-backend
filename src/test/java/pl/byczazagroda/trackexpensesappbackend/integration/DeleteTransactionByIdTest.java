@@ -40,7 +40,7 @@ public class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
         Wallet wallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test Transaction");
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/transactions/{id}", testFinancialTransaction.getId())
-                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
+                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNoContent());
         Assertions.assertEquals(0, financialTransactionRepository.count());
 
     }
