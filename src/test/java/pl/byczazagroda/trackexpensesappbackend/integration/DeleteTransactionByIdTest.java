@@ -37,7 +37,7 @@ public class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
     @Test
     public void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccesfully()
             throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        Wallet wallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test Transaction");
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/transactions/{id}", testFinancialTransaction.getId())
                         .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
@@ -48,7 +48,7 @@ public class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
     @Test
     void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        Wallet wallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test Transaction");
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/transactions/{id}", 100L)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
