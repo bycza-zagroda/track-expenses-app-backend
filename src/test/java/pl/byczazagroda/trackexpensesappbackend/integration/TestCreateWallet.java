@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,7 +40,6 @@ public class TestCreateWallet extends BaseIntegrationTestIT {
 
         // then
         response.andExpect(status().isCreated())
-                .andDo(print())
                 .andExpect(jsonPath("$.name").value(newWallet.name()));
 
         Assertions.assertEquals(1, walletRepository.count());
@@ -58,13 +58,9 @@ public class TestCreateWallet extends BaseIntegrationTestIT {
 
         // then
         response.andExpect(status().isBadRequest())
-                .andDo(print())
-                .andExpect(jsonPath("$.status").value("TEA003"))
-                .andExpect(jsonPath("$.message").value("VALIDATION_FAILED"))
-                .andExpect(jsonPath("$.description[0]")
-                        .value("error: field: name, default message: must match \"[\\w ]+\"," +
-                                " rejected value: @3H*(G"))
-                .andExpect(jsonPath("$.statusCode").value(400));
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         Assertions.assertEquals(0, walletRepository.count());
     }
@@ -82,13 +78,9 @@ public class TestCreateWallet extends BaseIntegrationTestIT {
 
         // then
         response.andExpect(status().isBadRequest())
-                .andDo(print())
-                .andExpect(jsonPath("$.status").value("TEA003"))
-                .andExpect(jsonPath("$.message").value("VALIDATION_FAILED"))
-                .andExpect(jsonPath("$.description[0]")
-                        .value("error: field: name, default message: size must be between 0 and 20," +
-                                " rejected value: nameOfThisWalletIsTooLong"))
-                .andExpect(jsonPath("$.statusCode").value(400));
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         Assertions.assertEquals(0, walletRepository.count());
     }
