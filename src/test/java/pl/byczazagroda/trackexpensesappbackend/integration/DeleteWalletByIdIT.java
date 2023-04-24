@@ -51,6 +51,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
         Assertions.assertEquals(0, walletRepository.count());
+        Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
     private void createTestFinancialTransaction(Wallet wallet) {
