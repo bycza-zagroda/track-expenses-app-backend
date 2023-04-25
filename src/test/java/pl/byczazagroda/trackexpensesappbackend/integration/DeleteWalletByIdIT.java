@@ -22,10 +22,10 @@ import java.time.Instant;
 class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -40,6 +40,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", wallet.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         Assertions.assertEquals(0, walletRepository.count());
+        Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
