@@ -38,9 +38,13 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
+        FinancialTransactionCategory financialTransactionCategory = null;
         Long categoryId = financialTransactionCreateDTO.categoryId();
-        FinancialTransactionCategory financialTransactionCategory =
-                financialTransactionCategoryRepository.findById(categoryId).orElse(null);
+
+        if(!(financialTransactionCreateDTO.categoryId() == null)
+                && financialTransactionCategoryRepository.existsById(categoryId)){
+            financialTransactionCategory = financialTransactionCategoryRepository.getReferenceById(categoryId);
+        }
 
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
                 .type(financialTransactionCreateDTO.type())
