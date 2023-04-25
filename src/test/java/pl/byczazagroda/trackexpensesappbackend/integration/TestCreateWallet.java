@@ -17,13 +17,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TestCreateWallet extends BaseIntegrationTestIT {
+class TestCreateWallet extends BaseIntegrationTestIT {
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @BeforeEach
-    public void clearTestDB() {
+    void clearTestDB() {
         walletRepository.deleteAll();
     }
 
