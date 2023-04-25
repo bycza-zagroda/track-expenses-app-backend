@@ -18,7 +18,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
+class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
 
 
     @Autowired
@@ -33,30 +33,36 @@ public class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
         walletRepository.deleteAll();
     }
 
-    @DisplayName("Should return deleted transaction successfully")
+    @DisplayName("Should delete transaction when ID is correct")
     @Test
-    public void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccesfully()
-            throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test wallet"));
+    void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccesfully() throws Exception {
+        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test Transaction");
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/transactions/{id}", testFinancialTransaction.getId())
-                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/transactions/{id}", testFinancialTransaction.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers
+                        .status().isNoContent());
         Assertions.assertEquals(0, financialTransactionRepository.count());
 
     }
 
-    @DisplayName("Should return is Not Found error when Id does not exist in a database")
+    @DisplayName("Should return is Not Found error when ID does not exist in a database")
     @Test
     void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test wallet"));
+        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test Transaction");
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/transactions/{id}", 100L)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/transactions/{id}", 100L)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers
+                        .status().isNotFound());
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet, String description) {
-        return financialTransactionRepository.save(FinancialTransaction.builder()
+        return financialTransactionRepository
+                .save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(new BigDecimal("5.0"))
                 .date(Instant.ofEpochSecond(1L))
