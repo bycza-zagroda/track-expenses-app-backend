@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.hasSize;
 public class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
 
     static private final String WALLET_NAME = "wallet";
+
     static private final String WALLET_NAME_TOO_LONG = "The quick, brown fox jumps over";
 
     @Autowired
