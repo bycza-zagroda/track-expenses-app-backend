@@ -44,7 +44,6 @@ class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers
                         .status().isNoContent());
         Assertions.assertEquals(0, financialTransactionRepository.count());
-
     }
 
     @DisplayName("Should return is Not Found error when ID does not exist in a database")
@@ -70,6 +69,5 @@ class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
                 .description(description)
                 .build());
     }
-
 
 }
