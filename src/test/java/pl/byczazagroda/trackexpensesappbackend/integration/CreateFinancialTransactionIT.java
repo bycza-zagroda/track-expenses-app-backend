@@ -88,7 +88,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
-                new BigDecimal("55555555555555555555555.0"),
+                new BigDecimal("5555555555555555555555.0"),
                 "Test Description",
                 Instant.ofEpochSecond(1L),
                 FinancialTransactionType.EXPENSE);
