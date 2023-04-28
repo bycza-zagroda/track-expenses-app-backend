@@ -29,9 +29,13 @@ import java.util.List;
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
 
     private final FinancialTransactionRepository financialTransactionRepository;
+
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
+
     private final WalletRepository walletRepository;
+
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+
     @Override
     public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
         Long walletId = financialTransactionCreateDTO.walletId();
@@ -41,8 +45,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         FinancialTransactionCategory financialTransactionCategory = null;
         Long categoryId = financialTransactionCreateDTO.categoryId();
 
-        if(!(financialTransactionCreateDTO.categoryId() == null)
-                && financialTransactionCategoryRepository.existsById(categoryId)){
+        if ((categoryId != null) && financialTransactionCategoryRepository.existsById(categoryId)) {
             financialTransactionCategory = financialTransactionCategoryRepository.getReferenceById(categoryId);
         }
 
