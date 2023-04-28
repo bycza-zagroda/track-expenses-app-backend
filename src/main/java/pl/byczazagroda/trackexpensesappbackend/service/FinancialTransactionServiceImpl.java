@@ -45,8 +45,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         FinancialTransactionCategory financialTransactionCategory = null;
         Long categoryId = financialTransactionCreateDTO.categoryId();
 
-        if ((categoryId != null) && financialTransactionCategoryRepository.existsById(categoryId)) {
-            financialTransactionCategory = financialTransactionCategoryRepository.getReferenceById(categoryId);
+        if (categoryId != null) {
+            financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> {throw new AppRuntimeException(ErrorCode.FTC001,
+                        String.format("Financial transaction category with id: %d does not exist", categoryId));
+            });
         }
 
         FinancialTransaction financialTransaction = FinancialTransaction.builder()
