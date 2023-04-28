@@ -42,24 +42,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransactionCategory financialTransactionCategory = null;
-        Long categoryId = financialTransactionCreateDTO.categoryId();
+        FinancialTransactionCategory financialTransactionCategory =
+                findFinancialTransactionCategory(financialTransactionCreateDTO);
 
-        if (categoryId != null) {
-            financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)
-                    .orElseThrow(() -> {throw new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d does not exist", categoryId));
-            });
-        }
-
-        FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .type(financialTransactionCreateDTO.type())
-                .date(financialTransactionCreateDTO.date())
-                .description(financialTransactionCreateDTO.description())
-                .wallet(wallet)
-                .amount(financialTransactionCreateDTO.amount())
-                .financialTransactionCategory(financialTransactionCategory)
-                .build();
+        FinancialTransaction financialTransaction =
+                buildFinancialTransaction(financialTransactionCreateDTO, wallet, financialTransactionCategory);
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
@@ -113,6 +100,31 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         entity.setDate(uDTO.date());
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
+    }
+
+    private FinancialTransactionCategory findFinancialTransactionCategory(FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+        FinancialTransactionCategory financialTransactionCategory = null;
+        Long categoryId = financialTransactionCreateDTO.categoryId();
+
+        if (categoryId != null) {
+            financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> {throw new AppRuntimeException(ErrorCode.FTC001,
+                            String.format("Financial transaction category with id: %d does not exist", categoryId));
+                    });
+        }
+        return financialTransactionCategory;
+    }
+
+    private FinancialTransaction buildFinancialTransaction(FinancialTransactionCreateDTO financialTransactionCreateDTO,
+                                                                Wallet wallet, FinancialTransactionCategory financialTransactionCategory) {
+        return FinancialTransaction.builder()
+                .type(financialTransactionCreateDTO.type())
+                .date(financialTransactionCreateDTO.date())
+                .description(financialTransactionCreateDTO.description())
+                .wallet(wallet)
+                .amount(financialTransactionCreateDTO.amount())
+                .financialTransactionCategory(financialTransactionCategory)
+                .build();
     }
 
 }
