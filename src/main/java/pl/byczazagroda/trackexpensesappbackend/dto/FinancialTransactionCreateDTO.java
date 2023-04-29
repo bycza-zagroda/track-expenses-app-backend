@@ -15,5 +15,5 @@ public record FinancialTransactionCreateDTO(@Min(1) @NotNull Long walletId,
                                             String description,
                                             @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern="yyyy-MM-dd HH:mm:ss", timezone = "UTC")
                                             Instant date,
-                                            @NotNull FinancialTransactionType type) {
+                                            @NotNull FinancialTransactionType type, Long categoryId) {
 }

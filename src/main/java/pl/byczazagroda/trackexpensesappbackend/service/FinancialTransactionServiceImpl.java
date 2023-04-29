@@ -11,7 +11,9 @@ import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
@@ -27,21 +29,24 @@ import java.util.List;
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
 
     private final FinancialTransactionRepository financialTransactionRepository;
+
     private final FinancialTransactionModelMapper financialTransactionModelMapper;
+
     private final WalletRepository walletRepository;
+
+    private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+
     @Override
     public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
         Long walletId = financialTransactionCreateDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransaction financialTransaction = FinancialTransaction.builder()
-                .type(financialTransactionCreateDTO.type())
-                .date(financialTransactionCreateDTO.date())
-                .description(financialTransactionCreateDTO.description())
-                .wallet(wallet)
-                .amount(financialTransactionCreateDTO.amount())
-                .build();
+        FinancialTransactionCategory financialTransactionCategory =
+                findFinancialTransactionCategory(financialTransactionCreateDTO);
+
+        FinancialTransaction financialTransaction =
+                buildFinancialTransaction(financialTransactionCreateDTO, wallet, financialTransactionCategory);
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
@@ -95,6 +100,31 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         entity.setDate(uDTO.date());
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
+    }
+
+    private FinancialTransactionCategory findFinancialTransactionCategory(FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+        FinancialTransactionCategory financialTransactionCategory = null;
+        Long categoryId = financialTransactionCreateDTO.categoryId();
+
+        if (categoryId != null) {
+            financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> {throw new AppRuntimeException(ErrorCode.FTC001,
+                            String.format("Financial transaction category with id: %d does not exist", categoryId));
+                    });
+        }
+        return financialTransactionCategory;
+    }
+
+    private FinancialTransaction buildFinancialTransaction(FinancialTransactionCreateDTO financialTransactionCreateDTO,
+                                                                Wallet wallet, FinancialTransactionCategory financialTransactionCategory) {
+        return FinancialTransaction.builder()
+                .type(financialTransactionCreateDTO.type())
+                .date(financialTransactionCreateDTO.date())
+                .description(financialTransactionCreateDTO.description())
+                .wallet(wallet)
+                .amount(financialTransactionCreateDTO.amount())
+                .financialTransactionCategory(financialTransactionCategory)
+                .build();
     }
 
 }
