@@ -29,6 +29,8 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Autowired
     WalletRepository walletRepository;
 
+    private static BigDecimal TRANSACTION_AMOUNT_LIMIT = new BigDecimal("999999999999999.99");
+
     @BeforeEach
     void clearDatabase() {
         financialTransactionRepository.deleteAll();
@@ -53,7 +55,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(jsonPath("$.amount").value(financialTransactionCreateDTO.amount()))
                 .andExpect(jsonPath("$.type").value(financialTransactionCreateDTO.type().toString()))
-                .andExpect(jsonPath("$.description").value(financialTransactionCreateDTO.description().toString()));
+                .andExpect(jsonPath("$.description").value(financialTransactionCreateDTO.description()));
 
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(1, financialTransactionRepository.count());
@@ -88,7 +90,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
-                new BigDecimal("5555555555555555555555.0"),
+                TRANSACTION_AMOUNT_LIMIT,
                 "Test Description",
                 Instant.ofEpochSecond(1L),
                 FinancialTransactionType.EXPENSE);
