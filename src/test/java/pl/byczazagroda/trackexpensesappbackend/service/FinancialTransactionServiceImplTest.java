@@ -16,7 +16,6 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -36,13 +35,11 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
-import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.INCOME;
 
 @ExtendWith(MockitoExtension.class)
 class FinancialTransactionServiceImplTest{
@@ -136,6 +133,24 @@ class FinancialTransactionServiceImplTest{
         verify(walletRepository, atMostOnce()).findById(any());
         verify(financialTransactionModelMapper, atMostOnce())
                 .mapFinancialTransactionEntityToFinancialTransactionDTO(any());
+    }
+
+    @Test
+    @DisplayName("do not update financial transaction without valid id and throw AppRuntimeException")
+    void shouldThrowExceptionWhenUpdatingFinancialTransactionWithInvalidId() {
+        //given
+        FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
+        when(financialTransactionRepository.findById(any())).thenReturn(Optional.empty());
+
+        //when & then
+        AppRuntimeException exception = assertThrows(
+                AppRuntimeException.class,
+                () -> financialTransactionService.updateFinancialTransaction(ID_1L, updateDTO)
+        );
+        assertEquals(ErrorCode.FT001.getBusinessStatusCode(), exception.getBusinessStatusCode());
+        assertEquals(ErrorCode.FT001.getBusinessMessage(), exception.getBusinessMessage());
+        verify(financialTransactionRepository, atMostOnce()).findById(any());
+        verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(any());
     }
 
     @Test
