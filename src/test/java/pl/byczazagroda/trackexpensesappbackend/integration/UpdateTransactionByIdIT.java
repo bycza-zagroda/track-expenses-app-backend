@@ -45,7 +45,8 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
-                FinancialTransactionType.EXPENSE);
+                FinancialTransactionType.EXPENSE,
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", testFinancialTransaction.getId())
@@ -71,7 +72,8 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
-                FinancialTransactionType.EXPENSE);
+                FinancialTransactionType.EXPENSE,
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", 100L)
