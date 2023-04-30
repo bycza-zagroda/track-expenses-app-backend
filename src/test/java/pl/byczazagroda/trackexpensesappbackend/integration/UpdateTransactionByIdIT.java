@@ -12,8 +12,10 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
@@ -26,6 +28,9 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
 
     @Autowired
     private FinancialTransactionRepository financialTransactionRepository;
+
+    @Autowired
+    private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Autowired
     private WalletRepository walletRepository;
@@ -41,12 +46,13 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
+        Long categoryId = testFinancialTransaction.getFinancialTransactionCategory().getId();
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
                 FinancialTransactionType.EXPENSE,
-                1L);
+                categoryId);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", testFinancialTransaction.getId())
@@ -59,6 +65,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.amount").value(updateDTO.amount()))
                 .andExpect(jsonPath("$.date").value(updateDTO.date().toString()))
                 .andExpect(jsonPath("$.type").value(updateDTO.type().name()))
+                .andExpect(jsonPath("$.categoryId").value(updateDTO.categoryId()))
                 .andExpect(jsonPath("$.description").value(updateDTO.description()));
 
         Assertions.assertEquals(1, financialTransactionRepository.count());
@@ -91,6 +98,12 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
+    private FinancialTransactionCategory createTestFinancialTransactionCategory() {
+        return financialTransactionCategoryRepository.save(FinancialTransactionCategory.builder()
+                .name("TestCategory")
+                .type(FinancialTransactionType.INCOME)
+                .build());
+    }
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {
         return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
@@ -98,7 +111,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .date(Instant.ofEpochSecond(1L))
                 .type(FinancialTransactionType.INCOME)
                 .description("Test description")
+                .financialTransactionCategory(createTestFinancialTransactionCategory())
                 .build());
     }
-
 }
