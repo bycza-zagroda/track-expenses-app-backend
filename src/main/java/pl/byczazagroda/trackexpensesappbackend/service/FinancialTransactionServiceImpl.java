@@ -89,10 +89,15 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             @Valid FinancialTransactionUpdateDTO uDTO) {
 
         FinancialTransaction entity = financialTransactionRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new AppRuntimeException(ErrorCode.FT001,
-                            String.format("Financial transaction with id: %d not found", id));
-                });
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001,
+                        String.format("Financial transaction with id: %d not found", id)));
+
+        if (uDTO.categoryId() != null) {
+            FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository.findById(uDTO.categoryId())
+                    .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                            String.format("Financial transaction category with id: %d does not exist", uDTO.categoryId())));
+            entity.setFinancialTransactionCategory(financialTransactionCategory);
+        }
 
         entity.setType(uDTO.type());
         entity.setAmount(uDTO.amount());
