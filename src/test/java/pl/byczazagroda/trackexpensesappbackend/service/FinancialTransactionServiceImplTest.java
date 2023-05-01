@@ -236,7 +236,7 @@ class FinancialTransactionServiceImplTest{
     }
 
     private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO(){
-        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE);
+        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE, null);
     }
 
     private FinancialTransactionDTO createFinancialTransactionDTO(){
