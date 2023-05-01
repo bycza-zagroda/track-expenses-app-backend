@@ -29,7 +29,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Autowired
     WalletRepository walletRepository;
 
-    private static BigDecimal TRANSACTION_AMOUNT_LIMIT = new BigDecimal("999999999999999.99");
+    private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
+    /**
+     The maximum value for the 'amount' parameter id described:
+     @see pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO
+     */
 
     @BeforeEach
     void clearDatabase() {
@@ -46,7 +50,8 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
                 new BigDecimal("5.0"),
                 "Test Description",
                 Instant.ofEpochSecond(1L),
-                FinancialTransactionType.EXPENSE);
+                FinancialTransactionType.EXPENSE,
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +74,8 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
                 new BigDecimal("5.0"),
                 "Test Description",
                 Instant.ofEpochSecond(1L),
-                FinancialTransactionType.EXPENSE);
+                FinancialTransactionType.EXPENSE,
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,10 +96,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
-                TRANSACTION_AMOUNT_LIMIT,
+                MAX_ALLOWED_TRANSACTION_AMOUNT,
                 "Test Description",
                 Instant.ofEpochSecond(1L),
-                FinancialTransactionType.EXPENSE);
+                FinancialTransactionType.EXPENSE,
+                null);
+
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
