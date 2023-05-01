@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,10 +40,9 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets"));
 
-
         // then
         response.andExpect(status().isOk())
-                .andDo(print())
+                .andExpect(jsonPath("$.*", hasSize(savedWallets.size())))
                 .andExpect(jsonPath("$.[0].name").value(savedWallets.get(0).getName()))
                 .andExpect(jsonPath("$.[0].id").value(savedWallets.get(0).getId()))
                 .andExpect(jsonPath("$.[1].name").value(savedWallets.get(1).getName()))
@@ -53,8 +51,6 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.[2].id").value(savedWallets.get(2).getId()))
                 .andExpect(jsonPath("$.[3].name").value(savedWallets.get(3).getName()))
                 .andExpect(jsonPath("$.[3].id").value(savedWallets.get(3).getId()));
-
-        Assertions.assertEquals(savedWallets.size(), walletRepository.count());
     }
 
     @Test
@@ -62,16 +58,13 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     void shouldResponseStatusOKAndEmptyWalletDTOsList() throws Exception {
         //given
 
-
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets"));
 
-
         // then
         response.andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(jsonPath("$.*", hasSize(0)));
 
-        Assertions.assertEquals(0, walletRepository.count());
     }
 
     @NotNull
