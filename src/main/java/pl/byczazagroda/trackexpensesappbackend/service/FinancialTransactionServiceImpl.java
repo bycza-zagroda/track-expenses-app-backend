@@ -12,6 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -37,18 +38,28 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Override
-    public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
-        Long walletId = financialTransactionCreateDTO.walletId();
+    public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO ftCreateDTO) {
+        Long walletId = ftCreateDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransactionCategory financialTransactionCategory =
-                findFinancialTransactionCategory(financialTransactionCreateDTO);
+        FinancialTransactionCategory ftCategory =
+                findFinancialTransactionCategory(ftCreateDTO);
 
         FinancialTransaction financialTransaction =
-                buildFinancialTransaction(financialTransactionCreateDTO, wallet, financialTransactionCategory);
+                buildFinancialTransaction(ftCreateDTO, wallet, ftCategory);
+
+        FinancialTransactionType ftCategoryType;
+        ftCategoryType = ftCategory == null ? null : ftCategory.getType();
+
+        if (ftCreateDTO.type() != ftCategoryType) {
+           throw new AppRuntimeException(ErrorCode.FT002,
+                   String.format("Financial transaction type: '%s' and financial transaction category type '%s' does not match",
+                           ftCreateDTO.type().name(), ftCategoryType));
+        }
 
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
+
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
     }
 
