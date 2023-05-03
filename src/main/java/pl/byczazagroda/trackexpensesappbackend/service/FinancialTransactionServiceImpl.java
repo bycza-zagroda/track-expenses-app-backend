@@ -102,7 +102,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                             String.format("Financial transaction category with id: %d does not exist", categoryId)));
 
             if (uDTO.type() != financialTransactionCategory.getType()) {
-                throw new AppRuntimeException(ErrorCode.FT001,
+                throw new AppRuntimeException(ErrorCode.FT002,
                         String.format("Financial transaction type: '%s' does not match with category type: '%s'",
                                 uDTO.type(), financialTransactionCategory.getType()));
             }
