@@ -29,11 +29,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Autowired
     WalletRepository walletRepository;
 
-    private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
     /**
-     The maximum value for the 'amount' parameter id described:
-     @see pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO
+     The maximum value for the `amount` parameter is described as:
+     {@link  pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
      */
+    private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
+
 
     @BeforeEach
     void clearDatabase() {
