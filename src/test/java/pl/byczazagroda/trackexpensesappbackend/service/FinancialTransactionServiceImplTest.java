@@ -47,7 +47,7 @@ import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class FinancialTransactionServiceImplTest{
+class FinancialTransactionServiceImplTest {
 
     public static final long ID_1L = 1L;
 
@@ -107,7 +107,7 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
-    void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException(){
+    void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException() {
         //given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         when(walletRepository.findById(any())).thenReturn(Optional.empty());
@@ -123,10 +123,10 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("create financial transaction when valid parameters are given")
-    void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO(){
+    void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO() {
         //given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
-                ID_1L,ONE,EMPTY,DATE_NOW,EXPENSE,ID_1L);
+                ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE, ID_1L);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createEntityFinancialTransaction();
@@ -142,7 +142,7 @@ class FinancialTransactionServiceImplTest{
                 .createFinancialTransaction(financialTransactionCreateDTO);
 
         //then
-        assertAll(()->assertEquals(financialTransactionDTO, result), ()->assertEquals(financialTransactionDTO.id(),
+        assertAll(() -> assertEquals(financialTransactionDTO, result), () -> assertEquals(financialTransactionDTO.id(),
                 result.id()));
         verify(financialTransactionRepository, atMostOnce()).save(any());
         verify(walletRepository, atMostOnce()).findById(any());
@@ -152,10 +152,10 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("create financial transaction with empty description")
-    void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction(){
+    void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction() {
         //given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
-                ID_1L,ONE,EMPTY,DATE_NOW,EXPENSE,ID_1L);
+                ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE, ID_1L);
         Wallet wallet = new Wallet();
         when(walletRepository.findById(any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransaction = createEntityFinancialTransaction();
@@ -174,9 +174,9 @@ class FinancialTransactionServiceImplTest{
                 .createFinancialTransaction(financialTransactionCreateDTO);
 
         //then
-        assertAll(()->assertEquals(EMPTY, financialTransactionDTO.description()),
-                ()->assertEquals(financialTransactionDTO, result),
-                ()->assertEquals(financialTransactionDTO.id(), result.id()));
+        assertAll(() -> assertEquals(EMPTY, financialTransactionDTO.description()),
+                () -> assertEquals(financialTransactionDTO, result),
+                () -> assertEquals(financialTransactionDTO.id(), result.id()));
         verify(financialTransactionRepository, atMostOnce()).save(any());
         verify(walletRepository, atMostOnce()).findById(any());
         verify(financialTransactionModelMapper, atMostOnce())
@@ -185,7 +185,7 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
-    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven(){
+    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
         //given
         FinancialTransaction financialTransaction1 = createEntityFinancialTransaction();
         FinancialTransactionDTO financialTransactionDTO1 = createFinancialTransactionDTO();
@@ -232,7 +232,7 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("when financial transaction id doesn't exist should not return transaction")
-    void shouldNotReturnFinancialTransactionById_WhenIdNotExist(){
+    void shouldNotReturnFinancialTransactionById_WhenIdNotExist() {
         //given
 
         //when
@@ -240,12 +240,12 @@ class FinancialTransactionServiceImplTest{
 
         //then
         assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(
-                ()->financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT001.getBusinessMessage());
+                () -> financialTransactionService.findById(ID_10L)).withMessage(ErrorCode.FT001.getBusinessMessage());
     }
 
     @Test
     @DisplayName("when finding with proper financial transaction id should successfully find transaction")
-    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId(){
+    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId() {
         //given
         FinancialTransaction financialTransaction = createEntityFinancialTransaction();
         FinancialTransactionDTO financialTransactionDTO =
@@ -265,17 +265,17 @@ class FinancialTransactionServiceImplTest{
 
     @Test
     @DisplayName("when deleting financial transaction that does not exist should throw an exception")
-    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist(){
+    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
         //given
 
         //when
         when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
 
         //then
-        Assertions.assertThrows(AppRuntimeException.class, ()->financialTransactionService.deleteTransactionById(ID_1L));
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L));
     }
 
-    private FinancialTransaction createEntityFinancialTransaction(){
+    private FinancialTransaction createEntityFinancialTransaction() {
         FinancialTransaction financialTransaction1 = new FinancialTransaction();
         financialTransaction1.setId(ID_1L);
         financialTransaction1.setType(FinancialTransactionType.EXPENSE);
@@ -283,11 +283,11 @@ class FinancialTransactionServiceImplTest{
         return financialTransaction1;
     }
 
-    private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO(){
-        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE, null);
+    private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
+        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, DATE_NOW, EXPENSE, ID_1L);
     }
 
-    private FinancialTransactionDTO createFinancialTransactionDTO(){
+    private FinancialTransactionDTO createFinancialTransactionDTO() {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, null);
     }
 }
