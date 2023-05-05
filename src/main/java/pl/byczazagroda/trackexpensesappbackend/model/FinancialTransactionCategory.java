@@ -52,7 +52,7 @@ public class FinancialTransactionCategory implements Serializable {
     @Size(max = 30, message = "{validation.name.size.too_long}")
     private String name;
 
-    @Column(name = "transaction_type")
+    @Column(name = "transaction_type", columnDefinition = "ENUM('INCOME', 'EXPENSE')")
     @Enumerated(EnumType.STRING)
     private FinancialTransactionType type;
 
