@@ -12,7 +12,6 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -44,22 +43,16 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
         FinancialTransactionCategory ftCategory =
-                findFinancialTransactionCategory(ftCreateDTO);
+                findFinancialTransactionCategory(ftCreateDTO.categoryId());
+
+        if (ftCreateDTO.categoryId() != null && ftCreateDTO.type() != ftCategory.getType()) {
+            throw new AppRuntimeException(ErrorCode.FT002,
+                    String.format("Financial transaction type: '%s' and financial transaction category type '%s' does not match",
+                            ftCreateDTO.type().name(), ftCategory.getType()));
+        }
 
         FinancialTransaction financialTransaction =
                 buildFinancialTransaction(ftCreateDTO, wallet, ftCategory);
-
-        if (ftCreateDTO.categoryId() != null) {
-            FinancialTransactionType ftCategoryType;
-            ftCategoryType = ftCategory == null ? null : ftCategory.getType();
-
-            if (ftCreateDTO.type() != ftCategoryType) {
-                throw new AppRuntimeException(ErrorCode.FT002,
-                        String.format("Financial transaction type: '%s' and financial transaction category type '%s' does not match",
-                                ftCreateDTO.type().name(), ftCategoryType));
-            }
-        }
-
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
@@ -115,9 +108,8 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
 
-    private FinancialTransactionCategory findFinancialTransactionCategory(FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+    private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId) {
         FinancialTransactionCategory financialTransactionCategory = null;
-        Long categoryId = financialTransactionCreateDTO.categoryId();
 
         if (categoryId != null) {
             financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)
