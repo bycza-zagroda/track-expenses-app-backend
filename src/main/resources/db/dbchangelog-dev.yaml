@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/007-add-new-column-and-foreignKey-to-financial_transaction.yaml
   - include:
       file: db/changelog/004-insert-into-financial_transactions.yaml
+  - include:
+      file: db/changelog/008-add-constraints-on-columns-in-database-tables.yaml
