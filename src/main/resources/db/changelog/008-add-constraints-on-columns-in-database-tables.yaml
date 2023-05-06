@@ -5,14 +5,4 @@ databaseChangeLog:
       changes:
         - sqlFile:
             dbms: 'mysql'
-            path: db/changelog/constrains.sql
-
-
-
-
-
-
-
-
-
-
+            path: db/changelog/008-add-constraints-on-columns-in-database-tables.sql
