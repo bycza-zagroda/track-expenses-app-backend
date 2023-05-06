@@ -37,18 +37,24 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Override
-    public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO financialTransactionCreateDTO) {
-        Long walletId = financialTransactionCreateDTO.walletId();
+    public FinancialTransactionDTO createFinancialTransaction(@Valid FinancialTransactionCreateDTO ftCreateDTO) {
+        Long walletId = ftCreateDTO.walletId();
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> {
             throw new AppRuntimeException(ErrorCode.W003, String.format("Wallet with id: %d does not exist", walletId));
         });
-        FinancialTransactionCategory financialTransactionCategory =
-                findFinancialTransactionCategory(financialTransactionCreateDTO);
+        FinancialTransactionCategory ftCategory =
+                findFinancialTransactionCategory(ftCreateDTO.categoryId());
+
+        if (ftCreateDTO.categoryId() != null && ftCreateDTO.type() != ftCategory.getType()) {
+            throw new AppRuntimeException(ErrorCode.FT002,
+                    String.format("Financial transaction type: '%s' and financial transaction category type '%s' does not match",
+                            ftCreateDTO.type().name(), ftCategory.getType()));
+        }
 
         FinancialTransaction financialTransaction =
-                buildFinancialTransaction(financialTransactionCreateDTO, wallet, financialTransactionCategory);
-
+                buildFinancialTransaction(ftCreateDTO, wallet, ftCategory);
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
+
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(savedFinancialTransaction);
     }
 
@@ -92,7 +98,6 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001,
                         String.format("Financial transaction with id: %d not found", id)));
 
-
         FinancialTransactionCategory financialTransactionCategory = null;
         Long categoryId = uDTO.categoryId();
 
@@ -115,9 +120,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(entity);
     }
-    private FinancialTransactionCategory findFinancialTransactionCategory(FinancialTransactionCreateDTO financialTransactionCreateDTO) {
+
+    private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId) {
         FinancialTransactionCategory financialTransactionCategory = null;
-        Long categoryId = financialTransactionCreateDTO.categoryId();
 
         if (categoryId != null) {
             financialTransactionCategory = financialTransactionCategoryRepository.findById(categoryId)

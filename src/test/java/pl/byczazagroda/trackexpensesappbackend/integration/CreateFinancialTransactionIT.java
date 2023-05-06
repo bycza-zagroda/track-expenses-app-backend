@@ -11,8 +11,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
@@ -23,18 +25,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
 
-    @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
-
-    @Autowired
-    WalletRepository walletRepository;
-
     /**
-     The maximum value for the `amount` parameter is described as:
-     {@link  pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
+     * The maximum value for the `amount` parameter is described as:
+     * {@link  pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
      */
     private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
-
+    @Autowired
+    FinancialTransactionRepository financialTransactionRepository;
+    @Autowired
+    FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    @Autowired
+    WalletRepository walletRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -115,6 +116,34 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
 
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
+    }
+
+    @DisplayName("When financial transaction type does not match with category type should throw exception")
+    @Test
+    void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
+        Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
+        FinancialTransactionCategory ftCategory = financialTransactionCategoryRepository.save(
+                new FinancialTransactionCategory("name", FinancialTransactionType.INCOME));
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
+                savedWallet.getId(),
+                new BigDecimal("10"),
+                "Test Description",
+                Instant.ofEpochSecond(1L),
+                FinancialTransactionType.EXPENSE,
+                ftCategory.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT002.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT002.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT002.getBusinessStatusCode()));
+
+        Assertions.assertEquals(1, walletRepository.count());
+        Assertions.assertEquals(0, financialTransactionRepository.count());
+        Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
     }
 
 }
