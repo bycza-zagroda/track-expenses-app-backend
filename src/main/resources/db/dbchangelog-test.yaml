@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/005-create-table-financial_transaction_categories.yaml
   - include:
       file: db/changelog/007-add-new-column-and-foreignKey-to-financial_transaction.yaml
+  - include:
+      file: db/changelog/008-add-onDelete-to-financial-transaction-foreignKey.yaml

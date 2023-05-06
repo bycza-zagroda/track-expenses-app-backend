@@ -1,0 +1,15 @@
+databaseChangeLog:
+    - changeSet:
+          id: "10"
+          author: pmackowiak
+          changes:
+              - dropForeignKeyConstraint:
+                    constraintName: fk_financial_transaction_categories_id
+                    baseTableName: financial_transactions
+              - addForeignKeyConstraint:
+                    constraintName: fk_financial_transaction_categories_id
+                    baseColumnNames: financial_transaction_category_id
+                    baseTableName: financial_transactions
+                    referencedTableName: financial_transaction_categories
+                    referencedColumnNames: id
+                    onDelete: SET NULL
