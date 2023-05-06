@@ -52,7 +52,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
                 FinancialTransactionType.EXPENSE,
-                categoryId);
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", testFinancialTransaction.getId())
@@ -80,7 +80,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
                 FinancialTransactionType.EXPENSE,
-                1L);
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", 100L)

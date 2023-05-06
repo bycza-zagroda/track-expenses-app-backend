@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.Assert.assertThrows;
@@ -184,6 +186,63 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
+    @DisplayName("do not update financial transaction without valid id and throw AppRuntimeException")
+    void shouldThrowExceptionWhenUpdatingFinancialTransactionWithInvalidId() {
+        //given
+        FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
+        when(financialTransactionRepository.findById(any())).thenReturn(Optional.empty());
+
+        //when & then
+        AppRuntimeException exception = assertThrows(
+                AppRuntimeException.class,
+                () -> financialTransactionService.updateFinancialTransaction(ID_1L, updateDTO)
+        );
+        assertEquals(ErrorCode.FT001.getBusinessStatusCode(), exception.getBusinessStatusCode());
+        assertEquals(ErrorCode.FT001.getBusinessMessage(), exception.getBusinessMessage());
+        verify(financialTransactionRepository, atMostOnce()).findById(any());
+        verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(any());
+    }
+
+    @Test
+    @DisplayName("update financial transaction with valid parameters")
+    void shouldUpdateFinancialTransactionWhenValidParametersAreGiven(){
+        //given
+        FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
+
+        FinancialTransaction financialTransaction = createEntityFinancialTransaction();
+        financialTransaction.setDescription(EMPTY);
+        financialTransaction.setAmount(ONE);
+
+        FinancialTransactionDTO financialTransactionDTO
+                = new FinancialTransactionDTO(ID_1L, TEN, DESCRIPTION, EXPENSE, DATE_NOW, null);
+
+        when(financialTransactionModelMapper
+                .mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction))
+                .thenReturn(financialTransactionDTO);
+
+        when(financialTransactionRepository
+                .findById(ID_1L))
+                .thenReturn(Optional.of(financialTransaction));
+
+        //when
+        FinancialTransactionDTO result
+                    = financialTransactionService
+                    .updateFinancialTransaction(ID_1L,updateDTO);
+
+        //then
+        assertAll(
+                ()->assertEquals(updateDTO.amount(), result.amount()),
+                ()->assertEquals(updateDTO.description(), result.description()),
+                ()->assertEquals(updateDTO.type(), result.type()),
+                ()->assertEquals(updateDTO.date(), result.date()));
+
+        verify(financialTransactionRepository, atMostOnce()).save(any());
+        verify(financialTransactionRepository, atMostOnce()).findById(any());
+        verify(financialTransactionModelMapper, atMostOnce())
+                .mapFinancialTransactionEntityToFinancialTransactionDTO(any());
+    }
+
+    @Test
     @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
     void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
         //given
@@ -289,5 +348,8 @@ class FinancialTransactionServiceImplTest {
 
     private FinancialTransactionDTO createFinancialTransactionDTO() {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, null);
+    }
+    private FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
+        return new FinancialTransactionUpdateDTO(TEN,DATE_NOW, DESCRIPTION, EXPENSE,null);
     }
 }
