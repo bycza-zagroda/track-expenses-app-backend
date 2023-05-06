@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/004-insert-into-financial_transactions.yaml
   - include:
       file: db/changelog/008-add-onDelete-to-financial-transaction-foreignKey.yaml
+  - include:
+      file: db/changelog/009-add-constraints-on-columns-in-database-tables.yaml
