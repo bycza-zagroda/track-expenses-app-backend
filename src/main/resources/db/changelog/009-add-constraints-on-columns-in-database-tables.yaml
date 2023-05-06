@@ -1,8 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: "10"
+      id: "11"
       author: zetxdev
       changes:
         - sqlFile:
             dbms: 'mysql'
-            path: db/changelog/008-add-constraints-on-columns-in-database-tables.sql
+            path: db/changelog/009-add-constraints-on-columns-in-database-tables.sql
