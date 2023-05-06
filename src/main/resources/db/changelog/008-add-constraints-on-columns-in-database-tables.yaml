@@ -6,13 +6,3 @@ databaseChangeLog:
         - sqlFile:
             dbms: 'mysql'
             path: db/changelog/constrains.sql
-
-
-
-
-
-
-
-
-
-
