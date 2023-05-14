@@ -72,17 +72,18 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
     }
-    @DisplayName("Update financial transaction with new data provided in DTO when category Id is null")
+    @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
     @Test
-    void updateExistingFinancialTransactionWithNullCategoryIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
+    void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         testFinancialTransaction.setFinancialTransactionCategory(null);
+        testFinancialTransaction.setDescription(null);
 
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
-                "Updated DTO Description",
+                null,
                 FinancialTransactionType.INCOME,
                 null);
 
