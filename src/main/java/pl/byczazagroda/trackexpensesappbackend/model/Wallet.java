@@ -39,6 +39,9 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne()
+    private Long userid;
+
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "[\\w ]+", message = "invalid input. Name should contains only latin litters")
