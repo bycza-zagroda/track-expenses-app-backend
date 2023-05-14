@@ -47,12 +47,13 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         Long categoryId = testFinancialTransaction.getFinancialTransactionCategory().getId();
+
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
-                FinancialTransactionType.EXPENSE,
-                null);
+                FinancialTransactionType.INCOME,
+                categoryId);
 
         mockMvc.perform(MockMvcRequestBuilders.
                         patch("/api/transactions/{id}", testFinancialTransaction.getId())
