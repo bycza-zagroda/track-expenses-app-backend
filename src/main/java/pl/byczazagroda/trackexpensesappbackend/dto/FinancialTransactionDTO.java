@@ -6,6 +6,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record FinancialTransactionDTO(Long id, BigDecimal amount, @JsonInclude String description,
-                                      FinancialTransactionType type, Instant date, @JsonInclude Long categoryId) {
+public record FinancialTransactionDTO(Long id, BigDecimal amount, @JsonInclude(JsonInclude.Include.ALWAYS) String description,
+                                      FinancialTransactionType type, Instant date, @JsonInclude(JsonInclude.Include.ALWAYS) Long categoryId) {
 }
