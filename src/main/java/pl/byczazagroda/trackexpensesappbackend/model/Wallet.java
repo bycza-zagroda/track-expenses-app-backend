@@ -39,8 +39,9 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
-    private Long userid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fk_user_id")
+    private User user;
 
     @NotBlank
     @Size(max = 20)

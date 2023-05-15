@@ -17,3 +17,7 @@ databaseChangeLog:
       file: db/changelog/008-add-onDelete-to-financial-transaction-foreignKey.yaml
   - include:
       file: db/changelog/009-add-constraints-on-columns-in-database-tables.yaml
+  - include:
+      file: db/changelog/010-alter-table-wallets.yaml
+  - include:
+      file: db/changelog/011-create-table-users.yaml

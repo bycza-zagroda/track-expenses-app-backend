@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "12"
+      author: Iwona007
+      changes:
+        - addColumn:
+            tableName: wallets
+            columns:
+            - column:
+                name: fk_user_id
+                type: bigint
+                constraints:
+                  nullable: false
