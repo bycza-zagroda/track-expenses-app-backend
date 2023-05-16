@@ -47,11 +47,44 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         Long categoryId = testFinancialTransaction.getFinancialTransactionCategory().getId();
+
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
                 new BigDecimal("5.0"),
                 Instant.ofEpochSecond(2L),
                 "Updated DTO Description",
-                FinancialTransactionType.EXPENSE,
+                FinancialTransactionType.INCOME,
+                categoryId);
+
+        mockMvc.perform(MockMvcRequestBuilders.
+                        patch("/api/transactions/{id}", testFinancialTransaction.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers
+                        .status().isOk())
+                .andExpect(jsonPath("$.id").value(testFinancialTransaction.getId()))
+                .andExpect(jsonPath("$.amount").value(updateDTO.amount()))
+                .andExpect(jsonPath("$.date").value(updateDTO.date().toString()))
+                .andExpect(jsonPath("$.type").value(updateDTO.type().name()))
+                .andExpect(jsonPath("$.categoryId").value(updateDTO.categoryId()))
+                .andExpect(jsonPath("$.description").value(updateDTO.description()));
+
+        Assertions.assertEquals(1, financialTransactionRepository.count());
+        Assertions.assertEquals(1, walletRepository.count());
+    }
+    @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
+    @Test
+    void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
+        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
+        testFinancialTransaction.setFinancialTransactionCategory(null);
+        testFinancialTransaction.setDescription(null);
+
+        FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
+                new BigDecimal("5.0"),
+                Instant.ofEpochSecond(2L),
+                null,
+                FinancialTransactionType.INCOME,
                 null);
 
         mockMvc.perform(MockMvcRequestBuilders.
@@ -71,7 +104,6 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
     }
-
     @DisplayName("Return isNotFound status when ID not found in database")
     @Test
     void testUpdateTransactionById_whenIdIsNotFoundInDB_thenReturnIsNotFound() throws Exception {
