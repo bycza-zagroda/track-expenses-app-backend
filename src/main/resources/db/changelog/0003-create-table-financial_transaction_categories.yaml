@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: "13"
-      author: iwona007
+      id: "create table financial_transaction_categories"
+      author: Krisu93
       changes:
         - createTable:
-            tableName: users
+            tableName: financial_transaction_categories
             columns:
               - column:
                   name: id
@@ -14,22 +14,17 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: user_name
-                  type: varchar(50)
-              - column:
-                  name: email
-                  type: varchar(120)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: password
+                  name: name
                   type: varchar(20)
                   constraints:
                     nullable: false
               - column:
-                  name: user_status
+                  name: creation_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_type
                   type: varchar(255)
                   constraints:
                     nullable: false
-
-

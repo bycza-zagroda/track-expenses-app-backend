@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "16"
+      id: "add foreign key to wallets"
       author: Iwona007
       changes:
       -  addForeignKeyConstraint:

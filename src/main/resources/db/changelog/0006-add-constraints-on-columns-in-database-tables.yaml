@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: "add enum and amount check"
+      author: zetxdev
+      changes:
+        - sqlFile:
+            dbms: 'mysql'
+            path: db/changelog/0006-add-constraints-on-columns-in-database-tables.sql

@@ -1,6 +1,6 @@
 databaseChangeLog:
   -  changeSet:
-       id: loaddata-example
+       id: "insert into wallet"
        author: iwona007
        changes:
          - loadData:

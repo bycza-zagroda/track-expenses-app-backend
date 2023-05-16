@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "8"
+      id: "insert into financial_transaction_categories"
       author: Krisu93
       changes:
         - loadData:

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "4"
+      id: "create table financial transactions"
       author: dstuzynski
       changes:
         - createTable:
@@ -37,7 +37,7 @@ databaseChangeLog:
                   name: description
                   type: varchar(255)
   - changeSet:
-      id: "5"
+      id: "create foreign key"
       author: dstuzynski
       changes:
         - addForeignKeyConstraint:

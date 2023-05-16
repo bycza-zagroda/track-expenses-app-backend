@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "15"
+      id: "insert into users"
       author: Iwona007
       changes:
         - loadData:

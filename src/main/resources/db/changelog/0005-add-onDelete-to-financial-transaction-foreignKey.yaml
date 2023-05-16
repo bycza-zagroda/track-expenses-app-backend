@@ -1,6 +1,6 @@
 databaseChangeLog:
     - changeSet:
-          id: "10"
+          id: "drop and add foreign key"
           author: pmackowiak
           changes:
               - dropForeignKeyConstraint:
