@@ -1,0 +1,4 @@
+id,user_name,email,password,user_status
+1,user one,user@gmail.com,Password1,verified
+2,user two,usertwo@gmail.com,Second45password,verified
+3,userthree,userthree@gmail.com,ThirdPassword3,verified

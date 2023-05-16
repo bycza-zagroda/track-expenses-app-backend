@@ -1,8 +1,8 @@
 databaseChangeLog:
   - include:
       file: db/changelog/001-create-table-wallets.yaml
-  - include:
-      file: db/changelog/002-insert-into-wallets.yaml
+#  - include:
+#      file: db/changelog/002-insert-into-wallets.yaml
   - include:
       file: db/changelog/003-create-table-financial_transactions.yaml
   - include:
@@ -11,8 +11,8 @@ databaseChangeLog:
       file: db/changelog/006-insert-into-financial_transaction_categories.yaml
   - include:
       file: db/changelog/007-add-new-column-and-foreignKey-to-financial_transaction.yaml
-  - include:
-      file: db/changelog/004-insert-into-financial_transactions.yaml
+#  - include:
+#      file: db/changelog/004-insert-into-financial_transactions.yaml
   - include:
       file: db/changelog/008-add-onDelete-to-financial-transaction-foreignKey.yaml
   - include:
@@ -21,3 +21,11 @@ databaseChangeLog:
       file: db/changelog/010-alter-table-wallets.yaml
   - include:
       file: db/changelog/011-create-table-users.yaml
+  - include:
+      file: db/changelog/012-insert-into-users.yaml
+  - include:
+      file: db/changelog/002-insert-into-wallets.yaml
+  - include:
+      file: db/changelog/004-insert-into-financial_transactions.yaml
+  - include:
+      file: db/changelog/013-add-constraints-foreign-key-wallets.yaml

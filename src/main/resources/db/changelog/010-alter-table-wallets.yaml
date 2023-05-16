@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: wallets
             columns:
             - column:
-                name: fk_user_id
+                name: user_id
                 type: bigint
                 constraints:
                   nullable: false

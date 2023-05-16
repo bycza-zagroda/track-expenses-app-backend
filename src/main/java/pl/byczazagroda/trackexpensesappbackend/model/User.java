@@ -57,4 +57,14 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+
+    public void addWallet(Wallet wallet) {
+        this.wallets.add(wallet);
+        wallet.setUser(this);
+    }
+
+    public void removeWallet(Wallet wallet) {
+        this.wallets.remove(wallet);
+        wallet.setUser(null);
+    }
 }

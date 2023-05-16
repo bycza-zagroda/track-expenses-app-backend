@@ -40,7 +40,7 @@ public class Wallet implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fk_user_id")
+    @JoinColumn(name="user_id")
     private User user;
 
     @NotBlank
