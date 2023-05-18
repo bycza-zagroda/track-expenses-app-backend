@@ -19,7 +19,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class FindTransactionByIDTest extends BaseIntegrationTestIT {
+public class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @Autowired
     FinancialTransactionRepository financialTransactionRepository;
