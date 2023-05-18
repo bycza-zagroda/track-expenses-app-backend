@@ -12,32 +12,39 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class FindTransactionByIDTest extends BaseIntegrationTestIT {
+class FindTransactionByIDTest extends BaseIntegrationTestIT {
 
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void clearDatabase() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("Should return proper financial transaction when search Id exist in database")
     @Test
-    public void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+    void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
+        createTestWallet();
+        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction("Test1");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -51,9 +58,9 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
 
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
-    public void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+    void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
+        createTestWallet();
+        createTestFinancialTransaction("Test2");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -64,14 +71,32 @@ public class FindTransactionByIDTest extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
-    private FinancialTransaction createTestFinancialTransaction(Wallet wallet, String description) {
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
+    }
+
+    private FinancialTransaction createTestFinancialTransaction(String description) {
         return financialTransactionRepository.save(FinancialTransaction.builder()
-                .wallet(wallet)
+                .wallet(createTestWallet())
                 .amount(new BigDecimal("5.0"))
                 .date(Instant.ofEpochSecond(1L))
                 .type(FinancialTransactionType.INCOME)
                 .description(description)
                 .build());
     }
-
 }

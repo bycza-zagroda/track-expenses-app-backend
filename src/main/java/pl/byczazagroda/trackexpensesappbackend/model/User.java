@@ -47,11 +47,11 @@ public class User implements Serializable {
     private String userName;
 
     @NotBlank
-    @Size(min = 11, max = 120)
+    @Size(min = 6, max = 120)
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 20)
+    @Size(min = 8, max = 100)
     private String password;
 
     @Enumerated(EnumType.STRING)

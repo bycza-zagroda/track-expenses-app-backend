@@ -11,11 +11,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
@@ -31,22 +35,26 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
      */
     private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
     @Autowired
-    FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void clearDatabase() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("Should successfully create financial transaction")
     @Test
     void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase() throws Exception {
-        Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
+        Wallet savedWallet = createTestWallet();
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("5.0"),
@@ -95,7 +103,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @DisplayName("Should return bad request and validation failed error when creating financial transaction with amount exceeding limit")
     @Test
     void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
-        Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
+        Wallet savedWallet = createTestWallet();
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 MAX_ALLOWED_TRANSACTION_AMOUNT,
@@ -121,7 +129,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @DisplayName("When financial transaction type does not match with category type should throw exception")
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
-        Wallet savedWallet = walletRepository.save(new Wallet("Test wallet"));
+        Wallet savedWallet = createTestWallet();
         FinancialTransactionCategory ftCategory = financialTransactionCategoryRepository.save(
                 new FinancialTransactionCategory("name", FinancialTransactionType.INCOME));
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
@@ -146,4 +154,32 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
     }
 
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
+    }
+
+    private FinancialTransaction createTestFinancialTransaction(String description) {
+        return financialTransactionRepository.save(FinancialTransaction.builder()
+                .wallet(createTestWallet())
+                .amount(new BigDecimal("5.0"))
+                .date(Instant.ofEpochSecond(1L))
+                .type(FinancialTransactionType.INCOME)
+                .description(description)
+                .build());
+    }
 }

@@ -14,9 +14,12 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
@@ -35,16 +38,19 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private UserRepository userRepository;
     @BeforeEach
     void clearDatabase() {
         walletRepository.deleteAll();
         financialTransactionRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("Update financial transaction with new data provided in DTO when Id found in database")
     @Test
     void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        Wallet wallet = createTestWallet();
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         Long categoryId = testFinancialTransaction.getFinancialTransactionCategory().getId();
 
@@ -75,7 +81,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        Wallet wallet = createTestWallet();
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         testFinancialTransaction.setFinancialTransactionCategory(null);
         testFinancialTransaction.setDescription(null);
@@ -145,5 +151,24 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .description("Test description")
                 .financialTransactionCategory(createTestFinancialTransactionCategory())
                 .build());
+    }
+
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
     }
 }
