@@ -12,4 +12,4 @@
 &#x2610; Correct branch name. Convention [https://github.com/bycza-zagroda/track-expenses-app-documentation/blob/develop/githubwork/GITHUB_WORK.md]
 &#x2610; Correct unit test name - suffix 'Test' in the end.
 &#x2610; Correct integration test name - suffix 'IT' in the end.
-&#x2610; Postivie and negative path for tests.
+&#x2610; Positive and negative test paths have been implemented.
