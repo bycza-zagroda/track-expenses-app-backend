@@ -7,27 +7,38 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-public class FindWalletByIdIT extends BaseIntegrationTestIT {
+class FindWalletByIdIT extends BaseIntegrationTestIT {
 
         @Autowired
-        WalletRepository walletRepository;
+       private WalletRepository walletRepository;
+
+        private UserRepository userRepository;
 
         @BeforeEach
         void clearDatabase() {
             walletRepository.deleteAll();
+            userRepository.deleteAll();
         }
 
         @DisplayName("It should return wallet DTO")
         @Test
         void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
-            Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+            Wallet wallet = createTestWallet();
             mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk())
@@ -44,5 +55,23 @@ public class FindWalletByIdIT extends BaseIntegrationTestIT {
                     .andReturn();
             Assertions.assertEquals(0, walletRepository.count());
         }
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
+    }
 
 }

@@ -11,8 +11,11 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
@@ -29,10 +32,14 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clearTestDB() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -69,8 +76,23 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
     private Wallet createTestWallet() {
-        return walletRepository.save(new Wallet("test_wallet"));
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("test_wallet")
+                .build();
+        return walletRepository.save(testWallet);
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {

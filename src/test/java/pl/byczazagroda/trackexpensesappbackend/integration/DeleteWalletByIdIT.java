@@ -12,8 +12,11 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
@@ -27,15 +30,21 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @Autowired
     private FinancialTransactionRepository financialTransactionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clearDatabase() {
+
         walletRepository.deleteAll();
+        financialTransactionRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("Test Wallet"));
+        Wallet wallet = createTestWallet();
         createTestFinancialTransaction(wallet);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", wallet.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -63,6 +72,25 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
                 .type(FinancialTransactionType.INCOME)
                 .description("Test transaction")
                 .build());
+    }
+
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
     }
 
 }
