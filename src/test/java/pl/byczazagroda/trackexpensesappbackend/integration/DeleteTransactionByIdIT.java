@@ -18,7 +18,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-class DeleteTransactionByIdTest extends BaseIntegrationTestIT {
+class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
 
 
     @Autowired
