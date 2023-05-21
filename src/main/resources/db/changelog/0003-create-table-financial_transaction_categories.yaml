@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "create table financial_transaction_categories"
+      id: "create table financial transaction categories"
       author: Krisu93
       changes:
         - createTable:

@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 6, max = 120)
+    @Pattern(regexp = "/^[a-z\\d]+[\\w\\d.-]*@(?:[a-z\\d]+[a-z\\d-]+.){1,5}[a-z]{2,6}$/i")
     private String email;
 
     @NotBlank
