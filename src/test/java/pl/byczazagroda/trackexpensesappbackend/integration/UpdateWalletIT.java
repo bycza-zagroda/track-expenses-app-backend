@@ -9,8 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+
+import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -20,19 +25,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UpdateWalletIT extends BaseIntegrationTestIT {
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     public void clearTestDB() {
+
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("It should return updated wallet DTO when ID is correct")
     @Test
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
-        Wallet savedWallet = new Wallet("TestWallet");
-        walletRepository.save(savedWallet);
+        Wallet savedWallet = createTestWallet();
 
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
@@ -65,6 +74,25 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         response.andExpect(status().isNotFound());
     }
 
+
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .userName("userone")
+                .email("Email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+        return userRepository.save(userOne);
+    }
+
+    private Wallet createTestWallet() {
+        final Wallet testWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+        return walletRepository.save(testWallet);
+    }
 }
 
 

@@ -80,7 +80,7 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     private User createTestUser() {
         final User userOne = User.builder()
                 .userName("userone")
-                .email("email@wp.pl")
+                .email("Email@wp.pl")
                 .password("password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();

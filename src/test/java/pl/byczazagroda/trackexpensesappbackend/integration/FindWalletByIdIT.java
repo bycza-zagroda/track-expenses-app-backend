@@ -27,6 +27,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
         @Autowired
        private WalletRepository walletRepository;
 
+        @Autowired
         private UserRepository userRepository;
 
         @BeforeEach

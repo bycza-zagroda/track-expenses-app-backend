@@ -49,7 +49,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 6, max = 120)
-    @Pattern(regexp = "/^[a-z\\d]+[\\w\\d.-]*@(?:[a-z\\d]+[a-z\\d-]+.){1,5}[a-z]{2,6}$/i")
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+.)+[\\w-]{2,4}$")
     private String email;
 
     @NotBlank

@@ -1,8 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend.dto;
 
+import lombok.Builder;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 
-public record UserDTO (
-        Long id, String user_name,  String email,
-         String password, UserStatus userStatus){
+@Builder
+public record UserDTO (Long id, String userName,  String email, String password, UserStatus userStatus) {
 }

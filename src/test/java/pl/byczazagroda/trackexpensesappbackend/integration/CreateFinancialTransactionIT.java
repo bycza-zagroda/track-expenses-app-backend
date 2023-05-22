@@ -157,7 +157,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     private User createTestUser() {
         final User userOne = User.builder()
                 .userName("userone")
-                .email("email@wp.pl")
+                .email("Email@wp.pl")
                 .password("password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
@@ -173,13 +173,4 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         return walletRepository.save(testWallet);
     }
 
-    private FinancialTransaction createTestFinancialTransaction(String description) {
-        return financialTransactionRepository.save(FinancialTransaction.builder()
-                .wallet(createTestWallet())
-                .amount(new BigDecimal("5.0"))
-                .date(Instant.ofEpochSecond(1L))
-                .type(FinancialTransactionType.INCOME)
-                .description(description)
-                .build());
-    }
 }

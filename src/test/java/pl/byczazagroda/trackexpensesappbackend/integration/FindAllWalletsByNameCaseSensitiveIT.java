@@ -21,6 +21,8 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 
@@ -50,13 +52,13 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
-        Wallet wallet1 = createTestWallet();
-        Wallet wallet2 = walletRepository.save(new Wallet("wallet"));
-        Wallet wallet3 = walletRepository.save(new Wallet("WALLET"));
-        Wallet wallet4 = walletRepository.save(new Wallet("Bag"));
+        Wallet wallet1 = createListTestWallets().get(0);
+        Wallet wallet2 = createListTestWallets().get(1);
+        Wallet wallet3 = createListTestWallets().get(2);
+        Wallet wallet4 = createListTestWallets().get(3);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME).accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(wallet1.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].id").value(wallet2.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].id").value(wallet3.getId()))
@@ -83,17 +85,17 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name does not exist should return null array")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
-        walletRepository.save(new Wallet("Bag"));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME).accept(MediaType.APPLICATION_JSON))
+        createTestWallet();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(0)));
     }
 
-
     private User createTestUser() {
         final User userOne = User.builder()
                 .userName("userone")
-                .email("email@wp.pl")
+                .email("Email@wp.pl")
                 .password("password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
@@ -109,13 +111,40 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         return walletRepository.save(testWallet);
     }
 
-    private FinancialTransaction createTestFinancialTransaction(String description) {
-        return financialTransactionRepository.save(FinancialTransaction.builder()
-                .wallet(createTestWallet())
-                .amount(new BigDecimal("5.0"))
-                .date(Instant.ofEpochSecond(1L))
-                .type(FinancialTransactionType.INCOME)
-                .description(description)
-                .build());
+    private List<Wallet> createListTestWallets() {
+
+        List<Wallet> wallets = new ArrayList<>();
+
+        final Wallet firstWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("TestWallet")
+                .build();
+
+        final Wallet secondWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("wallet")
+                .build();
+
+        final Wallet thirdWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("WALLET")
+                .build();
+
+        final Wallet forthWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("Bag")
+                .build();
+
+        wallets.add(firstWallet);
+        wallets.add(secondWallet);
+        wallets.add(thirdWallet);
+        wallets.add(forthWallet);
+
+        return walletRepository.saveAll(wallets);
     }
+
 }

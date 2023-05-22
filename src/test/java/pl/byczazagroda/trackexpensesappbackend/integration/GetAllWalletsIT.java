@@ -8,9 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -24,18 +29,20 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     public void clearTestDB() {
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("when getting all wallets should return wallets DTOs list and response status OK")
     void shouldResponseStatusOKAndWalletDTOsList() throws Exception {
         //given
-        List<Wallet> savedWallets = getWalletList();
-
-        walletRepository.saveAll(savedWallets);
+        List<Wallet> savedWallets = createListTestWallets();
 
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets"));
@@ -64,16 +71,52 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
         // then
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(0)));
+    }
 
+    private  List<User> createListTestUsers() {
+       List<User> users;
+        final User scroogeMcDuck = User.builder()
+                .userName("scroogeMcDuck")
+                .email("scroogeMcDuck@wp.pl")
+                .password("ScroogeMcDuck09!")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+
+        final User heuyDuck = User.builder()
+                .userName("heuyDuckHeuy")
+                .email("heuy@wp.pl")
+                .password("HeuyDuck08!")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+
+      users =  List.of(scroogeMcDuck, heuyDuck);
+        return userRepository.saveAll(users);
     }
 
     @NotNull
-    private static List<Wallet> getWalletList() {
-        return List.of(
-                new Wallet("TestWallet0"),
-                new Wallet("TestWallet1"),
-                new Wallet("TestWallet2"),
-                new Wallet("TestWallet3")
-        );
+    private List<Wallet> createListTestWallets() {
+
+        List<Wallet> wallets;
+
+        final Wallet firstWallet = Wallet.builder()
+                .user(createListTestUsers().get(0))
+                .creationDate(Instant.now())
+                .name("TestWallet0")
+                .build();
+
+        final Wallet secondWallet = Wallet.builder()
+                .user(createListTestUsers().get(0))
+                .creationDate(Instant.now())
+                .name("TestWallet2")
+                .build();
+
+        final Wallet thirdWallet = Wallet.builder()
+                .user(createListTestUsers().get(1))
+                .creationDate(Instant.now())
+                .name("TestWallet3")
+                .build();
+        wallets = List.of(firstWallet, secondWallet, thirdWallet);
+        return walletRepository.saveAll(wallets);
     }
+
 }

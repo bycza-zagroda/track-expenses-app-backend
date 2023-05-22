@@ -31,7 +31,9 @@ import static org.mockito.Mockito.when;
                 classes = {WalletRepository.class, WalletServiceImpl.class}))
 class WalletCreateServiceImplTest {
 
-    public static final long ID_1L = 1L;
+    public static final long WALLET_ID_1L = 1L;
+
+    public static final long USER_ID_1L= 1L;
 
     private static final String NAME_1 = "wallet name one";
 
@@ -61,15 +63,15 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet data are correct should create wallet successfully")
     void shouldCreateWalletSuccessfully_WhenWalletDataAreCorrect() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_1);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_1, USER_ID_1L);
         Wallet wallet = new Wallet(NAME_1);
-        wallet.setId(ID_1L);
+        wallet.setId(WALLET_ID_1L);
         wallet.setCreationDate(DATE_NOW);
-        WalletDTO walletDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
+        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW);
 
         // when
         when(walletRepository.save(any(Wallet.class))).thenReturn(wallet);
-        when(walletRepository.existsById(ID_1L)).thenReturn(true);
+        when(walletRepository.existsById(WALLET_ID_1L)).thenReturn(true);
         when(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).thenReturn(walletDTO);
         WalletDTO returnedWalletDTO = walletService.createWallet(walletCreateDTO);
 
@@ -83,7 +85,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name is empty should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsEmpty() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_EMPTY);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_EMPTY, USER_ID_1L);
 
         // when
 
@@ -95,7 +97,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name is blank should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsBlank() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_BLANK);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(NAME_BLANK, USER_ID_1L);
 
         // when
 
@@ -107,7 +109,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name is null should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsNull() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(null);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(null, USER_ID_1L);
 
         // when
 
@@ -119,7 +121,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name is too long should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameIsTooLong() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS, USER_ID_1L);
 
         // when
 
@@ -131,7 +133,7 @@ class WalletCreateServiceImplTest {
     @DisplayName("when wallet name contains illegal letters should not create wallet")
     void shouldNotCreateWallet_WhenWalletNameContainsIllegalLetters() {
         // given
-        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(INVALID_NAME);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO(INVALID_NAME, USER_ID_1L);
 
         // when
 
