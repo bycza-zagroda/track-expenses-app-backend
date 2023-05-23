@@ -44,13 +44,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class WalletGetControllerTest {
 
-    private static final Long ID_0L = 0L;
+    private static final Long WALLET_ID_0L = 0L;
 
-    private static final Long ID_1L = 1L;
+    private static final Long USER_ID_0L = 0L;
 
-    private static final Long ID_2L = 2L;
+    private static final Long WALLET_ID_1L = 1L;
 
-    private static final Long ID_3L = 3L;
+    private static final Long USER_ID_1L = 1L;
+
+    private static final Long WALLET_ID_2L = 2L;
+
+    private static final Long USER_ID_2L = 2L;
+
+    private static final Long WALLET_ID_3L = 3L;
+
+    private static final Long USER_ID_3L = 3L;
 
     public static final long ID_100L = 100L;
 
@@ -125,24 +133,24 @@ class WalletGetControllerTest {
     @DisplayName("when finding wallet by id should return wallet and response status OK")
     void shouldReturnResponseStatusOKAndWallet_WhenFindWalletById() throws Exception {
         // given
-        WalletDTO wallet = new WalletDTO(ID_1L, WALLET_NAME, DATE_NOW);
+        WalletDTO wallet = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
 
         // when
-        when(walletService.findById(ID_1L)).thenReturn(wallet);
-        ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", ID_1L)
+        when(walletService.findById(WALLET_ID_1L)).thenReturn(wallet);
+        ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(ID_1L.intValue()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(WALLET_ID_1L.intValue()));
     }
 
     @Test
     @DisplayName("when finding wallet by does not exist id should return response status not found")
     void shouldReturnResponseStatusNotFound_WhenWalletByIdDoesNotExist() throws Exception {
         // given
-        WalletDTO wallet = new WalletDTO(ID_1L, "", DATE_NOW);
+        WalletDTO wallet = new WalletDTO(WALLET_ID_1L, "", DATE_NOW, USER_ID_1L);
         doThrow(new AppRuntimeException(ErrorCode.W003, ""))
                 .when(walletService).findById(ID_100L);
 
@@ -159,12 +167,12 @@ class WalletGetControllerTest {
     @DisplayName("when finding wallet by id zero should return response status no content")
     void shouldReturnResponseStatusNoContent_WhenFindWalletByIdZero() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(ID_1L, WALLET_NAME, DATE_NOW);
+        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
         doThrow(ConstraintViolationException.class)
-                .when(walletService).findById(ID_0L);
+                .when(walletService).findById(WALLET_ID_0L);
 
         //when
-        ResultActions result = mockMvc.perform(get("/api/wallets/{id}", ID_0L)
+        ResultActions result = mockMvc.perform(get("/api/wallets/{id}", WALLET_ID_0L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
 
@@ -178,7 +186,7 @@ class WalletGetControllerTest {
         // given
         String walletNameSearched = WALLET_NAME;
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
-        List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(ID_2L, WALLET_NAME, DATE_2));
+        List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(WALLET_ID_2L, WALLET_NAME, DATE_2, USER_ID_2L));
         given(walletService.getWallets()).willReturn(listOfWalletsDTO);
         given(walletService.findAllByNameLikeIgnoreCase(walletNameSearched)).willReturn(foundedWalletsDTO);
 
@@ -196,9 +204,9 @@ class WalletGetControllerTest {
     }
 
     private List<WalletDTO> createListOfWalletsDTO() {
-        WalletDTO walletDTO1 = new WalletDTO(ID_1L, WALLET_NAME, DATE_1);
-        WalletDTO walletDTO2 = new WalletDTO(ID_2L, WALLET_NAME, DATE_2);
-        WalletDTO walletDTO3 = new WalletDTO(ID_3L, WALLET_NAME, DATE_3);
+        WalletDTO walletDTO1 = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_1, USER_ID_1L);
+        WalletDTO walletDTO2 = new WalletDTO(WALLET_ID_2L, WALLET_NAME, DATE_2, USER_ID_2L);
+        WalletDTO walletDTO3 = new WalletDTO(WALLET_ID_3L, WALLET_NAME, DATE_3, USER_ID_3L);
 
         return List.of(walletDTO1, walletDTO2, walletDTO3);
     }

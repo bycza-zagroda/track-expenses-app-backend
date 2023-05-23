@@ -64,7 +64,7 @@ class WalletUpdateControllerTest {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
         given(walletService.updateWallet(ID_1L, updDTO))
-                .willReturn(new WalletDTO(ID_1L, updDTO.name(), DATE_NOW));
+                .willReturn(  new WalletDTO(ID_1L, updDTO.name(), DATE_NOW));
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")

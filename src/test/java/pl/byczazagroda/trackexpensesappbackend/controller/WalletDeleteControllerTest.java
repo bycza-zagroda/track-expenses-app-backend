@@ -34,7 +34,9 @@ class WalletDeleteControllerTest {
 
     private static final Long ID_0L = 0L;
 
-    private static final Long ID_1L = 1L;
+    private static final Long WALLET_ID_1L = 1L;
+
+    private static final Long USER_ID_1L = 1L;
 
     private static final String NAME_1 = "Wallet name";
 
@@ -53,10 +55,10 @@ class WalletDeleteControllerTest {
     @DisplayName("when delete wallet correctly should return response status OK")
     void shouldReturnResponseStatusOK_WhenDeleteWalletCorrectly() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
+        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
 
         //when
-        ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", ID_1L)
+        ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
 
@@ -69,7 +71,7 @@ class WalletDeleteControllerTest {
     @DisplayName("when wallet id is zero should return response status no content")
     void shouldReturnResponseStatusNoContent_WhenWalletIdIsZero() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
+        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
         doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(ID_0L);
 
         //when

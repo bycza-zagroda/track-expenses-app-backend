@@ -115,7 +115,13 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
                 .creationDate(Instant.now())
                 .name("TestWallet3")
                 .build();
-        wallets = List.of(firstWallet, secondWallet, thirdWallet);
+
+        final Wallet forthWallet = Wallet.builder()
+                .user(createListTestUsers().get(1))
+                .creationDate(Instant.now())
+                .name("TestWallet4")
+                .build();
+        wallets = List.of(firstWallet, secondWallet, thirdWallet, forthWallet);
         return walletRepository.saveAll(wallets);
     }
 

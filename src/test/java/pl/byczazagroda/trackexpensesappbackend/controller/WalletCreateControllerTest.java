@@ -57,7 +57,7 @@ class WalletCreateControllerTest {
         // given
         WalletCreateDTO dto = new WalletCreateDTO(INVALID_NAME, USER_ID_1L);
         given(walletService.createWallet(dto))
-                .willReturn(new WalletDTO(WALLET_ID_1L, INVALID_NAME, DATE_NOW));
+                .willReturn(new WalletDTO(WALLET_ID_1L, INVALID_NAME, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
@@ -74,7 +74,7 @@ class WalletCreateControllerTest {
         // given
         WalletCreateDTO dto = new WalletCreateDTO("", USER_ID_1L);
         given(walletService.createWallet(dto))
-                .willReturn(new WalletDTO(WALLET_ID_1L, "", DATE_NOW));
+                .willReturn(new WalletDTO(WALLET_ID_1L, "", DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
@@ -91,7 +91,7 @@ class WalletCreateControllerTest {
         // given
         WalletCreateDTO dto = new WalletCreateDTO(null, USER_ID_1L);
         given(walletService.createWallet(dto))
-                .willReturn(new WalletDTO(WALLET_ID_1L, null, DATE_NOW));
+                .willReturn(new WalletDTO(WALLET_ID_1L, null, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
@@ -108,7 +108,7 @@ class WalletCreateControllerTest {
         // given
         WalletCreateDTO dto = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS, USER_ID_1L);
         given(walletService.createWallet(dto))
-                .willReturn(new WalletDTO(WALLET_ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS, DATE_NOW));
+                .willReturn(new WalletDTO(WALLET_ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
