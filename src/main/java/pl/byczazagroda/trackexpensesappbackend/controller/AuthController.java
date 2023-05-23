@@ -40,8 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Void> refreshToken(@CookieValue(name = "refresh_token") String refreshToken) {
+    public ResponseEntity<AuthAccessTokenDTO> refreshToken(@CookieValue(name = "refresh_token") String refreshToken) {
         //TODO
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
     }
 }
