@@ -55,7 +55,8 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase() throws Exception {
         Wallet savedWallet = createTestWallet();
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
+        FinancialTransactionCreateDTO financialTransactionCreateDTO
+                = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("5.0"),
                 "Test Description",
@@ -130,9 +131,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
         Wallet savedWallet = createTestWallet();
+
         FinancialTransactionCategory ftCategory = financialTransactionCategoryRepository.save(
                 new FinancialTransactionCategory("name", FinancialTransactionType.INCOME));
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
+
+        FinancialTransactionCreateDTO financialTransactionCreateDTO =
+                new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("10"),
                 "Test Description",

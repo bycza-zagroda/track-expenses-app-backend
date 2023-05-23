@@ -36,7 +36,8 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
-        WalletCreateDTO newWallet = new WalletCreateDTO("NewWallet", createTestUserDTO().id());
+        final UserDTO testUserDTO = createTestUserDTO();
+        WalletCreateDTO newWallet = new WalletCreateDTO("Wallet Name1", testUserDTO);
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
@@ -54,7 +55,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G", createTestUserDTO().id());
+        WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G", createTestUserDTO());
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
@@ -74,7 +75,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong", createTestUserDTO().id());
+        WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong", createTestUserDTO());
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
@@ -91,7 +92,8 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     }
 
     private UserDTO createTestUserDTO() {
-       return UserDTO.builder()
+        return UserDTO.builder()
+                .id(1L)
                 .userName("userone")
                 .email("Email@wp.pl")
                 .password("password1@")

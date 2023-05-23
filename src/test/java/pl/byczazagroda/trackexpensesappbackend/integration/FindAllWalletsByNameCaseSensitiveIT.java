@@ -52,13 +52,15 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
-        Wallet wallet1 = createListTestWallets().get(0);
-        Wallet wallet2 = createListTestWallets().get(1);
-        Wallet wallet3 = createListTestWallets().get(2);
-        Wallet wallet4 = createListTestWallets().get(3);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME).accept(MediaType.APPLICATION_JSON))
+        List<Wallet> wallets = createListTestWallets();
+        Wallet wallet1 = wallets.get(0);
+        Wallet wallet2 = wallets.get(1);
+        Wallet wallet3 = wallets.get(2);
+        Wallet wallet4 = wallets.get(3);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(wallet1.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].id").value(wallet2.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].id").value(wallet3.getId()))
@@ -66,7 +68,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value(wallet2.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()));
 
-        Assertions.assertEquals(4, walletRepository.count());
+        Assertions.assertEquals(2, walletRepository.count());
     }
 
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
@@ -118,7 +120,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         final Wallet firstWallet = Wallet.builder()
                 .user(createTestUser())
                 .creationDate(Instant.now())
-                .name("TestWallet")
+                .name("WalletTest")
                 .build();
 
         final Wallet secondWallet = Wallet.builder()

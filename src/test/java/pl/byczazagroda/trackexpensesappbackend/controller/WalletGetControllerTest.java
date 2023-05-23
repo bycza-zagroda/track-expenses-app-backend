@@ -46,8 +46,6 @@ class WalletGetControllerTest {
 
     private static final Long WALLET_ID_0L = 0L;
 
-    private static final Long USER_ID_0L = 0L;
-
     private static final Long WALLET_ID_1L = 1L;
 
     private static final Long USER_ID_1L = 1L;
@@ -188,7 +186,7 @@ class WalletGetControllerTest {
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
         List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(WALLET_ID_2L, WALLET_NAME, DATE_2, USER_ID_2L));
         given(walletService.getWallets()).willReturn(listOfWalletsDTO);
-        given(walletService.findAllByNameLikeIgnoreCase(walletNameSearched)).willReturn(foundedWalletsDTO);
+        given(walletService.findAllByNameIgnoreCase(walletNameSearched)).willReturn(foundedWalletsDTO);
 
         // when
 

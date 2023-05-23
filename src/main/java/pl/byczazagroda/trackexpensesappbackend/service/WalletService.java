@@ -24,5 +24,5 @@ public interface WalletService {
 
     WalletDTO findById(@Min(1) @NotNull Long id);
 
-    List<WalletDTO> findAllByNameLikeIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name);
+    List<WalletDTO> findAllByNameIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name);
 }
