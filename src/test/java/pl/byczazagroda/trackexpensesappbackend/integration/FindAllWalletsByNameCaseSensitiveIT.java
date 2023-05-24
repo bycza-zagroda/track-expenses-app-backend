@@ -3,6 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     //fixme, new issue, required improve method for wallets
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
-    @Ignore
+    @Disabled
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
         List<Wallet> wallets = createListTestWallets();

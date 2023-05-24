@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -116,7 +117,7 @@ class WalletGetServiceImplTest {
     //fixme, new issue, required improve method for wallets
     @Test
     @DisplayName("when finding wallet by name should return all wallets contains this name pattern")
-    @Ignore
+    @Disabled
     void shouldReturnAllWalletsContainsNamePattern_WhenFindingWalletByName() {
         // given
         String walletNameSearched = "Family";

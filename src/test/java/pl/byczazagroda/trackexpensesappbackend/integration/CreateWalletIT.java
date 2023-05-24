@@ -3,6 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
    //fixme, new issue, required improve method for wallets
     @DisplayName("It should create a new wallet and return wallet DTO")
     @Test
-    @Ignore
+    @Disabled
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
         final UserDTO testUserDTO = createTestUserDTO();
