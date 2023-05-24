@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,12 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
+
+    /**
+     * Class version 0.5.0.  SerialVersionUID needs to be updated with any change.
+     */
+    @Serial
+    private static final long serialVersionUID = 10050L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
