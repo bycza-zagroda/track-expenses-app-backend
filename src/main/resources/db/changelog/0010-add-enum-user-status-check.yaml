@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: "add enum user status check"
+      author: Iwona007
+      changes:
+        - sqlFile:
+            dbms: 'mysql'
+            path: db/changelog/0010-add-enum-user-status-check.sql

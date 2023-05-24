@@ -25,6 +25,7 @@ import java.util.Optional;
 @Service
 @Validated
 @RequiredArgsConstructor
+//fixme, new issue, required improve method for wallets
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
@@ -80,7 +81,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<WalletDTO> findAllByNameLikeIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name) {
+    public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
             listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name)

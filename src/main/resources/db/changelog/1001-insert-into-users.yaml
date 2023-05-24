@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: "insert into users"
+      author: Iwona007
+      changes:
+        - loadData:
+            file: db/changelog/data/users.csv
+            tableName: users
+            separator: ","
+            encoding: UTF-8
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: user_name
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(120)
+              - column:
+                  name: password
+                  type: varchar(20)
+              - column:
+                  name: user_status
+                  type: varchar(255)

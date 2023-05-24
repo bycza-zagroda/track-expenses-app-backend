@@ -31,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/wallets")
+//fixme, new issue, required improve method for wallets
 public class WalletController {
 
     private final WalletService walletService;
@@ -88,7 +89,7 @@ public class WalletController {
             @PathVariable @NotBlank @Pattern(regexp = "[\\w ]+") @Length(max = 20)
             String name) {
 
-        List<WalletDTO> walletsDTO = walletService.findAllByNameLikeIgnoreCase(name);
+        List<WalletDTO> walletsDTO = walletService.findAllByNameIgnoreCase(name);
         return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "9"
+      id: "add column and foreign key"
       author: pmackowiak
       changes:
         - addColumn:

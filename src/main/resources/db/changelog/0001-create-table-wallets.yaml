@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: "1"
       author: mirekgab
       runOnChange: true
       runAlways: true
@@ -12,7 +12,7 @@ databaseChangeLog:
         - dropTable:
             tableName: wallets
   -  changeSet:
-       id: 2
+       id: "create table wallets"
        author: iwona007
        runOnChange: true
        runAlways: true

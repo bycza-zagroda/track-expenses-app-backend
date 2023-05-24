@@ -30,7 +30,9 @@ import static org.mockito.BDDMockito.given;
                 classes = {WalletRepository.class, WalletServiceImpl.class}))
 class WalletUpdateServiceImplTest {
 
-    public static final long ID_1L = 1L;
+    public static final long WALLET_ID_1L = 1L;
+
+    public static final long USER_ID_1L = 1L;
 
     private static final String NAME_1 = "wallet name one";
 
@@ -56,14 +58,14 @@ class WalletUpdateServiceImplTest {
         // given
         WalletUpdateDTO walletUpdateDto = new WalletUpdateDTO(NAME_1);
         Wallet wallet = new Wallet(NAME_2);
-        wallet.setId(ID_1L);
+        wallet.setId(WALLET_ID_1L);
         wallet.setCreationDate(DATE_NOW);
-        WalletDTO newWalletDTO = new WalletDTO(ID_1L, NAME_1, DATE_NOW);
-        given(walletRepository.findById(ID_1L)).willReturn(Optional.of(wallet));
+        WalletDTO newWalletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
+        given(walletRepository.findById(WALLET_ID_1L)).willReturn(Optional.of(wallet));
         given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(newWalletDTO);
 
         // when
-        WalletDTO walletDTO = walletService.updateWallet(ID_1L, walletUpdateDto);
+        WalletDTO walletDTO = walletService.updateWallet(WALLET_ID_1L, walletUpdateDto);
 
         // then
         assertThat(walletDTO.name()).isEqualTo(walletUpdateDto.name());

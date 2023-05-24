@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "add foreign key to wallets"
+      author: Iwona007
+      changes:
+      -  addForeignKeyConstraint:
+            constraintName: fk_wallet_user_id
+            baseColumnNames: user_id
+            baseTableName: wallets
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedTableName: users
+            referencedColumnNames: id

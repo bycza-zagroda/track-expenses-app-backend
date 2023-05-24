@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "6"
+      id: "insert into financial transaction"
       author: iwona007
       changes:
         - loadData:
