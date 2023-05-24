@@ -31,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/wallets")
+//fixme, new issue, required improve method for wallets
 public class WalletController {
 
     private final WalletService walletService;

@@ -25,6 +25,7 @@ import java.util.Optional;
 @Service
 @Validated
 @RequiredArgsConstructor
+//fixme, new issue, required improve method for wallets
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
