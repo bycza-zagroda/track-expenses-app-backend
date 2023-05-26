@@ -34,7 +34,8 @@ public class UserServiceImplTest {
     @Test
     public void testValidateEmailWithInvalidEmail() {
         String invalidEmail = "test";
-        assertThrows(IllegalArgumentException.class, () -> userService.validateEmail(invalidEmail));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.validateEmail(invalidEmail));
     }
     @Test
     public void testHashPassword() {
@@ -45,14 +46,17 @@ public class UserServiceImplTest {
     @Test
     public void testHashPasswordWithShortPassword() {
         String shortPassword = "123";
-        assertThrows(IllegalArgumentException.class, () -> userService.hashPassword(shortPassword));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.hashPassword(shortPassword));
     }
 
     @Test
     public void testRegisterUser() {
         AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "Test123!", "testuser");
 
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
+        when(userRepository
+                .existsByEmail(anyString()))
+                .thenReturn(false);
 
         assertDoesNotThrow(() -> userService.registerUser(dto));
 
@@ -69,9 +73,12 @@ public class UserServiceImplTest {
     public void testRegisterUserWithExistingEmail() {
         AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "Test123!", "testuser");
 
-        when(userRepository.existsByEmail(anyString())).thenReturn(true);
+        when(userRepository
+                .existsByEmail(anyString()))
+                .thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(dto));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.registerUser(dto));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -79,7 +86,8 @@ public class UserServiceImplTest {
     public void testRegisterUserWithInvalidEmail() {
         AuthRegisterDTO dto = new AuthRegisterDTO("invalid_email", "Test123!", "testuser");
 
-        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(dto));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.registerUser(dto));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -87,7 +95,8 @@ public class UserServiceImplTest {
     public void testRegisterUserWithShortPassword() {
         AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "short", "testuser");
 
-        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(dto));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.registerUser(dto));
         verify(userRepository, never()).save(any(User.class));
     }
 }
