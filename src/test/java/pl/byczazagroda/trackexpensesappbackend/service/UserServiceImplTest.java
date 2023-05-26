@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserServiceImplTest {
+
     @Mock
     private UserRepository userRepository;
     @InjectMocks

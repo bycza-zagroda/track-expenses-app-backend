@@ -23,6 +23,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Validated
 public class AuthController {
+
 private final UserService userService;
 
     @PostMapping("/login")
