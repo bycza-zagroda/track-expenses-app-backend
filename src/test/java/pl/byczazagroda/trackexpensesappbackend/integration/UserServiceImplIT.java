@@ -74,7 +74,8 @@ public class UserServiceImplIT {
         AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "short", "testuser");
 
         HttpEntity<AuthRegisterDTO> requestEntity = new HttpEntity<>(dto);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate
+            .postForEntity(url, requestEntity, String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST,
                 response.getStatusCode());
