@@ -4,7 +4,10 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
@@ -13,14 +16,15 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
-import org.mockito.ArgumentCaptor;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -48,7 +52,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When password is valid, it should return a hashed password of correct length")
     @Test
-    public void testHashPassword_WhenPasswordIsValid_ThenReturnHashed() {
+    public void testHashPassword_whenPasswordIsValid_thenReturnHashed() {
         String password = "Password123!";
         String hashedPassword = userService.hashPassword(password);
         assertEquals(64, hashedPassword.length());
@@ -56,7 +60,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When password is too short, an AppRuntimeException (U004) should be thrown")
     @Test
-    public void testHashPassword_WhenPasswordIsTooShort_ThenThrowException() {
+    public void testHashPassword_whenPasswordIsTooShort_thenThrowException() {
         String shortPassword = "123";
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.hashPassword(shortPassword));
@@ -65,7 +69,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When registering a new user, no exception should be thrown and the user should be saved")
     @Test
-    public void testRegisterUser_WhenNewUser_ThenSaveUser() {
+    public void testRegisterUser_whenNewUser_thenSaveUser() {
         when(userRepository
                 .existsByEmail(anyString()))
                 .thenReturn(false);
@@ -83,7 +87,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When registering a user with existing email, an AppRuntimeException (U001) should be thrown")
     @Test
-    public void testRegisterUser_WhenEmailExists_ThenThrowException() {
+    public void testRegisterUser_whenEmailExists_thenThrowException() {
         when(userRepository
                 .existsByEmail(REGISTER_DTO.email()))
                 .thenReturn(true);
@@ -96,7 +100,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When registering a user with invalid email, an AppRuntimeException (U002) should be thrown")
     @Test
-    public void testRegisterUser_WhenEmailIsInvalid_ThenThrowException() {
+    public void testRegisterUser_whenEmailIsInvalid_thenThrowException() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_INVALID_EMAIL));
         assertEquals(ErrorCode.U002.getBusinessMessage(), exception.getMessage());
@@ -105,7 +109,7 @@ public class UserServiceImplTest {
 
     @DisplayName("When registering a user with too short password, an AppRuntimeException (U004) should be thrown")
     @Test
-    public void testRegisterUser_WhenPasswordIsTooShort_ThenThrowException() {
+    public void testRegisterUser_whenPasswordIsTooShort_thenThrowException() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_TOO_SHORT_PASSWORD));
         assertEquals(ErrorCode.U004.getBusinessMessage(), exception.getMessage());

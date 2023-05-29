@@ -13,7 +13,9 @@ import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserRegistrationIT extends BaseIntegrationTestIT {
@@ -80,7 +82,7 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
 
     @DisplayName("When registering a user with an invalid email, it should return BAD_REQUEST")
     @Test
-    void testRegisterUser_WhenEmailIsInvalid_thenShouldReturnErrorResponse() {
+    void testRegisterUser_whenEmailIsInvalid_thenShouldReturnErrorResponse() {
         ResponseEntity<String> response = restTemplate
                 .postForEntity(REGISTER_USER_URL, REGISTER_DTO_INVALID_EMAIL, String.class);
 
