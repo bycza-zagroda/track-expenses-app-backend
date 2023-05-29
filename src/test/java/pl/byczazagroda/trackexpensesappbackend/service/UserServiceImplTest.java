@@ -1,11 +1,15 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
@@ -18,85 +22,93 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
 import org.mockito.ArgumentCaptor;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class UserServiceImplTest {
 
+    private static final AuthRegisterDTO REGISTER_DTO =
+            new AuthRegisterDTO("test@test.com", "Test123@", "testuser");
+
+    private static final AuthRegisterDTO REGISTER_DTO_TOO_SHORT_PASSWORD =
+            new AuthRegisterDTO("test@test.com", "short", "testuser");
+
+    private static final AuthRegisterDTO REGISTER_DTO_INVALID_EMAIL =
+            new AuthRegisterDTO("InvalidEmail", "Test123@", "testuser");
+
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private UserServiceImpl userService;
-    @Test
-    public void testValidateEmail() {
-        String validEmail = "test@example.com";
-        assertDoesNotThrow(() -> userService.validateEmail(validEmail));
+
+    @BeforeEach
+    public void setUp() {
+        Mockito.reset(userRepository);
     }
+
+    @DisplayName("When password is valid, it should return a hashed password of correct length")
     @Test
-    public void testValidateEmailWithInvalidEmail() {
-        String invalidEmail = "test";
-        assertThrows(IllegalArgumentException.class,
-                () -> userService.validateEmail(invalidEmail));
-    }
-    @Test
-    public void testHashPassword() {
+    public void testHashPassword_WhenPasswordIsValid_ThenReturnHashed() {
         String password = "Password123!";
         String hashedPassword = userService.hashPassword(password);
-        assertTrue(hashedPassword.length() > 0);
+        assertEquals(64, hashedPassword.length());
     }
+
+    @DisplayName("When password is too short, an AppRuntimeException (U004) should be thrown")
     @Test
-    public void testHashPasswordWithShortPassword() {
+    public void testHashPassword_WhenPasswordIsTooShort_ThenThrowException() {
         String shortPassword = "123";
-        assertThrows(IllegalArgumentException.class,
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.hashPassword(shortPassword));
+        assertEquals(ErrorCode.U004.getBusinessMessage(), exception.getMessage());
     }
 
+    @DisplayName("When registering a new user, no exception should be thrown and the user should be saved")
     @Test
-    public void testRegisterUser() {
-        AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "Test123!", "testuser");
-
+    public void testRegisterUser_WhenNewUser_ThenSaveUser() {
         when(userRepository
                 .existsByEmail(anyString()))
                 .thenReturn(false);
 
-        assertDoesNotThrow(() -> userService.registerUser(dto));
+        assertDoesNotThrow(() -> userService.registerUser(REGISTER_DTO));
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
 
         User user = userCaptor.getValue();
-        assertEquals(dto.email(), user.getEmail());
-        assertEquals(dto.username(), user.getUserName());
-        assertNotEquals(dto.password(), user.getPassword());
+        assertEquals(REGISTER_DTO.email(), user.getEmail());
+        assertEquals(REGISTER_DTO.username(), user.getUserName());
+        assertNotEquals(REGISTER_DTO.password(), user.getPassword());
     }
 
+    @DisplayName("When registering a user with existing email, an AppRuntimeException (U001) should be thrown")
     @Test
-    public void testRegisterUserWithExistingEmail() {
-        AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "Test123!", "testuser");
-
+    public void testRegisterUser_WhenEmailExists_ThenThrowException() {
         when(userRepository
-                .existsByEmail(anyString()))
+                .existsByEmail(REGISTER_DTO.email()))
                 .thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> userService.registerUser(dto));
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
+                () -> userService.registerUser(REGISTER_DTO));
+        assertEquals(ErrorCode.U001.getBusinessMessage(), exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
+    @DisplayName("When registering a user with invalid email, an AppRuntimeException (U002) should be thrown")
     @Test
-    public void testRegisterUserWithInvalidEmail() {
-        AuthRegisterDTO dto = new AuthRegisterDTO("invalid_email", "Test123!", "testuser");
-
-        assertThrows(IllegalArgumentException.class,
-                () -> userService.registerUser(dto));
+    public void testRegisterUser_WhenEmailIsInvalid_ThenThrowException() {
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
+                () -> userService.registerUser(REGISTER_DTO_INVALID_EMAIL));
+        assertEquals(ErrorCode.U002.getBusinessMessage(), exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
+    @DisplayName("When registering a user with too short password, an AppRuntimeException (U004) should be thrown")
     @Test
-    public void testRegisterUserWithShortPassword() {
-        AuthRegisterDTO dto = new AuthRegisterDTO("test@test.com", "short", "testuser");
-
-        assertThrows(IllegalArgumentException.class,
-                () -> userService.registerUser(dto));
+    public void testRegisterUser_WhenPasswordIsTooShort_ThenThrowException() {
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
+                () -> userService.registerUser(REGISTER_DTO_TOO_SHORT_PASSWORD));
+        assertEquals(ErrorCode.U004.getBusinessMessage(), exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 }
