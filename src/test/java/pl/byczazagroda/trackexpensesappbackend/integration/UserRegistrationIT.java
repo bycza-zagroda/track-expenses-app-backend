@@ -32,13 +32,6 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
     private static final AuthRegisterDTO REGISTER_DTO_INVALID_EMAIL =
             new AuthRegisterDTO("InvalidEmail", "User123@", "User_Bolek");
 
-    final User existingUser = User.builder()
-            .email("user@server.com")
-            .userName("User Bolek")
-            .password("Password123!")
-            .userStatus(UserStatus.UNVERIFIED)
-            .build();
-
     @Autowired
     private TestRestTemplate restTemplate;
 
