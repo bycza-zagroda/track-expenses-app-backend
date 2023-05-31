@@ -1,6 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,36 +8,34 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
     private static final AuthRegisterDTO REGISTER_DTO =
-            new AuthRegisterDTO("test@test.com", "Test123@", "testuser");
+            new AuthRegisterDTO("user@server.com", "User123@", "User_Bolek");
 
     private static final AuthRegisterDTO REGISTER_DTO_TOO_SHORT_PASSWORD =
-            new AuthRegisterDTO("test@test.com", "short", "testuser");
+            new AuthRegisterDTO("user@server.com", "short", "User_Bolek");
 
     private static final AuthRegisterDTO REGISTER_DTO_INVALID_EMAIL =
-            new AuthRegisterDTO("InvalidEmail", "Test123@", "testuser");
+            new AuthRegisterDTO("InvalidEmail", "User123@", "User_Bolek");
 
     @Mock
     private UserRepository userRepository;
@@ -50,12 +48,12 @@ public class UserServiceImplTest {
         Mockito.reset(userRepository);
     }
 
-    @DisplayName("When password is valid, it should return a hashed password of correct length")
+    @DisplayName("A valid password should return a hash of the correct length")
     @Test
     public void testHashPassword_whenPasswordIsValid_thenReturnHashed() {
         String password = "Password123!";
         String hashedPassword = userService.hashPassword(password);
-        assertEquals(64, hashedPassword.length());
+        assertEquals(60, hashedPassword.length());
     }
 
     @DisplayName("When password is too short, an AppRuntimeException (U004) should be thrown")

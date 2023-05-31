@@ -30,8 +30,19 @@ public class UserServiceImpl implements UserService {
                     "A user with the email " + authRegisterDTO.email() + " already exists."
             );
         }
-        validateEmail(authRegisterDTO.email());
-        validatePassword(authRegisterDTO.password());
+        if (!validateEmail(authRegisterDTO.email())) {
+            throw new AppRuntimeException(
+                    ErrorCode.U002,
+                    "Invalid email format for email: " + authRegisterDTO.email()
+            );
+        }
+
+        if (!validatePassword(authRegisterDTO.password())) {
+            throw new AppRuntimeException(
+                    ErrorCode.U004,
+                    "Password must be at least 8 characters."
+            );
+        }
 
         UserStatus status = UserStatus.VERIFIED;
         String hashedPassword = hashPassword(authRegisterDTO.password());
@@ -45,26 +56,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public void validateEmail(String email) {
+    private boolean validateEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
-        if (!matcher.matches()) {
-            throw new AppRuntimeException(
-                    ErrorCode.U002,
-                    "Invalid email format for email: " + email
-            );
-        }
+
+        return matcher.matches();
     }
 
-    public void validatePassword(String password) {
+    private boolean validatePassword(String password) {
         String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,100}";
-        if (!password.matches(pattern)) {
-            throw new AppRuntimeException(
-                    ErrorCode.U003,
-                    "Password does not meet strength requirements."
-            );
-        }
+
+        return password.matches(pattern);
     }
 
     @Override
@@ -76,6 +79,7 @@ public class UserServiceImpl implements UserService {
             );
         }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         return passwordEncoder.encode(password);
     }
 

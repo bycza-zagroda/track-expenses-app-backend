@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,13 +24,21 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
     private static final String REGISTER_USER_URL = "/api/auth/register";
 
     private static final AuthRegisterDTO REGISTER_DTO =
-            new AuthRegisterDTO("test@test.com", "Test123@", "testuser");
+            new AuthRegisterDTO("user@server.com", "User123@", "User_Bolek");
 
     private static final AuthRegisterDTO REGISTER_DTO_TOO_SHORT_PASSWORD =
-            new AuthRegisterDTO("test@test.com", "short", "testuser");
+            new AuthRegisterDTO("user@server.com", "short", "User_Bolek");
 
     private static final AuthRegisterDTO REGISTER_DTO_INVALID_EMAIL =
-            new AuthRegisterDTO("InvalidEmail", "Test123@", "testuser");
+            new AuthRegisterDTO("InvalidEmail", "User123@", "User_Bolek");
+
+    final User existingUser = User.builder()
+            .email("user@server.com")
+            .userName("User Bolek")
+            .password("Password123!")
+            .userStatus(UserStatus.UNVERIFIED)
+            .build();
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -54,18 +63,23 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
         assertEquals(REGISTER_DTO.email(), user.getEmail());
         assertEquals(REGISTER_DTO.username(), user.getUserName());
         assertNotEquals(REGISTER_DTO.password(), user.getPassword());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @DisplayName("When trying to register a user that already exists, it should return BAD_REQUEST")
     @Test
     void testRegisterUser_whenUserAlreadyExists_thenShouldReturnErrorResponse() {
-        User existingUser = new User();
-        existingUser.setEmail("test@test.com");
-        existingUser.setUserName("existingUser");
-        userRepository.save(existingUser);
-
         ResponseEntity<String> response = restTemplate
                 .postForEntity(REGISTER_USER_URL, REGISTER_DTO, String.class);
+
+        final User existingUser = User.builder()
+                .email("user@server.com")
+                .userName("User Bolek")
+                .password("Password123!")
+                .userStatus(UserStatus.UNVERIFIED)
+                .build();
+
+        userRepository.save(existingUser);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(1, userRepository.count());
