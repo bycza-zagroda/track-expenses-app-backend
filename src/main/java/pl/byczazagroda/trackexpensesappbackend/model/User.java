@@ -67,6 +67,11 @@ public class User implements Serializable {
     @Column(name = "user_status", columnDefinition = "ENUM('VERIFIED', 'UNVERIFIED', 'BLOCKED', 'BANNED')")
     private UserStatus userStatus;
 
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<FinancialTransactionCategory> financialTransactionCategories = new ArrayList<>();
+
     public void addWallet(Wallet wallet) {
         this.wallets.add(wallet);
         wallet.setUser(this);
@@ -75,5 +80,14 @@ public class User implements Serializable {
     public void removeWallet(Wallet wallet) {
         this.wallets.remove(wallet);
         wallet.setUser(null);
+    }
+
+    public void addFinancialTransactionCategories(FinancialTransactionCategory financialTransactionCategory){
+        this.financialTransactionCategories.add(financialTransactionCategory);
+        financialTransactionCategory.setUser(this);
+    }
+    public void removeFinancialTransactionCategories(FinancialTransactionCategory financialTransactionCategory){
+        this.financialTransactionCategories.remove(financialTransactionCategory);
+        financialTransactionCategory.setUser(null);
     }
 }
