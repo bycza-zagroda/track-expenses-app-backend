@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import javax.validation.Valid;
 
@@ -21,10 +22,12 @@ import javax.validation.Valid;
 @Validated
 public class AuthController {
 
+    private final UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<AuthAccessTokenDTO> authenticateUser(@Valid @RequestBody AuthLoginDTO authLoginDTO) {
-        //TODO
-        return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
+        AuthAccessTokenDTO authAccessTokenDTO = userService.authenticateUser(authLoginDTO);
+        return new ResponseEntity<>(authAccessTokenDTO, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -44,4 +47,6 @@ public class AuthController {
         //TODO
         return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
     }
+
+
 }

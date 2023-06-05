@@ -59,3 +59,9 @@ log4j:
       hibernate: INFO, hb
       hibernate.SQL: trace
       hibernate.type: trace
+
+jwt:
+  expirationTime: 2592000000
+  secret: temporarysecret
+
+

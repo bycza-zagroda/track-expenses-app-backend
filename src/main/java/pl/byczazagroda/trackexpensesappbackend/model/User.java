@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +26,7 @@ import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -33,7 +37,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
     /**
      * Class version 0.5.0.  SerialVersionUID needs to be updated with any change.
@@ -53,6 +57,10 @@ public class User implements Serializable {
     @NotBlank
     @Size(min = 1, max = 50)
     private String userName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authority", columnDefinition = "ENUM('ROLE_USER')")
+    private UserRole authority;
 
     @NotBlank
     @Size(min = 6, max = 120)
@@ -75,5 +83,37 @@ public class User implements Serializable {
     public void removeWallet(Wallet wallet) {
         this.wallets.remove(wallet);
         wallet.setUser(null);
+    }
+
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(authority.toString()));
     }
 }
