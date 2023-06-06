@@ -19,4 +19,4 @@ jobs:
           cache: maven
 
       - name: Run tests with Maven
-        run: mvn -B test -Dspring.profiles.active=test --file pom.xml
+        run: mvn -B verify -Dspring.profiles.active=test --file pom.xml
