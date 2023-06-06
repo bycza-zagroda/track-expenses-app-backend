@@ -80,4 +80,11 @@ public class FinancialTransactionCategory implements Serializable {
         this.creationDate = Instant.now();
     }
 
+    public void addUser(User user){
+        this.setUser(user);
+    }
+
+    public void removeUser(){
+        this.setUser(null);
+    }
 }
