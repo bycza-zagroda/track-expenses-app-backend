@@ -67,8 +67,8 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
 
         final User existingUser = User.builder()
                 .email("user@server.com")
-                .userName("User Bolek")
-                .password("Password123!")
+                .userName("User_Bolek")
+                .password("User123@")
                 .userStatus(UserStatus.UNVERIFIED)
                 .build();
 

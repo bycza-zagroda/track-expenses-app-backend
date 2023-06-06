@@ -12,8 +12,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
 import javax.validation.Valid;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
@@ -24,12 +22,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(@Valid AuthRegisterDTO authRegisterDTO) {
-        if (userRepository.existsByEmail(authRegisterDTO.email())) {
-            throw new AppRuntimeException(
-                    ErrorCode.U001,
-                    "A user with the email " + authRegisterDTO.email() + " already exists."
-            );
-        }
         if (!validateEmail(authRegisterDTO.email())) {
             throw new AppRuntimeException(
                     ErrorCode.U002,
@@ -41,6 +33,13 @@ public class UserServiceImpl implements UserService {
             throw new AppRuntimeException(
                     ErrorCode.U004,
                     "Password must be at least 8 characters."
+            );
+        }
+
+        if (userRepository.existsByEmail(authRegisterDTO.email())) {
+            throw new AppRuntimeException(
+                    ErrorCode.U001,
+                    "A user with the email " + authRegisterDTO.email() + " already exists."
             );
         }
 
@@ -57,11 +56,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean validateEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
+        String pattern = "^[A-Za-z0-9+_.-]+@(.+)$";
 
-        return matcher.matches();
+        return email.matches(pattern);
     }
 
     private boolean validatePassword(String password) {
