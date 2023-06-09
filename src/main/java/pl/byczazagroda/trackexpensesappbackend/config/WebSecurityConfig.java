@@ -16,11 +16,11 @@ import pl.byczazagroda.trackexpensesappbackend.service.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    private final String secret;
+
     public WebSecurityConfig(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
     }
-
-    private final String secret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -29,12 +29,15 @@ public class WebSecurityConfig {
         http
                 .cors().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeHttpRequests(authorize -> authorize
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
+                .authorizeHttpRequests(authorize -> authorize
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/auth/login").permitAll()
                 .anyRequest().authenticated());
-        http.addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret));
+        http
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret));
 
 
         return http.build();

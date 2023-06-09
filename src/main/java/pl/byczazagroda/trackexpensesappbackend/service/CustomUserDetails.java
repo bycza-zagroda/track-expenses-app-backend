@@ -37,26 +37,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        // replace with actual value from User entity if exists
-        return true;
+        return user.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        // replace with actual value from User entity if exists
-        return true;
+        return user.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // replace with actual value from User entity if exists
-        return true;
+        return user.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        // replace with actual value from User entity if exists
-        return true;
+        return user.isEnabled();
     }
 
     @Override

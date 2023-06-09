@@ -67,6 +67,11 @@ public class User implements Serializable {
     @Column(name = "user_status", columnDefinition = "ENUM('VERIFIED', 'UNVERIFIED', 'BLOCKED', 'BANNED')")
     private UserStatus userStatus;
 
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
+
     public void addWallet(Wallet wallet) {
         this.wallets.add(wallet);
         wallet.setUser(this);

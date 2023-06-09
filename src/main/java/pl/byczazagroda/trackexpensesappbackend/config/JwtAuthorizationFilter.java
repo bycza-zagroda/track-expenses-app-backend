@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import pl.byczazagroda.trackexpensesappbackend.service.CustomUserDetails;
@@ -58,8 +59,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 String userName = decodedJWT.getSubject();
 
                 if (userName != null) {
-                    CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(userName);
-                    return new UsernamePasswordAuthenticationToken(userDetails.getId(), null, userDetails.getAuthorities());
+                    UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(userName);
+                    return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 }
             } catch (JWTVerificationException e) {
                 throw new AuthenticationServiceException("Failed to verify token: " + e.getMessage(), e);
