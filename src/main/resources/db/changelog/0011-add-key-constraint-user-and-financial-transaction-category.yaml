@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: "add foreign key to financial_transaction_categories"
+      id: "add foreign key to financial transaction categories"
       author: SzanieckiFranciszek
       changes:
         - addForeignKeyConstraint:

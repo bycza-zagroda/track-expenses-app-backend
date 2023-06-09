@@ -81,13 +81,4 @@ public class User implements Serializable {
         this.wallets.remove(wallet);
         wallet.setUser(null);
     }
-
-    public void addFinancialTransactionCategories(FinancialTransactionCategory financialTransactionCategory){
-        this.financialTransactionCategories.add(financialTransactionCategory);
-        financialTransactionCategory.setUser(this);
-    }
-    public void removeFinancialTransactionCategories(FinancialTransactionCategory financialTransactionCategory){
-        this.financialTransactionCategories.remove(financialTransactionCategory);
-        financialTransactionCategory.setUser(null);
-    }
 }
