@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class CustomUserDetails implements UserDetails {
+
     private final User user;
 
     public CustomUserDetails(User user) {
