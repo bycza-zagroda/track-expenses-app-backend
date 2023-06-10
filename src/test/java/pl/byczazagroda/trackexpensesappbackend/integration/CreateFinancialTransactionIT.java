@@ -133,7 +133,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Wallet savedWallet = createTestWallet();
 
         FinancialTransactionCategory ftCategory = financialTransactionCategoryRepository.save(
-                new FinancialTransactionCategory("name", FinancialTransactionType.INCOME));
+                new FinancialTransactionCategory("name", FinancialTransactionType.INCOME,createTestUser()));
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO =
                 new FinancialTransactionCreateDTO(
