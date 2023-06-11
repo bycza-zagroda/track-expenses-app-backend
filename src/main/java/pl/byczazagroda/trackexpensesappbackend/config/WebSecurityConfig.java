@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class WebSecurityConfig {
 
     private final String secret;
@@ -22,9 +25,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           AuthenticationManager authenticationManager
-                                           ) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors().disable()
                 .csrf().disable()
@@ -36,15 +37,9 @@ public class WebSecurityConfig {
                 .antMatchers("/api/auth/login").permitAll()
                 .anyRequest().authenticated());
         http
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, secret));
-
+                .addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
