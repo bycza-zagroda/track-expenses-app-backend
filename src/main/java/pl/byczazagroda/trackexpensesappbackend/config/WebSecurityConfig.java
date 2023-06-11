@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import pl.byczazagroda.trackexpensesappbackend.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +23,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           AuthenticationManager authenticationManager,
-                                           UserDetailsServiceImpl userDetailsService) throws Exception {
+                                           AuthenticationManager authenticationManager
+                                           ) throws Exception {
         http
                 .cors().disable()
                 .csrf().disable()
@@ -37,7 +36,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/auth/login").permitAll()
                 .anyRequest().authenticated());
         http
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret));
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, secret));
 
 
         return http.build();

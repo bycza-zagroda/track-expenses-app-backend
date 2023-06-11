@@ -3,21 +3,24 @@ package pl.byczazagroda.trackexpensesappbackend.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import pl.byczazagroda.trackexpensesappbackend.service.CustomUserDetails;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -25,15 +28,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    private final UserDetailsService userDetailsService;
-
     private final String secret;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  UserDetailsService userDetailsService,
                                   String secret) {
         super(authenticationManager);
-        this.userDetailsService = userDetailsService;
         this.secret = secret;
     }
 
@@ -56,12 +55,21 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret))
                         .build()
                         .verify(token.replace(TOKEN_PREFIX, ""));
-                String userName = decodedJWT.getSubject();
 
-                if (userName != null) {
-                    UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(userName);
-                    return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+                String userId = decodedJWT.getSubject();
+
+                Claim authoritiesClaim = decodedJWT.getClaim("authorities");
+                List<GrantedAuthority> authorities;
+
+                if (authoritiesClaim != null) {
+                    authorities = authoritiesClaim.asList(String.class).stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
+                } else {
+                    authorities = new ArrayList<>();
                 }
+
+                return new UsernamePasswordAuthenticationToken(userId, null, authorities);
             } catch (JWTVerificationException e) {
                 throw new AuthenticationServiceException("Failed to verify token: " + e.getMessage(), e);
             }
