@@ -19,8 +19,7 @@ public enum ErrorCode {
     U001("U001", "USER_ALREADY_EXISTS", 400),
     U002("U002", "INVALID_EMAIL_FORMAT", 400),
     U003("U003", "PASSWORD_DOES_NOT_MEET_REQUIREMENTS", 400),
-    U004("U004", "PASSWORD_TOO_SHORT", 400),
-    JWT_VERIFICATION_FAILURE("T001", "JWT_VERIFICATION_FAILURE", 401);
+    U004("U004", "PASSWORD_TOO_SHORT", 400);
 
     private final String businessStatus;
     private final String businessMessage;
