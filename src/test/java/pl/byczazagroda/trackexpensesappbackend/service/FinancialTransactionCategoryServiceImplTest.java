@@ -16,6 +16,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategor
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class FinancialTransactionCategoryServiceImplTest {
 
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @DisplayName("create financial transaction category when valid parameters are provided")
     @Test

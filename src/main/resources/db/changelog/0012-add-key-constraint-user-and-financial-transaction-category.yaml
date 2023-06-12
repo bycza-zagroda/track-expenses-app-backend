@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "add foreign key to financial transaction categories"
+      author: SzanieckiFranciszek
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_financial_transaction_categories_user_id
+            baseColumnNames: user_id
+            baseTableName: financial_transaction_categories
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedTableName: users
+            referencedColumnNames: id
