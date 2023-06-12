@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -55,7 +57,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 return new UsernamePasswordAuthenticationToken(userId, null, authorities);
             } catch (JWTVerificationException e) {
-                throw new AuthenticationServiceException("Failed to verify token: " + e.getMessage(), e);
+                return null;
             }
         }
         return null;
@@ -68,7 +70,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder
                     .getContext()
                     .setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized");
         }
-        filterChain.doFilter(request, response);
     }
 }
