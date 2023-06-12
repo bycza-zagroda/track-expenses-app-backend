@@ -14,10 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.controller.UserController;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-
 import java.time.Instant;
 import java.util.List;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,4 +67,3 @@ public class WebSecurityConfigTest {
     }
 
 }
-
