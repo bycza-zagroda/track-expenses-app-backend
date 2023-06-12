@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,20 +25,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_HEADER = "Authorization";
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    private final String secret = "Blabla";
+    private final String secret = "Blabla"; // if using the @Value, tests fails
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(TOKEN_HEADER);
         if (token != null && token.startsWith(TOKEN_PREFIX)) {
             try {
-                System.out.println("----------------------------------------------------------------");
                 DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret))
                         .build()
                         .verify(token.replace(TOKEN_PREFIX, ""));

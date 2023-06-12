@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +36,7 @@ public class WebSecurityConfigTest {
     private final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOltdLCJpYXQiOjE1MTYyMzkwMjJ9.fY5zqz0LBU7dDyz5BCbdDzH0cMf_EJm-zlQICupScVw";
 
     private String createJwtToken () {
-        Algorithm algorithm = Algorithm.HMAC256("Blabla");
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                 .withSubject("123")
                 .withClaim("authorities", List.of())
@@ -44,24 +45,26 @@ public class WebSecurityConfigTest {
                 .sign(algorithm);
     }
 
+    @DisplayName("Check if authorized request with valid JWT returns status OK")
     @Test
-    public void test() throws Exception {
+    void testPerformAuthorizedRequestWithValidJWT_thenReturnStatusOk() throws Exception {
         mockMvc.perform(get("/api/users/me")
-                .header("Authorization","Bearer " + createJwtToken()))
+                        .header("Authorization","Bearer " + createJwtToken()))
                 .andExpect(status().isOk());
-
     }
 
+    @DisplayName("Check if unauthorized request returns Unauthorized status")
     @Test
-    public void badTest() throws Exception {
+    void testPerformUnauthorizedRequest_thenReturnUnauthorizedStatus() throws Exception {
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
+    @DisplayName("Check if authorized request with invalid JWT returns Unauthorized status")
     @Test
-    public void worseTest() throws Exception {
+    void testPerformAuthorizedRequestWithInvalidJWT_thenReturnUnauthorizedStatus() throws Exception {
         mockMvc.perform(get("/api/users/me")
-                .header("Authorization", "Bearer " + INVALID_TOKEN))
+                        .header("Authorization", "Bearer " + INVALID_TOKEN))
                 .andExpect(status().isUnauthorized());
     }
 
