@@ -73,25 +73,4 @@ public class FinancialTransactionCategory implements Serializable {
     protected void onCreate() {
         creationDate = Instant.now();
     }
-    
-    public FinancialTransactionCategory(String name, FinancialTransactionType type) {
-        this.name = name;
-        this.type = type;
-        this.creationDate = Instant.now();
-    }
-
-    public FinancialTransactionCategory(String name, FinancialTransactionType type, User user) {
-        this.name = name;
-        this.type = type;
-        this.creationDate = Instant.now();
-        this.user = user;
-    }
-
-    public void addUser(User user){
-        this.setUser(user);
-    }
-
-    public void removeUser(){
-        this.setUser(null);
-    }
 }

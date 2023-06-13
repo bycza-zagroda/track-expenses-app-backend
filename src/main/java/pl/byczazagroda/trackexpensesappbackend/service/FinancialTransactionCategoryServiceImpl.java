@@ -39,7 +39,8 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(@Valid
             FinancialTransactionCategoryCreateDTO dto) {
-        FinancialTransactionCategory entityToSave = new FinancialTransactionCategory(dto.name(), dto.type());
+        FinancialTransactionCategory entityToSave = FinancialTransactionCategory
+                .builder().name(dto.name()).type(dto.type()).build();
         //TODO should be changed to the userId received from the controller
         User user = userRepository.getReferenceById(1L);
         entityToSave.setUser(user);
