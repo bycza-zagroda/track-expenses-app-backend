@@ -21,7 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = UserController.class,
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebSecurityConfig.class, ErrorStrategy.class}))
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {WebSecurityConfig.class, ErrorStrategy.class}))
 @ActiveProfiles("test")
 public class WebSecurityConfigTest {
 
@@ -33,7 +34,7 @@ public class WebSecurityConfigTest {
 
     private final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOltdLCJpYXQiOjE1MTYyMzkwMjJ9.fY5zqz0LBU7dDyz5BCbdDzH0cMf_EJm-zlQICupScVw";
 
-    private String createJwtToken () {
+    private String createJwtToken() {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                 .withSubject("123")
@@ -47,7 +48,7 @@ public class WebSecurityConfigTest {
     @Test
     void testPerformAuthorizedRequestWithValidJWT_thenReturnStatusOk() throws Exception {
         mockMvc.perform(get("/api/users/me")
-                        .header("Authorization","Bearer " + createJwtToken()))
+                        .header("Authorization", "Bearer " + createJwtToken()))
                 .andExpect(status().isOk());
     }
 

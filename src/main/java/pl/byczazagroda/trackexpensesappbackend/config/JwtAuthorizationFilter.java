@@ -26,9 +26,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
+    private final String UNAUTHORIZED_MESSAGE = "Unauthorized";
+
     private final String secret;
 
-    public JwtAuthorizationFilter(String secret){
+    public JwtAuthorizationFilter(String secret) {
         this.secret = secret;
     }
 
@@ -62,7 +64,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         if (authentication != null) {
             SecurityContextHolder
@@ -71,7 +74,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized");
+            response.getWriter().write(UNAUTHORIZED_MESSAGE);
         }
     }
 
