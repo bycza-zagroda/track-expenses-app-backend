@@ -78,24 +78,22 @@ public class FinancialTransactionCategoryServiceImplTest {
         assertEquals(financialTransactionCategoryDTO, fTCResult);
     }
 
-    private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {
-        return FinancialTransactionCategory.builder()
-                .name(name)
-                .type(type)
-                .creationDate(Instant.now())
-                .build();
-    }
-
     @Test
     @DisplayName("when finding financial transaction categories should successfully return categoryDTOs list")
     void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
         //given
-        FinancialTransactionCategory categoryFirst = createFinancialTransactionCategory("First", FinancialTransactionType.INCOME);
-        FinancialTransactionCategory categorySecond = createFinancialTransactionCategory("Second", FinancialTransactionType.INCOME);
-        FinancialTransactionCategory categoryThird = createFinancialTransactionCategory("Third", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categoryFirstDTO = new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categoryFirst =
+                createFinancialTransactionCategory("First", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categorySecond =
+                createFinancialTransactionCategory("Second", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categoryThird =
+                createFinancialTransactionCategory("Third", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categoryFirstDTO =
+                new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categorySecondDTO =
+                new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categoryThirdDTO =
+                new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
         List<FinancialTransactionCategory> categoryList = new ArrayList<>();
         categoryList.add(categoryFirst);
         categoryList.add(categorySecond);
@@ -182,6 +180,14 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         //then
         Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.findById(1L));
+    }
+
+    private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {
+        return FinancialTransactionCategory.builder()
+                .name(name)
+                .type(type)
+                .creationDate(Instant.now())
+                .build();
     }
 
 }
