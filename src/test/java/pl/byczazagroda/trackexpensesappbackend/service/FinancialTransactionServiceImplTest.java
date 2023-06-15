@@ -22,6 +22,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -104,7 +105,7 @@ class FinancialTransactionServiceImplTest {
 
     @NotNull
     private FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type) {
-        return new FinancialTransactionCategory(ID_1L, "Category name", type, DATE_NOW, null);
+        return new FinancialTransactionCategory(ID_1L, "Category name", type, DATE_NOW, null, new User());
     }
 
     @Test

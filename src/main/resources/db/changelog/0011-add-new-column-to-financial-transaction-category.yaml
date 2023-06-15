@@ -1,0 +1,13 @@
+databaseChangeLog:
+- changeSet:
+    id: "add column user_id to financial transaction categories"
+    author: SzanieckiFranciszek
+    changes:
+      - addColumn:
+          tableName: financial_transaction_categories
+          columns:
+            - column:
+                name: user_id
+                type: bigint
+                constraints:
+                  nullable: false

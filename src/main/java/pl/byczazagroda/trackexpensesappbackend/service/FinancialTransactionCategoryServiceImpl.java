@@ -11,8 +11,10 @@ import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -32,11 +34,16 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     private final FinancialTransactionRepository financialTransactionRepository;
 
+    private final UserRepository userRepository;
+
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(@Valid
             FinancialTransactionCategoryCreateDTO dto) {
-
-        FinancialTransactionCategory entityToSave = new FinancialTransactionCategory(dto.name(), dto.type());
+        FinancialTransactionCategory entityToSave = FinancialTransactionCategory
+                .builder().name(dto.name()).type(dto.type()).build();
+        //TODO should be changed to the userId received from the controller
+        User user = userRepository.getReferenceById(1L);
+        entityToSave.setUser(user);
         FinancialTransactionCategory savedEntity = financialTransactionCategoryRepository.save(entityToSave);
 
         return financialTransactionCategoryModelMapper

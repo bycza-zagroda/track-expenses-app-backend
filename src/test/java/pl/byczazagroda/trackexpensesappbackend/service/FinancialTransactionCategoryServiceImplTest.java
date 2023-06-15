@@ -16,6 +16,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategor
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.Instant;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -52,13 +55,17 @@ public class FinancialTransactionCategoryServiceImplTest {
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @DisplayName("create financial transaction category when valid parameters are provided")
     @Test
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
                 new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
-        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory();
+        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME, CATEGORY_TYPE);
+        financialTransactionCategory.setId(ID_1L);
         when(financialTransactionCategoryRepository.save(any())).thenReturn(financialTransactionCategory);
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(ID_1L,
                 CATEGORY_NAME, CATEGORY_TYPE);
@@ -71,23 +78,22 @@ public class FinancialTransactionCategoryServiceImplTest {
         assertEquals(financialTransactionCategoryDTO, fTCResult);
     }
 
-    private FinancialTransactionCategory createFinancialTransactionCategory() {
-        FinancialTransactionCategory financialTransactionCategory = new FinancialTransactionCategory(CATEGORY_NAME,
-                CATEGORY_TYPE);
-        financialTransactionCategory.setId(ID_1L);
-        return financialTransactionCategory;
-    }
-
     @Test
     @DisplayName("when finding financial transaction categories should successfully return categoryDTOs list")
     void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
         //given
-        FinancialTransactionCategory categoryFirst = new FinancialTransactionCategory("First", FinancialTransactionType.INCOME);
-        FinancialTransactionCategory categorySecond = new FinancialTransactionCategory("Second", FinancialTransactionType.INCOME);
-        FinancialTransactionCategory categoryThird = new FinancialTransactionCategory("Third", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categoryFirstDTO = new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categoryFirst =
+                createFinancialTransactionCategory("First", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categorySecond =
+                createFinancialTransactionCategory("Second", FinancialTransactionType.INCOME);
+        FinancialTransactionCategory categoryThird =
+                createFinancialTransactionCategory("Third", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categoryFirstDTO =
+                new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categorySecondDTO =
+                new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categoryThirdDTO =
+                new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
         List<FinancialTransactionCategory> categoryList = new ArrayList<>();
         categoryList.add(categoryFirst);
         categoryList.add(categorySecond);
@@ -146,7 +152,7 @@ public class FinancialTransactionCategoryServiceImplTest {
         BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
-                new FinancialTransactionCategoryDTO(id,"example name", FinancialTransactionType.INCOME);
+                new FinancialTransactionCategoryDTO(id, "example name", FinancialTransactionType.INCOME);
 
         //when
         when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
@@ -174,6 +180,14 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         //then
         Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.findById(1L));
+    }
+
+    private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {
+        return FinancialTransactionCategory.builder()
+                .name(name)
+                .type(type)
+                .creationDate(Instant.now())
+                .build();
     }
 
 }

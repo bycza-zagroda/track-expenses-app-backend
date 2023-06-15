@@ -140,6 +140,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         return financialTransactionCategoryRepository.save(FinancialTransactionCategory.builder()
                 .name("TestCategory")
                 .type(FinancialTransactionType.INCOME)
+                .user(createTestUser())
                 .build());
     }
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {

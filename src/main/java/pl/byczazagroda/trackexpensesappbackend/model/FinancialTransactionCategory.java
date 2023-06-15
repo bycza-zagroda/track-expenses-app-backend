@@ -19,6 +19,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -63,15 +65,12 @@ public class FinancialTransactionCategory implements Serializable {
     @OneToMany(mappedBy = "financialTransactionCategory", fetch = FetchType.LAZY)
     private List<FinancialTransaction> financialTransactions;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
     @PrePersist
     protected void onCreate() {
         creationDate = Instant.now();
     }
-    
-    public FinancialTransactionCategory(String name, FinancialTransactionType type) {
-        this.name = name;
-        this.type = type;
-        this.creationDate = Instant.now();
-    }
-
 }
