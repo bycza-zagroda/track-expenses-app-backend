@@ -17,3 +17,7 @@ databaseChangeLog:
       file: db/changelog/0008-create-table-users.yaml
   - include:
       file: db/changelog/0009-add-constraints-foreign-key-wallets.yaml
+  - include:
+      file: db/changelog/0011-add-new-column-to-financial-transaction-category.yaml
+  - include:
+      file: db/changelog/0012-add-key-constraint-user-and-financial-transaction-category.yaml

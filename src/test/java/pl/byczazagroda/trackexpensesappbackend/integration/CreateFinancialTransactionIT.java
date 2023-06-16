@@ -133,8 +133,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
         Wallet savedWallet = createTestWallet();
 
-        FinancialTransactionCategory ftCategory = financialTransactionCategoryRepository.save(
-                new FinancialTransactionCategory("name", FinancialTransactionType.INCOME));
+        FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO =
                 new FinancialTransactionCreateDTO(
@@ -178,4 +177,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         return walletRepository.save(testWallet);
     }
 
+    private FinancialTransactionCategory createTestFinancialTransactionCategory() {
+        final FinancialTransactionCategory testFinancialTransactionCategory = FinancialTransactionCategory.builder()
+                .name("name")
+                .type(FinancialTransactionType.INCOME)
+                .user(createTestUser())
+                .build();
+        return financialTransactionCategoryRepository.save(testFinancialTransactionCategory);
+    }
 }
