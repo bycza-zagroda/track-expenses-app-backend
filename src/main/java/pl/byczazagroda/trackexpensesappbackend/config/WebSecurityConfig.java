@@ -30,9 +30,9 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeHttpRequests(authorize -> authorize
-                .antMatchers("/").permitAll()
-                .antMatchers("/api/auth/login").permitAll()
-                .anyRequest().authenticated());
+                        .antMatchers("/").permitAll()
+                        .antMatchers("/api/auth/login").permitAll()
+                        .anyRequest().authenticated());
         http
                 .addFilterBefore(new JwtAuthorizationFilter(secret), UsernamePasswordAuthenticationFilter.class);
 
