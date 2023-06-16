@@ -116,7 +116,7 @@ class WalletGetServiceImplTest {
     void shouldReturnAllWalletsContainsNamePattern_WhenFindingWalletByName() {
         // given
         String walletNameSearched = "Family";
-        List<Wallet> walletList = createListOfWalletsByName("Family wallet", "Common Wallet", "Smith Family Wallet");
+        List<Wallet> walletList = createListOfWalletsByName("Family wallet", "Common Wallet", "Smith Family Wallet", "Random family wallet");
         List<WalletDTO> walletListDTO = walletList.stream().map((Wallet x) ->
                 new WalletDTO(x.getId(), x.getName(), x.getCreationDate(), 1L)).toList();
         given(walletRepository.findAll()).willReturn(walletList);
