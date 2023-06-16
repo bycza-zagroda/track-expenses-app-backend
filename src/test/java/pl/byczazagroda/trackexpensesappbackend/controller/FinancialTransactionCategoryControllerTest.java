@@ -3,6 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = FinancialTransactionCategoryServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {FinancialTransactionCategoryModelMapper.class, ErrorStrategy.class}))
 @ActiveProfiles("test")
+@AutoConfigureMockMvc(addFilters = false)
 class FinancialTransactionCategoryControllerTest {
         
     @Autowired

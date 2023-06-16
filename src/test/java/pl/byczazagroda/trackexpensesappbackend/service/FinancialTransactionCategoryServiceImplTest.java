@@ -32,7 +32,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 
-
 @ExtendWith(MockitoExtension.class)
 public class FinancialTransactionCategoryServiceImplTest {
 

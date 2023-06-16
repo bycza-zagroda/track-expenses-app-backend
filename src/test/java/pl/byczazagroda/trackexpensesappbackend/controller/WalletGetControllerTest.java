@@ -5,6 +5,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -42,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = WalletServiceImpl.class),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletModelMapper.class, ErrorStrategy.class}))
 @ActiveProfiles("test")
+@AutoConfigureMockMvc(addFilters = false)
 class WalletGetControllerTest {
 
     private static final Long WALLET_ID_0L = 0L;
