@@ -52,26 +52,27 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     //fixme, new issue, required improve method for wallets
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
-    @Disabled
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
         List<Wallet> wallets = createListTestWallets();
         Wallet wallet1 = wallets.get(0);
         Wallet wallet2 = wallets.get(1);
         Wallet wallet3 = wallets.get(2);
-        Wallet wallet4 = wallets.get(3);
+        Wallet wallet4 = wallets.get(4);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(wallet1.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].id").value(wallet2.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].id").value(wallet3.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[3].id").value(wallet4.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value(wallet1.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value(wallet2.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[3].name").value(wallet4.getName()));
 
-        Assertions.assertEquals(2, walletRepository.count());
+        Assertions.assertEquals(5, walletRepository.count());
     }
 
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
@@ -91,10 +92,11 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
         createTestWallet();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", "notExistingName")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(0)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0]").doesNotExist());
     }
 
     private User createTestUser() {
@@ -143,11 +145,17 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
                 .creationDate(Instant.now())
                 .name("Bag")
                 .build();
+        final Wallet fifthWallet = Wallet.builder()
+                .user(createTestUser())
+                .creationDate(Instant.now())
+                .name("Wallet Test")
+                .build();
 
         wallets.add(firstWallet);
         wallets.add(secondWallet);
         wallets.add(thirdWallet);
         wallets.add(forthWallet);
+        wallets.add(fifthWallet);
 
         return walletRepository.saveAll(wallets);
     }
