@@ -1,6 +1,5 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -35,7 +33,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @Validated
-@Slf4j
 @WebMvcTest(
         controllers = WalletController.class,
         includeFilters = @ComponentScan.Filter(
@@ -114,7 +111,6 @@ class WalletGetServiceImplTest {
                 walletService.findById(ID_5L)).withMessage(ErrorCode.W003.getBusinessMessage());
     }
 
-    //fixme, new issue, required improve method for wallets
     @Test
     @DisplayName("when finding wallet by name should return all wallets contains this name pattern")
     void shouldReturnAllWalletsContainsNamePattern_WhenFindingWalletByName() {
@@ -122,7 +118,7 @@ class WalletGetServiceImplTest {
         String walletNameSearched = "Family";
         List<Wallet> walletList = createListOfWalletsByName("Family wallet", "Common Wallet", "Smith Family Wallet");
         List<WalletDTO> walletListDTO = walletList.stream().map((Wallet x) ->
-                new WalletDTO(x.getId(), x.getName(), x.getCreationDate(), null)).toList();
+                new WalletDTO(x.getId(), x.getName(), x.getCreationDate(), 1L)).toList();
         given(walletRepository.findAll()).willReturn(walletList);
         given(walletRepository.findAllByNameIsContainingIgnoreCase(walletNameSearched))
                 .willReturn(walletList.stream()
@@ -131,13 +127,12 @@ class WalletGetServiceImplTest {
         walletList.forEach(wallet -> given(walletModelMapper.mapWalletEntityToWalletDTO(wallet)).willReturn(
                 walletListDTO
                         .stream()
-                        .filter(walletDTO -> Objects.equals(wallet.getName(), walletDTO.name()))
+                        .filter(walletDTO -> wallet.getName().toUpperCase().contains(walletNameSearched.toUpperCase()))
                         .findAny()
                         .orElse(null)));
         // when
         List<WalletDTO> fundedWallets = walletService.findAllByNameIgnoreCase(walletNameSearched);
 
-        System.out.println(fundedWallets.size());
         // then
         assertThat(fundedWallets, hasSize(walletRepository.findAllByNameIsContainingIgnoreCase(walletNameSearched).size()));
     }
