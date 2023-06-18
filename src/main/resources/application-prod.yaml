@@ -38,3 +38,5 @@ springdoc:
   swagger-ui:
     path: /docs/swagger
     enabled: true
+jwt:
+  secret: Blabla
