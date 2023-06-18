@@ -23,7 +23,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@AutoConfigureMockMvc(addFilters = false)
 class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 
     @Autowired

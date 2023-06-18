@@ -28,7 +28,6 @@ import java.time.Instant;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@AutoConfigureMockMvc(addFilters = false)
 class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
 
     @Autowired

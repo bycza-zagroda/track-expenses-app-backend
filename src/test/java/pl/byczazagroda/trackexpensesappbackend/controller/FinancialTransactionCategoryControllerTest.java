@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
@@ -29,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = FinancialTransactionCategoryController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = FinancialTransactionCategoryServiceImpl.class),
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {FinancialTransactionCategoryModelMapper.class, ErrorStrategy.class}))
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+                {FinancialTransactionCategoryModelMapper.class, ErrorStrategy.class, WebSecurityConfig.class}))
 @ActiveProfiles("test")
-@AutoConfigureMockMvc(addFilters = false)
 class FinancialTransactionCategoryControllerTest {
         
     @Autowired

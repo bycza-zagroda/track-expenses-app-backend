@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 //fixme, this required add user_id and check and add new scenario with user
-@AutoConfigureMockMvc(addFilters = false)
 public class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @Autowired

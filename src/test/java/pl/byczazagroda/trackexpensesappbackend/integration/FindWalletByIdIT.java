@@ -20,7 +20,6 @@ import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@AutoConfigureMockMvc(addFilters = false)
 class FindWalletByIdIT extends BaseIntegrationTestIT {
 
         @Autowired

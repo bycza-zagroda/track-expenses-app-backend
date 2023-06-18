@@ -22,7 +22,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@AutoConfigureMockMvc(addFilters = false)
 class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
 
 

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
@@ -31,9 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = WalletController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WalletServiceImpl.class),
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WalletModelMapper.class, ErrorStrategy.class}))
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+                {WalletModelMapper.class, ErrorStrategy.class, WebSecurityConfig.class}))
 @ActiveProfiles("test")
-@AutoConfigureMockMvc(addFilters = false)
 class WalletCreateControllerTest {
 
     private static final Long WALLET_ID_1L = 1L;

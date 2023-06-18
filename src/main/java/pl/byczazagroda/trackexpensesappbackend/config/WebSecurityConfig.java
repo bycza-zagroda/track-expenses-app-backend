@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Value("${jwt.secret}")
     private final String secret;
 
     public WebSecurityConfig(@Value("${jwt.secret}") String secret) {
@@ -35,7 +34,12 @@ public class WebSecurityConfig {
                         .antMatchers("/api/users/me").authenticated()
                         .anyRequest().permitAll());
         http
-                .addFilterBefore(new JwtAuthorizationFilter(secret), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling()
+                .authenticationEntryPoint(new AppAuthenticationEntryPoint())
+                .accessDeniedHandler(new AppAccessDeniedHandler());
+        http
+                .addFilterBefore(new JwtAuthorizationFilter(secret),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

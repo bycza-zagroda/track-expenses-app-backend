@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(addFilters = false)
 class UserRegistrationIT extends BaseIntegrationTestIT {
 
     private static final String REGISTER_USER_URL = "/api/auth/register";

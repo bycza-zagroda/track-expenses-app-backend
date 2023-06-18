@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@AutoConfigureMockMvc(addFilters = false)
 class GetAllWalletsIT extends BaseIntegrationTestIT {
 
     @Autowired

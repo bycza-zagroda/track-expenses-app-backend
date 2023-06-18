@@ -25,7 +25,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 
-@AutoConfigureMockMvc(addFilters = false)
 class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
 
     static private final String WALLET_NAME = "wallet";
