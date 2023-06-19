@@ -1,5 +1,5 @@
 id,user_name,email,password,user_status
-1,ScroogeMcDuck,scroogeMcDuck@gmail.com,ScroogeMcDuck09!,verified
-2,Heuy,heuy@gmail.com,HeuyDuck08!,verified
-3,Dewey,dewey@gmail.com,DeweyDuck07!,verified
-4,Louie,louie@gmail.com,LouieDuck06!,verified
+1,ScroogeMcDuck,scroogeMcDuck@gmail.com,ScroogeMcDuck09!,VERIFIED
+2,Heuy,heuy@gmail.com,HeuyDuck08!,VERIFIED
+3,Dewey,dewey@gmail.com,DeweyDuck07!,VERIFIED
+4,Louie,louie@gmail.com,LouieDuck06!,VERIFIED

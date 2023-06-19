@@ -84,7 +84,7 @@ public class WalletServiceImpl implements WalletService {
     public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name) {
         List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO = walletRepository.findAllByNameLikeIgnoreCase(name)
+            listOfWalletDTO = walletRepository.findAllByNameIsContainingIgnoreCase(name)
                     .stream()
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
