@@ -4,12 +4,7 @@ spring:
     url: jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}?useUnicode=true&serverTimezone=UTC
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     properties:

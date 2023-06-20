@@ -4,6 +4,7 @@ spring:
     url: jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}?useUnicode=true&serverTimezone=UTC
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jackson:
     default-property-inclusion: non_empty

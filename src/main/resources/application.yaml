@@ -6,9 +6,6 @@ spring:
   banner:
     location: classpath:banner.txt
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
@@ -16,6 +13,13 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+# using custom exception if handler not found
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 # OpenApi-UI
 springdoc:
