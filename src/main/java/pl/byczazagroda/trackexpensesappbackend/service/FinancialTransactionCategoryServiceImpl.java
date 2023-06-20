@@ -37,14 +37,17 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     private final UserRepository userRepository;
 
     @Override
-    public FinancialTransactionCategoryDTO createFinancialTransactionCategory(@Valid
-            FinancialTransactionCategoryCreateDTO dto) {
-        FinancialTransactionCategory entityToSave = FinancialTransactionCategory
-                .builder().name(dto.name()).type(dto.type()).build();
-        //TODO should be changed to the userId received from the controller
-        User user = userRepository.getReferenceById(1L);
-        entityToSave.setUser(user);
-        FinancialTransactionCategory savedEntity = financialTransactionCategoryRepository.save(entityToSave);
+    public FinancialTransactionCategoryDTO createFinancialTransactionCategory(
+            @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+
+        User user = getUserByUserId(financialTransactionCategoryCreateDTO.userId());
+
+        FinancialTransactionCategory financialTransactionCategory = FinancialTransactionCategory
+                .builder().name(financialTransactionCategoryCreateDTO.name()).type(financialTransactionCategoryCreateDTO
+                        .type()).user(user).build();
+
+        FinancialTransactionCategory savedEntity = financialTransactionCategoryRepository
+                .save(financialTransactionCategory);
 
         return financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(savedEntity);
@@ -89,10 +92,19 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                 = financialTransactionCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
                         String.format("Financial transaction category with id: %d not found", id)));
+
+        User user = getUserByUserId(financialTransactionCategoryUpdateDTO.userId());
+
         financialTransactionCategory.setName(financialTransactionCategoryUpdateDTO.name());
         financialTransactionCategory.setType(financialTransactionCategoryUpdateDTO.type());
+        financialTransactionCategory.setUser(user);
         return financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
+    }
+
+    private User getUserByUserId(Long userId) {
+        return (userId == null) ? null : userRepository.findById(userId).orElseThrow(() ->
+                new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
     }
 
 }
