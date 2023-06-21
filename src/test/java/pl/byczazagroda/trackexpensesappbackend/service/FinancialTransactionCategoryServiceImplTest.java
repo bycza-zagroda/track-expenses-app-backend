@@ -14,6 +14,7 @@ import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -35,8 +36,14 @@ import java.time.Instant;
 @ExtendWith(MockitoExtension.class)
 public class FinancialTransactionCategoryServiceImplTest {
 
-    public static final long ID_1L = 1L;
-
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+    private static final long USER_ID_1L = 1L;
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME = "example name";
     public static final String CATEGORY_NAME = "Name";
 
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;
@@ -62,14 +69,16 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
-                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
-        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME, CATEGORY_TYPE);
-        financialTransactionCategory.setId(ID_1L);
+                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE,USER_ID_1L);
+        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME,
+                CATEGORY_TYPE);
+        financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
         when(financialTransactionCategoryRepository.save(any())).thenReturn(financialTransactionCategory);
-        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(ID_1L,
-                CATEGORY_NAME, CATEGORY_TYPE);
-        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any())).thenReturn(financialTransactionCategoryDTO);
-
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(
+                FINANCIAL_TRANSACTION_CATEGORY_ID_1L, CATEGORY_NAME, CATEGORY_TYPE,USER_ID_1L);
+        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
+                .thenReturn(financialTransactionCategoryDTO);
+        when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         //when
         FinancialTransactionCategoryDTO fTCResult =
                 financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
@@ -82,17 +91,20 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
         //given
         FinancialTransactionCategory categoryFirst =
-                createFinancialTransactionCategory("First", FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST, FinancialTransactionType.INCOME);
         FinancialTransactionCategory categorySecond =
-                createFinancialTransactionCategory("Second", FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND, FinancialTransactionType.INCOME);
         FinancialTransactionCategory categoryThird =
-                createFinancialTransactionCategory("Third", FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD, FinancialTransactionType.INCOME);
         FinancialTransactionCategoryDTO categoryFirstDTO =
-                new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST,
+                        FinancialTransactionType.INCOME,USER_ID_1L);
         FinancialTransactionCategoryDTO categorySecondDTO =
-                new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_2L, FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND,
+                        FinancialTransactionType.INCOME,USER_ID_1L);
         FinancialTransactionCategoryDTO categoryThirdDTO =
-                new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_3L, FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD,
+                        FinancialTransactionType.INCOME,USER_ID_1L);
         List<FinancialTransactionCategory> categoryList = new ArrayList<>();
         categoryList.add(categoryFirst);
         categoryList.add(categorySecond);
@@ -121,7 +133,7 @@ public class FinancialTransactionCategoryServiceImplTest {
     void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
         //when
         when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(true);
-        financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
 
         //then
         verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
@@ -135,7 +147,7 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         //then
         Assertions.assertThrows(AppRuntimeException.class,
-                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(ID_1L));
+                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L));
     }
 
     @Test
@@ -146,12 +158,13 @@ public class FinancialTransactionCategoryServiceImplTest {
         Long id = 1L;
         FinancialTransactionCategory financialTransactionCategory = new FinancialTransactionCategory();
         financialTransactionCategory.setId(id);
-        financialTransactionCategory.setName("example name");
+        financialTransactionCategory.setName(FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME);
         financialTransactionCategory.setType(FinancialTransactionType.INCOME);
         BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
-                new FinancialTransactionCategoryDTO(id, "example name", FinancialTransactionType.INCOME);
+                new FinancialTransactionCategoryDTO(id, FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME,
+                        FinancialTransactionType.INCOME,USER_ID_1L);
 
         //when
         when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
