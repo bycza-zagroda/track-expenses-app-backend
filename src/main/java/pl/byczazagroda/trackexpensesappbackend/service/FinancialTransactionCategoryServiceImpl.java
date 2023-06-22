@@ -103,9 +103,8 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     private User getUserByUserId(Long userId) {
-        return (userId == null) ? null : userRepository.findById(userId).orElseThrow(() ->
+        return  userRepository.findById(userId).orElseThrow(() ->
                 new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
     }
-
 }
 
