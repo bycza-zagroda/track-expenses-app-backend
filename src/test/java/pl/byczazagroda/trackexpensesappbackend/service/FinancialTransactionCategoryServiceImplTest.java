@@ -37,13 +37,21 @@ import java.time.Instant;
 public class FinancialTransactionCategoryServiceImplTest {
 
     private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+
     private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
+
     private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+
     private static final long USER_ID_1L = 1L;
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME = "example name";
+
     public static final String CATEGORY_NAME = "Name";
 
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;

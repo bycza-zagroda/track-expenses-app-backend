@@ -98,6 +98,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         financialTransactionCategory.setName(financialTransactionCategoryUpdateDTO.name());
         financialTransactionCategory.setType(financialTransactionCategoryUpdateDTO.type());
         financialTransactionCategory.setUser(user);
+
         return financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
     }

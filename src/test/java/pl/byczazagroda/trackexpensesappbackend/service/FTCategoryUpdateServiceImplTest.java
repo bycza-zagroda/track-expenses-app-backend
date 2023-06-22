@@ -32,8 +32,11 @@ import static org.mockito.Mockito.when;
 public class FTCategoryUpdateServiceImplTest {
 
     private static final long VALID_ID = 1L;
+
     private static final long INVALID_ID = 10L;
+
     private static final long USER_ID_1L = 1L;
+
     private static final String NAME = "test_name";
 
     private static final FinancialTransactionType TYPE_INCOME = FinancialTransactionType.INCOME;

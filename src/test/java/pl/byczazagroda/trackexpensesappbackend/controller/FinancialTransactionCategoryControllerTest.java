@@ -36,11 +36,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FinancialTransactionCategoryControllerTest {
 
     private static final Long USER_ID_1L = 1L;
+
     private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+
     private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
+
     private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
 
     @Autowired
