@@ -13,7 +13,9 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -33,6 +35,8 @@ public class FTCategoryUpdateServiceImplTest {
 
     private static final long INVALID_ID = 10L;
 
+    private static final long USER_ID_1L = 1L;
+
     private static final String NAME = "test_name";
 
     private static final FinancialTransactionType TYPE_INCOME = FinancialTransactionType.INCOME;
@@ -46,10 +50,10 @@ public class FTCategoryUpdateServiceImplTest {
             .build();
 
     private static final FinancialTransactionCategoryDTO VALID_CATEGORY_DTO
-            = new FinancialTransactionCategoryDTO(VALID_ID, NAME, TYPE_INCOME);
+            = new FinancialTransactionCategoryDTO(VALID_ID, NAME, TYPE_INCOME, USER_ID_1L);
 
     private static final FinancialTransactionCategoryUpdateDTO VALID_UPDATE_CATEGORY_DTO
-            = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME);
+            = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME, USER_ID_1L);
 
     @Mock
     private FinancialTransactionCategoryRepository repository;
@@ -60,18 +64,23 @@ public class FTCategoryUpdateServiceImplTest {
     @InjectMocks
     private FinancialTransactionCategoryServiceImpl service;
 
+    @Mock
+    private UserRepository userRepository;
+
     @Test
     @DisplayName("update the FT category and return the category object if the ID is correct")
     void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
         when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
-        when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any())).thenReturn(VALID_CATEGORY_DTO);
+        when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
+                .thenReturn(VALID_CATEGORY_DTO);
+        when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, VALID_UPDATE_CATEGORY_DTO);
         assertEquals(dto, VALID_CATEGORY_DTO);
     }
 
     @Test
-    @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and does not update entity")
+    @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and doesnt update entity")
     void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
         when(repository.findById(INVALID_ID)).thenReturn(empty());
         AppRuntimeException exception = assertThrows(

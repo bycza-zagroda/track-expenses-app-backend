@@ -34,7 +34,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 {FinancialTransactionCategoryModelMapper.class, ErrorStrategy.class, WebSecurityConfig.class}))
 @ActiveProfiles("test")
 class FinancialTransactionCategoryControllerTest {
-        
+
+    private static final Long USER_ID_1L = 1L;
+
+    private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+
+    private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
+
+    private static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
+
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
+
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
+
     @Autowired
     private MockMvc mockMvc;
         
@@ -63,9 +77,9 @@ class FinancialTransactionCategoryControllerTest {
     }
 
     private static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOList() {
-        FinancialTransactionCategoryDTO categoryFirstDTO = new FinancialTransactionCategoryDTO(1L, "First", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(2L, "Second", FinancialTransactionType.INCOME);
-        FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(3L, "Third", FinancialTransactionType.INCOME);
+        FinancialTransactionCategoryDTO categoryFirstDTO = new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST, FinancialTransactionType.INCOME, USER_ID_1L);
+        FinancialTransactionCategoryDTO categorySecondDTO = new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_2L, FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND, FinancialTransactionType.INCOME, USER_ID_1L);
+        FinancialTransactionCategoryDTO categoryThirdDTO = new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_3L, FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD, FinancialTransactionType.INCOME, USER_ID_1L);
 
         return List.of(categoryFirstDTO, categorySecondDTO, categoryThirdDTO);       
     }
