@@ -1,0 +1,35 @@
+application:
+  group: zagrodnicy (Bycza-zagroda)
+  version: 0.5.0
+
+spring:
+  banner:
+    location: classpath:banner.txt
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+# using custom exception if handler not found
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+# OpenApi-UI
+springdoc:
+  api-docs:
+    path: /docs/api-docs
+    enabled: true
+  swagger-ui:
+    path: /docs/swagger
+    enabled: true
+
+#TODO before release we should change this and use an environment variable
+jwt:
+  secret: Blabla
