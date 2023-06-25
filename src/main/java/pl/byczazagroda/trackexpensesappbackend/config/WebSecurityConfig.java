@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    private final ObjectMapper objectMapper;
+
     private final String secret;
 
-    public WebSecurityConfig(@Value("${jwt.secret}") String secret) {
+    public WebSecurityConfig(@Value("${jwt.secret}") String secret, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         this.secret = secret;
     }
 
@@ -35,8 +39,8 @@ public class WebSecurityConfig {
                         .anyRequest().permitAll());
         http
                 .exceptionHandling()
-                .authenticationEntryPoint(new AppAuthenticationEntryPoint())
-                .accessDeniedHandler(new AppAccessDeniedHandler());
+                .authenticationEntryPoint(new AppAuthenticationEntryPoint(objectMapper))
+                .accessDeniedHandler(new AppAccessDeniedHandler(objectMapper));
         http
                 .addFilterBefore(new JwtAuthorizationFilter(secret),
                         UsernamePasswordAuthenticationFilter.class);
