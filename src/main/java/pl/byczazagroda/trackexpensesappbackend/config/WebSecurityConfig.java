@@ -1,6 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,16 +14,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final ObjectMapper objectMapper;
 
-    private final String secret;
-
-    public WebSecurityConfig(@Value("${jwt.secret}") String secret, ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-        this.secret = secret;
-    }
+    @Value("${jwt.secret}")
+    private String secret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
