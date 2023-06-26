@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,8 +13,8 @@ import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
-import pl.byczazagroda.trackexpensesappbackend.service.UserServiceImpl;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -24,12 +23,13 @@ import javax.validation.Valid;
 @Validated
 public class AuthController {
 
-private final UserService userService;
+    private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthAccessTokenDTO> authenticateUser(@Valid @RequestBody AuthLoginDTO authLoginDTO) {
-        //TODO
-        return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
+    public ResponseEntity<AuthAccessTokenDTO> authenticateUser(@Valid @RequestBody AuthLoginDTO authLoginDTO,
+                                                               HttpServletResponse response) {
+        String access_token = userService.loginUser(authLoginDTO, response);
+        return new ResponseEntity<>(new AuthAccessTokenDTO(access_token), HttpStatus.OK);
     }
 
     @PostMapping("/logout")

@@ -20,7 +20,8 @@ public enum ErrorCode {
     U002("U002", "INVALID_EMAIL_FORMAT", 400),
     U003("U003", "PASSWORD_DOES_NOT_MEET_REQUIREMENTS", 400),
     U004("U004", "PASSWORD_TOO_SHORT", 400),
-    U005("U005", "USER_NOT_FOUND", 404);
+    U005("U005", "USER_NOT_FOUND", 404),
+    U006("U006", "WRONG CREDENTIALS", 401);
 
     private final String businessStatus;
     private final String businessMessage;

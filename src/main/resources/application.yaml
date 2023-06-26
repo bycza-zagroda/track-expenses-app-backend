@@ -33,3 +33,5 @@ springdoc:
 #TODO before release we should change this and use an environment variable
 jwt:
   secret: Blabla
+  exp: 3600000
+  refresh-exp: 3600000
