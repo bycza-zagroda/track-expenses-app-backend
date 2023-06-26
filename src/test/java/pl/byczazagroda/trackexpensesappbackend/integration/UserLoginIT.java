@@ -63,7 +63,7 @@ public class UserLoginIT {
 
     }
 
-    @DisplayName("")
+    @DisplayName("When user credentials are valid and remember_me option is disabled, should return only access_token")
     @Test
     void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsFalse_thenShouldReturnOnlyAccessToken() throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, false);
@@ -75,7 +75,7 @@ public class UserLoginIT {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("")
+    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token and refresh token")
     @Test
     void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsTrue_thenShouldReturnOnlyAccessTokenAndRefreshToken() throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, true);
@@ -87,7 +87,7 @@ public class UserLoginIT {
                 .andExpect(cookie().exists("refresh_token"));
     }
 
-    @DisplayName("")
+    @DisplayName("When user credentials are invalid, should return an 401 error response")
     @Test
     void testLoginUser_whenUserCredentialsAreBad_thenShouldReturnErrorResponse() throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, "wrongpasswordAAAAA123*", false);

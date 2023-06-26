@@ -26,13 +26,13 @@ import java.util.List;
 @Validated
 public class UserServiceImpl implements UserService {
 
-    @Value("{jwt.exp}")
+    @Value("${jwt.exp}")
     private String expireTime;
 
-    @Value("{jwt.refresh-exp}")
+    @Value("${jwt.refresh-exp}")
     private String refreshExpireTime;
 
-    @Value("{jwt.secret}")
+    @Value("${jwt.secret}")
     private String secret;
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
             throw new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist");
         }
         if (authLoginDTO.isRememberMe()) {
-            response.addCookie(createRefreshToken(u));
+            response.addCookie(createRefreshTokenCookie(u));
         }
         return createAccessToken(u);
     }
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    private Cookie createRefreshToken(User user) {
+    private Cookie createRefreshTokenCookie(User user) {
         String token = JWT.create()
                 .withSubject(user.getId().toString())
                 .withExpiresAt(Instant.now().plusMillis(Long.parseLong(refreshExpireTime)))
