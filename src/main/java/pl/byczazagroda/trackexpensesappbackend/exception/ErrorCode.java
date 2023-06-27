@@ -21,7 +21,9 @@ public enum ErrorCode {
     U003("U003", "PASSWORD_DOES_NOT_MEET_REQUIREMENTS", 400),
     U004("U004", "PASSWORD_TOO_SHORT", 400),
     U005("U005", "USER_NOT_FOUND", 404),
-    U006("U006", "WRONG_CREDENTIALS", 401);
+    U006("U006", "WRONG_CREDENTIALS", 401),
+    S001("S001", "UNAUTHORIZED", 401),
+    S002("S002", "FORBIDDEN", 403);
 
     private final String businessStatus;
     private final String businessMessage;
@@ -44,4 +46,5 @@ public enum ErrorCode {
     public Integer getBusinessStatusCode() {
         return this.businessStatusCode;
     }
+
 }

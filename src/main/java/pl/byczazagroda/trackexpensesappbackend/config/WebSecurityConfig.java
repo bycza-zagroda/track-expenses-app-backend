@@ -1,5 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +14,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final String secret;
+    private final ObjectMapper objectMapper;
 
-    public WebSecurityConfig(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
-    }
+    @Value("${jwt.secret}")
+    private String secret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,8 +37,8 @@ public class WebSecurityConfig {
                         .anyRequest().permitAll());
         http
                 .exceptionHandling()
-                .authenticationEntryPoint(new AppAuthenticationEntryPoint())
-                .accessDeniedHandler(new AppAccessDeniedHandler());
+                .authenticationEntryPoint(new AppAuthenticationEntryPoint(objectMapper))
+                .accessDeniedHandler(new AppAccessDeniedHandler(objectMapper));
         http
                 .addFilterBefore(new JwtAuthorizationFilter(secret),
                         UsernamePasswordAuthenticationFilter.class);
