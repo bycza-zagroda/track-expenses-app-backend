@@ -42,16 +42,10 @@ public class UserServiceImpl implements UserService {
                     "A user with the email " + authRegisterDTO.email() + " already exists."
             );
         }
-
-        UserStatus status = UserStatus.VERIFIED;
         String hashedPassword = hashPassword(authRegisterDTO.password());
 
-        User user = new User();
-        user.setEmail(authRegisterDTO.email());
-        user.setPassword(hashedPassword);
-        user.setUserName(authRegisterDTO.username());
-        user.setUserStatus(status);
-
+        User user = User.builder().email(authRegisterDTO.email()).password(hashedPassword)
+                .userName(authRegisterDTO.username()).userStatus(UserStatus.VERIFIED).build();
         userRepository.save(user);
     }
 

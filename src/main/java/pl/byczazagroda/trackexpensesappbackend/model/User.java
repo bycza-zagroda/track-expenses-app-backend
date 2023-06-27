@@ -61,7 +61,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 8, max = 100)
-    @Pattern(regexp = "(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&+=])(?=\\S+$).{8,100}")
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[@$!%?&]).{8,100}$")
     private String password;
 
     @Enumerated(EnumType.STRING)
