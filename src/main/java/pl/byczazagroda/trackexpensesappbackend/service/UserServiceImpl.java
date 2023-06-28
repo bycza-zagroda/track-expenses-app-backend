@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String loginUser(AuthLoginDTO authLoginDTO, HttpServletResponse response) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User u = userRepository.findByEmail(authLoginDTO.email())
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist"));
         if (!passwordEncoder.matches(authLoginDTO.password(), u.getPassword())) {

@@ -28,8 +28,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthAccessTokenDTO> authenticateUser(@Valid @RequestBody AuthLoginDTO authLoginDTO,
                                                                HttpServletResponse response) {
-        String access_token = userService.loginUser(authLoginDTO, response);
-        return new ResponseEntity<>(new AuthAccessTokenDTO(access_token), HttpStatus.OK);
+        String accessToken = userService.loginUser(authLoginDTO, response);
+        return new ResponseEntity<>(new AuthAccessTokenDTO(accessToken), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
