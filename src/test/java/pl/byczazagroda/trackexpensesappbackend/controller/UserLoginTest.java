@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.integration;
+package pl.byczazagroda.trackexpensesappbackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
-import pl.byczazagroda.trackexpensesappbackend.controller.AuthController;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
@@ -26,13 +25,15 @@ import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AuthController.class,
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
                 {UserServiceImpl.class, ErrorStrategy.class, WebSecurityConfig.class}))
 @ActiveProfiles("test")
-public class UserLoginIT {
+public class UserLoginTest {
 
     @Autowired
     private MockMvc mockMvc;
