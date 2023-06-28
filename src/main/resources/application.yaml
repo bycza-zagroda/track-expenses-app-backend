@@ -33,3 +33,9 @@ springdoc:
 #TODO before release we should change this and use an environment variable
 jwt:
   secret: Blabla
+
+#Regex pattern
+regex:
+  pattern:
+    password: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[@$!%?&]).{8,100}$
+    email: ^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$

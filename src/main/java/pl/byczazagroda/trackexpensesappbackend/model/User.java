@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
@@ -56,12 +56,11 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 6, max = 120)
-    @Pattern(regexp = "^[\\w-.]+@([\\w-]+.)+[\\w-]{2,4}$")
+    @Value("${regex.pattern.email}")
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 100)
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[@$!%?&]).{8,100}$")
+    @Value("${regex.pattern.password}")
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -83,7 +82,7 @@ public class User implements Serializable {
         wallet.setUser(null);
     }
 
-    public void addFinancialTransactionCategory(FinancialTransactionCategory financialTransactionCategory){
+    public void addFinancialTransactionCategory(FinancialTransactionCategory financialTransactionCategory) {
         this.financialTransactionCategories.add(financialTransactionCategory);
         financialTransactionCategory.setUser(this);
     }
