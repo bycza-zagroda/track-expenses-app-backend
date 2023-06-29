@@ -30,10 +30,24 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!validatePassword(authRegisterDTO.password())) {
+            int passwordLength = authRegisterDTO.password().length();
+            if (passwordLength < 8) {
+                throw new AppRuntimeException(
+                        ErrorCode.U004,
+                        "Password must be at least 8 characters."
+                );
+            } else if (passwordLength > 100) {
+                throw new AppRuntimeException(
+                        ErrorCode.U006,
+                        "Password must consist of less than 100 characters."
+                );
+            }
+
             throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
-            );
+                        ErrorCode.U003,
+                        "Password doesn't meet requirements."
+                );
+
         }
 
         if (userRepository.existsByEmail(authRegisterDTO.email())) {
@@ -44,8 +58,12 @@ public class UserServiceImpl implements UserService {
         }
         String hashedPassword = hashPassword(authRegisterDTO.password());
 
-        User user = User.builder().email(authRegisterDTO.email()).password(hashedPassword)
-                .userName(authRegisterDTO.username()).userStatus(UserStatus.VERIFIED).build();
+        User user = User.builder()
+                .email(authRegisterDTO.email())
+                .password(hashedPassword)
+                .userName(authRegisterDTO.username())
+                .userStatus(UserStatus.VERIFIED)
+                .build();
         userRepository.save(user);
     }
 
@@ -68,7 +86,12 @@ public class UserServiceImpl implements UserService {
                     ErrorCode.U004,
                     "Password must be at least 8 characters."
             );
+        } else if (password.length() > 100) {
+            throw new AppRuntimeException(ErrorCode.U006,
+            "Password must consist of no more that 100 characters."
+            );
         }
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         return passwordEncoder.encode(password);
