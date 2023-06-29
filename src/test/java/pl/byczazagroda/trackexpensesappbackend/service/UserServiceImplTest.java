@@ -1,14 +1,16 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -20,16 +22,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
     private static String tooLongPassword = "@ehGtbD2fFH$2%P*P8WDUG3R&jOa4xvr#nK81*%m4#&1nATIu1@ehGtbD2fFH$2%"
             + " P*P8WDUG3R&jOa4xvr#nK81*%m4#&1nATIu1@ehGtbD2fFH$2%P*P8WDUG3R";
+
     private static final AuthRegisterDTO REGISTER_DTO =
             new AuthRegisterDTO("user@server.com", "User123@", "User_Bolek");
 
@@ -42,6 +45,9 @@ public class UserServiceImplTest {
     private static final AuthRegisterDTO REGISTER_DTO_TOO_LONG_PASSWORD =
             new AuthRegisterDTO("user@server.com",
                     tooLongPassword, "User_Test");
+
+    @Spy
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Mock
     private UserRepository userRepository;
