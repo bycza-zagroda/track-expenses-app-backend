@@ -131,7 +131,7 @@ public class UserServiceImplTest {
     public void testHashPasswordWhenPasswordIsTooLongThenThrowException() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.hashPassword(tooLongPassword));
-        assertEquals(ErrorCode.U006.getBusinessMessage(), exception.getMessage());
+        assertEquals(ErrorCode.U007.getBusinessMessage(), exception.getMessage());
     }
 
     @DisplayName("When registering a user with too long password, an AppRuntimeException (U006) should be thrown")
@@ -139,7 +139,7 @@ public class UserServiceImplTest {
     public void testRegisterUserWhenPasswordIsTooLongThenThrowException() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_TOO_LONG_PASSWORD));
-        assertEquals(ErrorCode.U006.getBusinessMessage(), exception.getMessage());
+        assertEquals(ErrorCode.U007.getBusinessMessage(), exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 }

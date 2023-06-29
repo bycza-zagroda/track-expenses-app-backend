@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 );
             } else if (passwordLength > 100) {
                 throw new AppRuntimeException(
-                        ErrorCode.U006,
+                        ErrorCode.U007,
                         "Password must consist of less than 100 characters."
                 );
             }
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
                     "Password must be at least 8 characters."
             );
         } else if (password.length() > 100) {
-            throw new AppRuntimeException(ErrorCode.U006,
+            throw new AppRuntimeException(ErrorCode.U007,
             "Password must consist of no more that 100 characters."
             );
         }
@@ -119,7 +119,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginUser(AuthLoginDTO authLoginDTO, HttpServletResponse response) {
         User u = userRepository.findByEmail(authLoginDTO.email())
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist"));
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006,
+                        "User with this email or password does not exist"));
         if (!passwordEncoder.matches(authLoginDTO.password(), u.getPassword())) {
             throw new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist");
         }
