@@ -35,6 +35,12 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${regex.pattern.password}")
+    private String passwordPattern;
+
+    @Value("${regex.pattern.email}")
+    private String emailPattern;
+
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
@@ -87,15 +93,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean validateEmail(String email) {
-        String pattern = "^[A-Za-z0-9+_.-]+@(.+)$";
 
-        return email.matches(pattern);
+        return email.matches(emailPattern);
     }
 
     private boolean validatePassword(String password) {
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,100}";
 
-        return password.matches(pattern);
+        return password.matches(passwordPattern);
     }
 
     @Override
@@ -110,8 +114,6 @@ public class UserServiceImpl implements UserService {
             "Password must consist of no more that 100 characters."
             );
         }
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         return passwordEncoder.encode(password);
     }
