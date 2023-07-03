@@ -60,7 +60,6 @@ public class User implements Serializable {
     private String email;
 
     @NotBlank
-    @Value("${regex.pattern.password}")
     private String password;
 
     @Enumerated(EnumType.STRING)

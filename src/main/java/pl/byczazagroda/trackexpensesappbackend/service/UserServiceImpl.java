@@ -55,23 +55,12 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!validatePassword(authRegisterDTO.password())) {
-            int passwordLength = authRegisterDTO.password().length();
-            if (passwordLength < 8) {
-                throw new AppRuntimeException(
-                        ErrorCode.U004,
-                        "Password must be at least 8 characters."
-                );
-            } else if (passwordLength > 100) {
-                throw new AppRuntimeException(
-                        ErrorCode.U007,
-                        "Password must consist of less than 100 characters."
-                );
-            }
+            validatePasswordLength(authRegisterDTO.password());
 
             throw new AppRuntimeException(
-                        ErrorCode.U003,
-                        "Password doesn't meet requirements."
-                );
+                    ErrorCode.U003,
+                    "Password doesn't meet requirements."
+            );
 
         }
 
@@ -104,16 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String hashPassword(String password) {
-        if (password.length() < 8) {
-            throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
-            );
-        } else if (password.length() > 100) {
-            throw new AppRuntimeException(ErrorCode.U007,
-            "Password must consist of no more that 100 characters."
-            );
-        }
+        validatePasswordLength(password);
 
         return passwordEncoder.encode(password);
     }
@@ -154,6 +134,20 @@ public class UserServiceImpl implements UserService {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    private void validatePasswordLength(String password) {
+
+        if (password.length() < 8) {
+            throw new AppRuntimeException(
+                    ErrorCode.U004,
+                    "Password must be at least 8 characters."
+            );
+        } else if (password.length() > 100) {
+            throw new AppRuntimeException(ErrorCode.U007,
+                    "Password must consist of no more that 100 characters."
+            );
+        }
     }
 
 }

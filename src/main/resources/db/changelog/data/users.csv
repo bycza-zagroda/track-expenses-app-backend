@@ -1,9 +1,9 @@
 id,user_name,email,password,user_status
 #password for this user is ScroogeMcDuck09!
-1,ScroogeMcDuck,scroogeMcDuck@gmail.com,e3c2e42987be081a9eccf744eb90726eeb7255691184308cafe2968646ca6073,VERIFIED
+1,ScroogeMcDuck,scroogeMcDuck@gmail.com,$2a$10$RzN1oSIQr8OQ0ScOVGVHoOfyEEPdSd5P3fw2WvccXVyJ0WWZ/Qqmy,VERIFIED
 #password for this user is HeuyDuck08!
-2,Heuy,heuy@gmail.com,a32065a955ccea2b3e18d3c6486954eca77b64a904660fb256c5047fbd49dd5e,VERIFIED
+2,Heuy,heuy@gmail.com,$2a$10$lzIMYReI0KDxJsg1qUBARO7rIvYqjkliPdm.B77DMvU5Xi9u2HdCe,VERIFIED
 #password for this user is DeweyDuck07!
-3,Dewey,dewey@gmail.com,1957fb1471a6986ea9a8f52b456e76c80bc17e12704fd41768a389b964c10fd6,VERIFIED
+3,Dewey,dewey@gmail.com,$2a$10$.Z2lxXaPM9aR7ow18k1/puvR1GLd78EoZumBB10MQStF8N1rgCVPm,VERIFIED
 #password for this user is LouieDuck06!
-4,Louie,louie@gmail.com,8ad1d51094629639d78141e4bb2b850749c5b32102c7fe29ddf5f96214851227,VERIFIED
+4,Louie,louie@gmail.com,$2a$10$/SWiLr.1qh8ZeizV8OQmwu2KfrdVocuQ8AHONv9iB1pvXf92bHyou,VERIFIED
