@@ -46,7 +46,7 @@ public class UserLoginTest {
 
     private static final String LOGIN_URL = "/api/auth/login";
 
-    private static final String TEST_PASSWORD = "Exampletestpassword123*";
+    private static final String TEST_PASSWORD = "Exampletestpassword123*@";
 
     private static final String TEST_EMAIL = "test@gmail.com";
 
@@ -91,7 +91,7 @@ public class UserLoginTest {
     @DisplayName("When user credentials are invalid, should return an 401 error response")
     @Test
     void testLoginUser_whenUserCredentialsAreBad_thenShouldReturnErrorResponse() throws Exception {
-        AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, "wrongpasswordAAAAA123*", false);
+        AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, "wrongpasswordAAAAA123*@", false);
         mockMvc.perform(post(LOGIN_URL)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(loginDTO)))

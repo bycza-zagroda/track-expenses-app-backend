@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
@@ -56,7 +57,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 6, max = 120)
-    @Value("${regex.pattern.email}")
+    @Pattern(regexp = RegexConstant.EMAIL_PATTERN)
     private String email;
 
     @NotBlank

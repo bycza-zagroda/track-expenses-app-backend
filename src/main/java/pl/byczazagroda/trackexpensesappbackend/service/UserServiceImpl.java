@@ -12,6 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
@@ -35,11 +36,9 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${regex.pattern.password}")
-    private String passwordPattern;
+    private final int shortestPasswordLength = 8;
+    private final int greatestPasswordLength = 100;
 
-    @Value("${regex.pattern.email}")
-    private String emailPattern;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -83,12 +82,12 @@ public class UserServiceImpl implements UserService {
 
     private boolean validateEmail(String email) {
 
-        return email.matches(emailPattern);
+        return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
     private boolean validatePassword(String password) {
 
-        return password.matches(passwordPattern);
+        return password.matches(RegexConstant.PASSWORD_PATTERN);
     }
 
     @Override
@@ -137,13 +136,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validatePasswordLength(String password) {
-
-        if (password.length() < 8) {
+        if (password.length() < shortestPasswordLength) {
             throw new AppRuntimeException(
                     ErrorCode.U004,
                     "Password must be at least 8 characters."
             );
-        } else if (password.length() > 100) {
+        } else if (password.length() > greatestPasswordLength) {
             throw new AppRuntimeException(ErrorCode.U007,
                     "Password must consist of no more that 100 characters."
             );

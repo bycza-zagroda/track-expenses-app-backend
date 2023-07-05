@@ -1,9 +1,10 @@
 package pl.byczazagroda.trackexpensesappbackend.dto;
 
-import org.springframework.beans.factory.annotation.Value;
+import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public record AuthRegisterDTO(@NotBlank @Value("${regex.pattern.email}") String email,
-                              @NotBlank @Value("${regex.pattern.password}") String password,
+public record AuthRegisterDTO(@NotBlank @Pattern(regexp = RegexConstant.EMAIL_PATTERN) String email,
+                              @NotBlank @Pattern(regexp = RegexConstant.PASSWORD_PATTERN) String password,
                               @NotBlank @Size(max = 20) String username) { }

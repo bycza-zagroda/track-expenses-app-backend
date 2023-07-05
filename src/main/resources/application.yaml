@@ -35,9 +35,3 @@ jwt:
   secret: Blabla
   exp: 604800000 # one week
   refresh-exp: 31536000000 # one year
-
-#Regex pattern
-regex:
-  pattern:
-    password: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[@$!%?&]).{8,100}$
-    email: ^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$
