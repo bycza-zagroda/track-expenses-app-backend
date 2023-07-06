@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final int shortestPasswordLength = 8;
-    private final int greatestPasswordLength = 100;
+    private static final int SHORTEST_PASSWORD_LENGTH = 8;
 
+    private static final int GREATEST_PASSWORD_LENGTH = 100;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -55,12 +55,10 @@ public class UserServiceImpl implements UserService {
 
         if (!validatePassword(authRegisterDTO.password())) {
             validatePasswordLength(authRegisterDTO.password());
-
             throw new AppRuntimeException(
                     ErrorCode.U003,
                     "Password doesn't meet requirements."
             );
-
         }
 
         if (userRepository.existsByEmail(authRegisterDTO.email())) {
@@ -79,17 +77,6 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(user);
     }
-
-    private boolean validateEmail(String email) {
-
-        return email.matches(RegexConstant.EMAIL_PATTERN);
-    }
-
-    private boolean validatePassword(String password) {
-
-        return password.matches(RegexConstant.PASSWORD_PATTERN);
-    }
-
     @Override
     public String hashPassword(String password) {
         validatePasswordLength(password);
@@ -109,6 +96,15 @@ public class UserServiceImpl implements UserService {
             response.addCookie(createRefreshTokenCookie(u));
         }
         return createAccessToken(u);
+    }
+
+    private boolean validatePassword(String password) {
+
+        return password.matches(RegexConstant.PASSWORD_PATTERN);
+    }
+    private boolean validateEmail(String email) {
+
+        return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
     private String createAccessToken(User user) {
@@ -136,12 +132,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validatePasswordLength(String password) {
-        if (password.length() < shortestPasswordLength) {
+        if (password.length() < SHORTEST_PASSWORD_LENGTH) {
             throw new AppRuntimeException(
                     ErrorCode.U004,
                     "Password must be at least 8 characters."
             );
-        } else if (password.length() > greatestPasswordLength) {
+        } else if (password.length() > GREATEST_PASSWORD_LENGTH) {
             throw new AppRuntimeException(ErrorCode.U007,
                     "Password must consist of no more that 100 characters."
             );
