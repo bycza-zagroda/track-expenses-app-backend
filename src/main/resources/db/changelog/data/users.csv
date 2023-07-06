@@ -1,5 +1,9 @@
 id,user_name,email,password,user_status
-1,ScroogeMcDuck,scroogeMcDuck@gmail.com,ScroogeMcDuck09!,VERIFIED
-2,Heuy,heuy@gmail.com,HeuyDuck08!,VERIFIED
-3,Dewey,dewey@gmail.com,DeweyDuck07!,VERIFIED
-4,Louie,louie@gmail.com,LouieDuck06!,VERIFIED
+#password for this user is ScroogeMcDuck09!
+1,ScroogeMcDuck,scroogeMcDuck@gmail.com,$2a$10$RzN1oSIQr8OQ0ScOVGVHoOfyEEPdSd5P3fw2WvccXVyJ0WWZ/Qqmy,VERIFIED
+#password for this user is HeuyDuck08!
+2,Heuy,heuy@gmail.com,$2a$10$lzIMYReI0KDxJsg1qUBARO7rIvYqjkliPdm.B77DMvU5Xi9u2HdCe,VERIFIED
+#password for this user is DeweyDuck07!
+3,Dewey,dewey@gmail.com,$2a$10$.Z2lxXaPM9aR7ow18k1/puvR1GLd78EoZumBB10MQStF8N1rgCVPm,VERIFIED
+#password for this user is LouieDuck06!
+4,Louie,louie@gmail.com,$2a$10$/SWiLr.1qh8ZeizV8OQmwu2KfrdVocuQ8AHONv9iB1pvXf92bHyou,VERIFIED

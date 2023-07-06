@@ -30,6 +30,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
+    private static String tooLongPassword = "@ehGtbD2fFH$2%P*P8WDUG3R&jOa4xvr#nK81*%m4#&1nATIu1@ehGtbD2fFH$2%"
+            + " P*P8WDUG3R&jOa4xvr#nK81*%m4#&1nATIu1@ehGtbD2fFH$2%P*P8WDUG3R";
+
     private static final AuthRegisterDTO REGISTER_DTO =
             new AuthRegisterDTO("user@server.com", "User123@", "User_Bolek");
 
@@ -38,6 +41,10 @@ public class UserServiceImplTest {
 
     private static final AuthRegisterDTO REGISTER_DTO_INVALID_EMAIL =
             new AuthRegisterDTO("InvalidEmail", "User123@", "User_Bolek");
+
+    private static final AuthRegisterDTO REGISTER_DTO_TOO_LONG_PASSWORD =
+            new AuthRegisterDTO("user@server.com",
+                    tooLongPassword, "User_Test");
 
     @Spy
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -116,6 +123,23 @@ public class UserServiceImplTest {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_TOO_SHORT_PASSWORD));
         assertEquals(ErrorCode.U004.getBusinessMessage(), exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @DisplayName("When password is too long, an AppRuntimeException (U006) should be thrown")
+    @Test
+    public void testHashPasswordWhenPasswordIsTooLongThenThrowException() {
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
+                () -> userService.hashPassword(tooLongPassword));
+        assertEquals(ErrorCode.U007.getBusinessMessage(), exception.getMessage());
+    }
+
+    @DisplayName("When registering a user with too long password, an AppRuntimeException (U006) should be thrown")
+    @Test
+    public void testRegisterUserWhenPasswordIsTooLongThenThrowException() {
+        AppRuntimeException exception = assertThrows(AppRuntimeException.class,
+                () -> userService.registerUser(REGISTER_DTO_TOO_LONG_PASSWORD));
+        assertEquals(ErrorCode.U007.getBusinessMessage(), exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 }

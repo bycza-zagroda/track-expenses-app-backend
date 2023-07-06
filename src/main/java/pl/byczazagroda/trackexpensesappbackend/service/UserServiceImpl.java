@@ -12,6 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
@@ -35,6 +36,10 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.secret}")
     private String secret;
 
+    private static final int SHORTEST_PASSWORD_LENGTH = 8;
+
+    private static final int GREATEST_PASSWORD_LENGTH = 100;
+
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
@@ -49,9 +54,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!validatePassword(authRegisterDTO.password())) {
+            validatePasswordLength(authRegisterDTO.password());
             throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
+                    ErrorCode.U003,
+                    "Password doesn't meet requirements."
             );
         }
 
@@ -61,39 +67,19 @@ public class UserServiceImpl implements UserService {
                     "A user with the email " + authRegisterDTO.email() + " already exists."
             );
         }
-
-        UserStatus status = UserStatus.VERIFIED;
         String hashedPassword = hashPassword(authRegisterDTO.password());
 
-        User user = new User();
-        user.setEmail(authRegisterDTO.email());
-        user.setPassword(hashedPassword);
-        user.setUserName(authRegisterDTO.username());
-        user.setUserStatus(status);
-
+        User user = User.builder()
+                .email(authRegisterDTO.email())
+                .password(hashedPassword)
+                .userName(authRegisterDTO.username())
+                .userStatus(UserStatus.VERIFIED)
+                .build();
         userRepository.save(user);
     }
-
-    private boolean validateEmail(String email) {
-        String pattern = "^[A-Za-z0-9+_.-]+@(.+)$";
-
-        return email.matches(pattern);
-    }
-
-    private boolean validatePassword(String password) {
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,100}";
-
-        return password.matches(pattern);
-    }
-
     @Override
     public String hashPassword(String password) {
-        if (password.length() < 8) {
-            throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
-            );
-        }
+        validatePasswordLength(password);
 
         return passwordEncoder.encode(password);
     }
@@ -101,7 +87,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginUser(AuthLoginDTO authLoginDTO, HttpServletResponse response) {
         User u = userRepository.findByEmail(authLoginDTO.email())
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist"));
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006,
+                        "User with this email or password does not exist"));
         if (!passwordEncoder.matches(authLoginDTO.password(), u.getPassword())) {
             throw new AppRuntimeException(ErrorCode.U006, "User with this email or password does not exist");
         }
@@ -109,6 +96,15 @@ public class UserServiceImpl implements UserService {
             response.addCookie(createRefreshTokenCookie(u));
         }
         return createAccessToken(u);
+    }
+
+    private boolean validatePassword(String password) {
+
+        return password.matches(RegexConstant.PASSWORD_PATTERN);
+    }
+    private boolean validateEmail(String email) {
+
+        return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
     private String createAccessToken(User user) {
@@ -133,6 +129,19 @@ public class UserServiceImpl implements UserService {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    private void validatePasswordLength(String password) {
+        if (password.length() < SHORTEST_PASSWORD_LENGTH) {
+            throw new AppRuntimeException(
+                    ErrorCode.U004,
+                    "Password must be at least 8 characters."
+            );
+        } else if (password.length() > GREATEST_PASSWORD_LENGTH) {
+            throw new AppRuntimeException(ErrorCode.U007,
+                    "Password must consist of no more that 100 characters."
+            );
+        }
     }
 
 }

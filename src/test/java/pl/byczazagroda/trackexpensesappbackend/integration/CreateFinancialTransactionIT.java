@@ -161,7 +161,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         final User userOne = User.builder()
                 .userName("userone")
                 .email("Email@wp.pl")
-                .password("password1@")
+                .password("Password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
         return userRepository.save(userOne);

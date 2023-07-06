@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,11 +57,10 @@ public class User implements Serializable {
 
     @NotBlank
     @Size(min = 6, max = 120)
-    @Pattern(regexp = "^[\\w-.]+@([\\w-]+.)+[\\w-]{2,4}$")
+    @Pattern(regexp = RegexConstant.EMAIL_PATTERN)
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 100)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -82,7 +82,7 @@ public class User implements Serializable {
         wallet.setUser(null);
     }
 
-    public void addFinancialTransactionCategory(FinancialTransactionCategory financialTransactionCategory){
+    public void addFinancialTransactionCategory(FinancialTransactionCategory financialTransactionCategory) {
         this.financialTransactionCategories.add(financialTransactionCategory);
         financialTransactionCategory.setUser(this);
     }
