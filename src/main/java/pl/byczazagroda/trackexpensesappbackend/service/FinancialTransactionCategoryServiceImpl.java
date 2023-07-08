@@ -72,11 +72,19 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
 
     @Override
-    public List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories() {
-        return financialTransactionCategoryRepository.findAll().stream()
+    public List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories(Long userId) {
+
+        List<FinancialTransactionCategory> financialTransactionCategories = financialTransactionCategoryRepository
+                .findAllByUserId(userId)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                        String.format("Financial transaction categories not found for user with id: %d", userId)));
+
+        return financialTransactionCategories.stream()
                 .map(financialTransactionCategoryModelMapper::mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO)
                 .toList();
     }
+
+
 
     @Override
 

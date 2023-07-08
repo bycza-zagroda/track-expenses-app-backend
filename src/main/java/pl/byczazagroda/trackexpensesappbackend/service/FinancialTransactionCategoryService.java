@@ -23,7 +23,7 @@ public interface FinancialTransactionCategoryService {
 
     FinancialTransactionCategoryDetailedDTO findCategoryForUser(@Min(1) @NotNull Long categoryId, Long userId);
 
-    List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories();
+    List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories(Long userId);
 
     void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id);
 

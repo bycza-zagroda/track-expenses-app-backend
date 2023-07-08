@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -13,5 +14,7 @@ public interface FinancialTransactionCategoryRepository extends JpaRepository<Fi
     @Query(nativeQuery = false, value = "select c from FinancialTransactionCategory c where c.id = :id and c.user.id = :userId")
     Optional<FinancialTransactionCategory> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
+    @Query(nativeQuery = false, value = "select c from FinancialTransactionCategory c where c.user.id = :userId")
+    Optional<List <FinancialTransactionCategory>> findAllByUserId(Long userId);
 
 }

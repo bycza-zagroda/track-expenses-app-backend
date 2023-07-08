@@ -119,7 +119,7 @@ public class FinancialTransactionCategoryServiceImplTest {
         categoryList.add(categoryThird);
 
         //when
-        when(financialTransactionCategoryRepository.findAll()).thenReturn(categoryList);
+        when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(Optional.of(categoryList));
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryFirst))
                 .thenReturn(categoryFirstDTO);
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categorySecond))
@@ -128,7 +128,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 .thenReturn(categoryThirdDTO);
 
         List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
-                financialTransactionCategoryService.getFinancialTransactionCategories();
+                financialTransactionCategoryService.getFinancialTransactionCategories(USER_ID_1L);
 
         //then
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryFirstDTO);
