@@ -21,6 +21,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCateg
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,9 +33,15 @@ public class FinancialTransactionCategoryController {
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
 
     @GetMapping("/{id}")
-    ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
+    ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(
+            @Min(1) @NotNull @PathVariable Long id,
+            Principal principal){
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO =
-                financialTransactionCategoryService.findById(id);
+                financialTransactionCategoryService.findCategoryForUser(id,userId);
+
         return new ResponseEntity<>(financialTransactionCategoryDetailedDTO, HttpStatus.OK);
     }
 

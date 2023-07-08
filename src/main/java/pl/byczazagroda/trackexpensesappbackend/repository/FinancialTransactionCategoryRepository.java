@@ -1,9 +1,17 @@
 package pl.byczazagroda.trackexpensesappbackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 
+import java.util.Optional;
+
 @Repository
 public interface FinancialTransactionCategoryRepository extends JpaRepository<FinancialTransactionCategory, Long> {
+    @Query(nativeQuery = false, value = "select c from FinancialTransactionCategory c where c.id = :id and c.user.id = :userId")
+    Optional<FinancialTransactionCategory> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+
+
 }

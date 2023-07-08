@@ -107,5 +107,22 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         return  userRepository.findById(userId).orElseThrow(() ->
                 new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
     }
+
+    @Override
+    public FinancialTransactionCategoryDetailedDTO findCategoryForUser(@Min(1) @NotNull Long categoryId, Long userId) {
+
+        FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository
+                .findByIdAndUserId(categoryId, userId)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
+
+        BigInteger numberOfFinancialTransactions =
+                financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(categoryId);
+
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
+
+        return new FinancialTransactionCategoryDetailedDTO(financialTransactionCategoryDTO, numberOfFinancialTransactions);
+    }
 }
 
