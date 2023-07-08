@@ -101,11 +101,11 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     @Transactional
     public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
-            Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+            Long categoryId, Long userId, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
         FinancialTransactionCategory financialTransactionCategory
-                = financialTransactionCategoryRepository.findById(id)
+                = financialTransactionCategoryRepository.findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d not found", id)));
+                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
 
         User user = getUserByUserId(financialTransactionCategoryUpdateDTO.userId());
 

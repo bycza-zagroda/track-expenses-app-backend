@@ -69,10 +69,14 @@ public class FinancialTransactionCategoryController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
-            @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+            @Min(1) @NotNull @PathVariable(name = "id") Long categoryId,
+            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO,
+            Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
-                = financialTransactionCategoryService.updateFinancialTransactionCategory(id, financialTransactionCategoryUpdateDTO);
+                = financialTransactionCategoryService.updateFinancialTransactionCategory(categoryId, userId, financialTransactionCategoryUpdateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
