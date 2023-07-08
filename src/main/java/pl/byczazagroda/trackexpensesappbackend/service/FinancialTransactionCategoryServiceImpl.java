@@ -38,7 +38,8 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(
-            @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
+            Long userId) {
 
         User user = getUserByUserId(financialTransactionCategoryCreateDTO.userId());
 

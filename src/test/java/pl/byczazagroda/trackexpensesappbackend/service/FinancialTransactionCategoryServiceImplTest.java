@@ -89,7 +89,7 @@ public class FinancialTransactionCategoryServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         //when
         FinancialTransactionCategoryDTO fTCResult =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
+                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, USER_ID_1L);
         //then
         assertEquals(financialTransactionCategoryDTO, fTCResult);
     }

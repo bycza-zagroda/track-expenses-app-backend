@@ -19,7 +19,7 @@ public interface FinancialTransactionCategoryService {
             @Min(1) @NotNull Long id, @Valid FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO);
 
     FinancialTransactionCategoryDTO createFinancialTransactionCategory(
-            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO);
+            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO, Long userId);
 
     FinancialTransactionCategoryDetailedDTO findCategoryForUser(@Min(1) @NotNull Long categoryId, Long userId);
 

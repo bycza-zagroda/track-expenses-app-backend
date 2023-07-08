@@ -57,9 +57,13 @@ public class FinancialTransactionCategoryController {
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
-            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
+            Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
+                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, userId);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
     }
 
