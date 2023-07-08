@@ -140,8 +140,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category exists should delete it successfully")
     void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
         //when
-        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(true);
-        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
+        when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(true);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L);
 
         //then
         verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
@@ -151,11 +151,11 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category doesn't exist should throw an exception")
     void shouldFailToDeleteFinancialTransactionCategory_WhenIdNotExists() {
         //when
-        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(false);
+        when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(false);
 
         //then
         Assertions.assertThrows(AppRuntimeException.class,
-                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L));
+                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L));
     }
 
     @Test

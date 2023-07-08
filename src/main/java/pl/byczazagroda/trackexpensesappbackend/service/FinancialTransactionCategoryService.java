@@ -25,7 +25,7 @@ public interface FinancialTransactionCategoryService {
 
     List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories(Long userId);
 
-    void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id);
+    void deleteFinancialTransactionCategory(@Min(1) @NotNull Long categoryId, Long userId);
 
 }
 
