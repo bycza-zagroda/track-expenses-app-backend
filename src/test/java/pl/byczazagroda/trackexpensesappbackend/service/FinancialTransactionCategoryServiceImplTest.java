@@ -175,7 +175,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                         FinancialTransactionType.INCOME,USER_ID_1L);
 
         //when
-        when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
+        when(financialTransactionCategoryRepository.findByIdAndUserId(id, USER_ID_1L)).thenReturn(Optional.of(financialTransactionCategory));
         when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id))
                 .thenReturn(numberOfFinancialTransactions);
         when(financialTransactionCategoryModelMapper
@@ -183,7 +183,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 .thenReturn(financialTransactionCategoryDTO);
 
         FinancialTransactionCategoryDetailedDTO foundFinancialTransactionCategory =
-                financialTransactionCategoryService.findById(id);
+                financialTransactionCategoryService.findCategoryForUser(id, USER_ID_1L);
 
         //then
         Assertions.assertEquals(financialTransactionCategoryDTO,
@@ -196,10 +196,13 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category doesn't exist should throw an exception")
     void shouldFailToReadFinancialTransactionCategoryById_WhenIdDoNotExists() {
         //when
-        when(financialTransactionCategoryRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(financialTransactionCategoryRepository
+                .findByIdAndUserId(anyLong(), anyLong()))
+                .thenReturn(Optional.empty());
 
         //then
-        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.findById(1L));
+        Assertions.assertThrows(AppRuntimeException.class,
+                () -> financialTransactionCategoryService.findCategoryForUser(1L, 1L));
     }
 
     private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {

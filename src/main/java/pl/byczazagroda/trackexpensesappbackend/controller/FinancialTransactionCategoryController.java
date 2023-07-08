@@ -46,7 +46,8 @@ public class FinancialTransactionCategoryController {
     }
 
     @GetMapping()
-    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(){
+    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(Principal principal){
+
         List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = financialTransactionCategoryService.getFinancialTransactionCategories();
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }

@@ -21,13 +21,11 @@ public interface FinancialTransactionCategoryService {
     FinancialTransactionCategoryDTO createFinancialTransactionCategory(
             @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO);
 
-    FinancialTransactionCategoryDetailedDTO findById(@Min(1) @NotNull Long id);
+    FinancialTransactionCategoryDetailedDTO findCategoryForUser(@Min(1) @NotNull Long categoryId, Long userId);
 
     List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories();
 
     void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id);
-
-    FinancialTransactionCategoryDetailedDTO findCategoryForUser(Long categoryId, Long userId);
 
 }
 
