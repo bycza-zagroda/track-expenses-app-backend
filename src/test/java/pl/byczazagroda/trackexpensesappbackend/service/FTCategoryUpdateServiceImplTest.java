@@ -70,22 +70,22 @@ public class FTCategoryUpdateServiceImplTest {
     @Test
     @DisplayName("update the FT category and return the category object if the ID is correct")
     void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
-        when(repository.findById(VALID_ID)).thenReturn(Optional.of(VALID_CATEGORY));
+        when(repository.findByIdAndUserId(VALID_ID, USER_ID_1L)).thenReturn(Optional.of(VALID_CATEGORY));
         when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
                 .thenReturn(VALID_CATEGORY_DTO);
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         FinancialTransactionCategoryDTO dto
-                = service.updateFinancialTransactionCategory(VALID_ID, VALID_UPDATE_CATEGORY_DTO);
+                = service.updateFinancialTransactionCategory(VALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO);
         assertEquals(dto, VALID_CATEGORY_DTO);
     }
 
     @Test
     @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and doesnt update entity")
     void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
-        when(repository.findById(INVALID_ID)).thenReturn(empty());
+        when(repository.findByIdAndUserId(INVALID_ID, USER_ID_1L)).thenReturn(empty());
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
-                () -> service.updateFinancialTransactionCategory(INVALID_ID, VALID_UPDATE_CATEGORY_DTO)
+                () -> service.updateFinancialTransactionCategory(INVALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO)
         );
         assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(repository, never()).save(any());
