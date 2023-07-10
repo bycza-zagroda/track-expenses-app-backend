@@ -52,6 +52,7 @@ public class FinancialTransactionCategoryController {
 
         List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList
                 = financialTransactionCategoryService.getFinancialTransactionCategories(userId);
+        
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }
 
@@ -64,6 +65,7 @@ public class FinancialTransactionCategoryController {
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, userId);
+        
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
     }
 
@@ -77,6 +79,7 @@ public class FinancialTransactionCategoryController {
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
                 = financialTransactionCategoryService.updateFinancialTransactionCategory(categoryId, userId, financialTransactionCategoryUpdateDTO);
+        
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
@@ -86,6 +89,7 @@ public class FinancialTransactionCategoryController {
         Long userId = Long.valueOf(principal.getName());
 
         financialTransactionCategoryService.deleteFinancialTransactionCategory(categoryId, userId);
+        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
