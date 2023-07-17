@@ -114,7 +114,8 @@ class RefreshTokenTest {
 
         when(userService.validateToken(expiredAccessToken)).thenReturn(false);
         when(userService.validateToken(validRefreshToken)).thenReturn(true);
-        when(userService.getUserFromToken(expiredAccessToken)).thenThrow(new JWTVerificationException("Expired access token"));
+        when(userService.getUserFromToken(expiredAccessToken)).thenThrow(
+                new JWTVerificationException("Expired access token"));
         when(userService.createAccessToken(user)).thenReturn(newAccessToken);
         when(userService.createRefreshTokenCookie(user)).thenReturn(newRefreshTokenCookie);
 
