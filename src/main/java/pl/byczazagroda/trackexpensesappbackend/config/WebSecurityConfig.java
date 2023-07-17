@@ -33,6 +33,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/").permitAll()
                         .antMatchers("/api/auth/login").permitAll()
+                        .antMatchers("/api/auth/refresh").authenticated()
                         .antMatchers("/api/users/me", "/api/categories/**").authenticated()
                         .anyRequest().permitAll());
         http

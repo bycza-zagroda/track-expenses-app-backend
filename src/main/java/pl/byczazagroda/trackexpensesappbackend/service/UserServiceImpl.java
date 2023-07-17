@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
         return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
-    private String createAccessToken(User user) {
+    public String createAccessToken(User user) {
         return JWT.create()
                 .withSubject(user.getId().toString())
                 .withExpiresAt(Instant.now().plusMillis(Long.parseLong(expireTime)))
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    private Cookie createRefreshTokenCookie(User user) {
+    public Cookie createRefreshTokenCookie(User user) {
         String token = JWT.create()
                 .withSubject(user.getId().toString())
                 .withExpiresAt(Instant.now().plusMillis(Long.parseLong(refreshExpireTime)))
@@ -129,6 +130,22 @@ public class UserServiceImpl implements UserService {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            return false;
+        }
+    }
+
+    public User getUserFromToken(String token) {
+        String userId = JWT.decode(token).getSubject();
+        return userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006,
+                        "User with this id does not exist"));
     }
 
     private void validatePasswordLength(String password) {

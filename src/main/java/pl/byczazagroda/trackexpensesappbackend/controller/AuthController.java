@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -45,8 +48,21 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthAccessTokenDTO> refreshToken(@CookieValue(name = "refresh_token") String refreshToken) {
-        //TODO
-        return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
+    public ResponseEntity<AuthAccessTokenDTO> refreshToken(@CookieValue(name = "refresh_token", required = false) String refreshToken, HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+
+        if (userService.validateToken(accessToken) && userService.validateToken(refreshToken)) {
+            User user = userService.getUserFromToken(accessToken);
+
+            String newAccessToken = userService.createAccessToken(user);
+            Cookie newRefreshTokenCookie = userService.createRefreshTokenCookie(user);
+
+            response.addCookie(newRefreshTokenCookie);
+
+            return new ResponseEntity<>(new AuthAccessTokenDTO(newAccessToken), HttpStatus.OK);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
 }
