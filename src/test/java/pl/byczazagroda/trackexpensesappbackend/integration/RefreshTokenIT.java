@@ -21,7 +21,7 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
     private UserRepository userRepository;
 
     @Autowired
-    private UserService jwtTokenProvider;
+    private UserService userService;
 
     private String validAccessToken;
     private String validRefreshToken;
@@ -37,8 +37,8 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
         user.setUserStatus(UserStatus.VERIFIED);
         userRepository.save(user);
 
-        validAccessToken = jwtTokenProvider.createAccessToken(user);
-        Cookie refreshTokenCookie = jwtTokenProvider.createRefreshTokenCookie(user);
+        validAccessToken = userService.createAccessToken(user);
+        Cookie refreshTokenCookie = userService.createRefreshTokenCookie(user);
         validRefreshToken = refreshTokenCookie.getValue();
     }
 
