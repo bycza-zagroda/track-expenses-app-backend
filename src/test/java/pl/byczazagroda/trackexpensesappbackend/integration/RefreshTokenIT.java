@@ -60,22 +60,22 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
                 .andExpect(status().isInternalServerError());
     }
 
-    @DisplayName("When request contains invalid access_token, should return 400 Bad Request")
+    @DisplayName("When request contains invalid access_token, should return 403 Forbidden")
     @Test
     void testRefreshToken_whenAccessTokenInvalid_thenShouldReturnBadRequest() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .cookie(new Cookie("refresh_token", validRefreshToken))
                         .header("Authorization", "Bearer " + invalidAccessToken))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden());
     }
 
-    @DisplayName("When request contains invalid refresh_token cookie, should return 400 Bad Request")
+    @DisplayName("When request contains invalid refresh_token cookie, should return 403 Forbidden")
     @Test
     void testRefreshToken_whenRefreshTokenInvalid_thenShouldReturnBadRequest() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .cookie(new Cookie("refresh_token", invalidRefreshToken))
                         .header("Authorization", "Bearer " + validAccessToken))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden());
     }
 
 }

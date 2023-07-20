@@ -166,14 +166,14 @@ public class UserServiceImpl implements UserService {
 
     public String refreshToken(HttpServletRequest request, HttpServletResponse response,
                                String refreshToken, String accessToken) {
-        if(!validateTokenSignature(refreshToken) && !validateTokenExpiry(refreshToken)) {
-            throw new AppRuntimeException(ErrorCode.U004,
+        if (!validateTokenSignature(refreshToken) && !validateTokenExpiry(refreshToken)) {
+            throw new AppRuntimeException(ErrorCode.S003,
                     "Refresh token is not valid");
         }
 
         String accessTokenWithoutBearer = accessToken.replace("Bearer ", "");
-        if(!validateTokenSignature(accessTokenWithoutBearer)) {
-            throw new AppRuntimeException(ErrorCode.U004,
+        if (!validateTokenSignature(accessTokenWithoutBearer)) {
+            throw new AppRuntimeException(ErrorCode.S003,
                     "Access token is not valid");
         }
 
