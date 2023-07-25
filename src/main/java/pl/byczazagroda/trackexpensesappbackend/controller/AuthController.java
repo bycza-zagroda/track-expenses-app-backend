@@ -1,19 +1,17 @@
 package pl.byczazagroda.trackexpensesappbackend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -23,7 +21,8 @@ import javax.validation.Valid;
 @Validated
 public class AuthController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthAccessTokenDTO> authenticateUser(@Valid @RequestBody AuthLoginDTO authLoginDTO,
@@ -45,8 +44,15 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthAccessTokenDTO> refreshToken(@CookieValue(name = "refresh_token") String refreshToken) {
-        //TODO
-        return new ResponseEntity<>(new AuthAccessTokenDTO("TODO-accessTOKEN"), HttpStatus.OK);
+    public ResponseEntity<AuthAccessTokenDTO> refreshToken(
+            @CookieValue(name = "refresh_token") String refreshToken,
+            @RequestHeader(name = "Authorization") String accessToken,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+            String newAccessToken = userService.refreshToken(request, response, refreshToken, accessToken);
+            AuthAccessTokenDTO accessTokenDTO = new AuthAccessTokenDTO(newAccessToken);
+
+            return ResponseEntity.ok(accessTokenDTO);
     }
+
 }
