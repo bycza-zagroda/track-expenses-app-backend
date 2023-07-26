@@ -21,6 +21,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -38,8 +39,12 @@ public class WalletController {
 
     @PostMapping()
     public ResponseEntity<WalletDTO> createWallet(
-            @Valid @RequestBody WalletCreateDTO walletCreateDTO) {
-        WalletDTO walletDTO = walletService.createWallet(walletCreateDTO);
+            @Valid @RequestBody WalletCreateDTO walletCreateDTO,
+            Principal principal
+    ) {
+        Long userId = Long.valueOf(principal.getName());
+
+        WalletDTO walletDTO = walletService.createWallet(walletCreateDTO, userId);
 
         return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
     }
@@ -58,38 +63,43 @@ public class WalletController {
     @PatchMapping("/{id}")
     public ResponseEntity<WalletDTO> updateWallet(
             @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody WalletUpdateDTO walletUpdateDto) {
-
-        WalletDTO walletDTO = walletService.updateWallet(id, walletUpdateDto);
+            @Valid @RequestBody WalletUpdateDTO walletUpdateDto,
+            Principal principal
+    ) {
+        Long userId = Long.valueOf(principal.getName());
+        WalletDTO walletDTO = walletService.updateWallet(id, walletUpdateDto, userId);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
     @GetMapping()
-    ResponseEntity<List<WalletDTO>> getWallets() {
-        List<WalletDTO> walletsDTO = walletService.getWallets();
+    ResponseEntity<List<WalletDTO>> getWallets(
+            Principal principal
+    ) {
+        Long userId = Long.valueOf(principal.getName());
+        List<WalletDTO> walletsDTO = walletService.getWallets(userId);
         return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWalletById(@Min(1) @NotNull @PathVariable Long id) {
-
-        walletService.deleteWalletById(id);
+    public ResponseEntity<Void> deleteWalletById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        walletService.deleteWalletById(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletDTO> findWalletById(@Min(1) @NotNull @PathVariable Long id) {
-
-        WalletDTO walletDTO = walletService.findById(id);
+    public ResponseEntity<WalletDTO> findWalletById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        WalletDTO walletDTO = walletService.findById(id, userId);
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
     @GetMapping("/wallets/{name}")
     ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnoreCase(
             @PathVariable @NotBlank @Pattern(regexp = "[\\w ]+") @Length(max = 20)
-            String name) {
-
-        List<WalletDTO> walletsDTO = walletService.findAllByNameIgnoreCase(name);
+            String name, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        List<WalletDTO> walletsDTO = walletService.findAllByNameIgnoreCase(name, userId);
         return new ResponseEntity<>(walletsDTO, HttpStatus.OK);
     }
 }

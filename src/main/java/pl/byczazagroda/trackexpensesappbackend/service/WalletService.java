@@ -14,15 +14,15 @@ import java.util.List;
 @Validated
 public interface WalletService {
 
-    WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO);
+    WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO, Long userId);
 
-    WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO walletToUpdate);
+    WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO walletToUpdate, Long userId);
 
-    List<WalletDTO> getWallets();
+    List<WalletDTO> getWallets(Long userId);
 
-    void deleteWalletById(@Min(1) @NotNull Long id);
+    void deleteWalletById(@Min(1) @NotNull Long id, Long userId);
 
-    WalletDTO findById(@Min(1) @NotNull Long id);
+    WalletDTO findById(@Min(1) @NotNull Long id, Long userId);
 
-    List<WalletDTO> findAllByNameIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name);
+    List<WalletDTO> findAllByNameIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name, Long userId);
 }
