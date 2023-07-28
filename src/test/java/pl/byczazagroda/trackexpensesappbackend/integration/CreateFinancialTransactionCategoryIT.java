@@ -10,7 +10,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCa
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
@@ -51,10 +50,11 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should successfully create financial transaction category")
     @Test
-    void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategorySuccessfully() throws Exception {
+    void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategorySuccessfully(
+    ) throws Exception {
         User testUser = createTestUser();
-        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO
-                ("Category",
+        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
+                = new FinancialTransactionCategoryCreateDTO("Category",
                         FinancialTransactionType.INCOME,
                         testUser.getId());
 
@@ -74,9 +74,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return error when name length is greater than 30")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnError () throws Exception {
-        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO
-                ("ThisIsVeryLongNameForCategoryMoreThan30Characters",
+    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnError() throws Exception {
+        var financialTransactionCategoryCreateDTO
+                = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
                         FinancialTransactionType.INCOME,
                         1L);
 
@@ -85,18 +85,17 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user("1")))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         assertEquals(0, financialTransactionCategoryRepository.count());
     }
 
     @DisplayName("Should return error when name is empty")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnError() throws Exception{
-        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO
-                ("",
+    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnError() throws Exception {
+        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
                         FinancialTransactionType.INCOME,
                         1L);
 
@@ -106,19 +105,20 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         .with(user("1"))
                         .with(csrf()))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         assertEquals(0, financialTransactionCategoryRepository.count());
     }
 
     @DisplayName("Should return error when name contains invalid characters")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnError(
+    ) throws Exception {
         User testUser = createTestUser();
-        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO
-                ("Catego*&*^ry@",
+        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
+                "Catego*&*^ry@",
                         FinancialTransactionType.INCOME,
                         1L);
 
@@ -127,9 +127,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user(String.valueOf(testUser.getId()))))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         assertEquals(0, financialTransactionCategoryRepository.count());
     }
