@@ -23,6 +23,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode.TEA003;
 
 class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
@@ -120,6 +121,27 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Catego*&*^ry@",
                         FinancialTransactionType.INCOME,
+                        1L);
+
+        mockMvc.perform(post("/api/categories")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
+                        .with(user(String.valueOf(testUser.getId()))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+
+        assertEquals(0, financialTransactionCategoryRepository.count());
+    }
+
+    @DisplayName("Should return error when type is empty")
+    @Test
+    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnError() throws Exception {
+        User testUser = createTestUser();
+        var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
+                "Category",
+                        null,
                         1L);
 
         mockMvc.perform(post("/api/categories")
