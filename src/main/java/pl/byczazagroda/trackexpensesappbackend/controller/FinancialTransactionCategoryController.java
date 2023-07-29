@@ -39,14 +39,14 @@ public class FinancialTransactionCategoryController {
     }
 
     @GetMapping()
-    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(){
+    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories() {
         List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = financialTransactionCategoryService.getFinancialTransactionCategories();
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
-            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
