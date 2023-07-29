@@ -21,6 +21,7 @@ import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCateg
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,38 +33,63 @@ public class FinancialTransactionCategoryController {
     private final FinancialTransactionCategoryService financialTransactionCategoryService;
 
     @GetMapping("/{id}")
-    ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
+    ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialTransactionCategoryById(
+            @Min(1) @NotNull @PathVariable Long id,
+            Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO =
-                financialTransactionCategoryService.findById(id);
+                financialTransactionCategoryService.findCategoryForUser(id, userId);
+
         return new ResponseEntity<>(financialTransactionCategoryDetailedDTO, HttpStatus.OK);
     }
 
     @GetMapping()
-    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(){
-        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList = financialTransactionCategoryService.getFinancialTransactionCategories();
+    ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList
+                = financialTransactionCategoryService.getFinancialTransactionCategories(userId);
+
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
-            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
+            Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
+                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, userId);
+
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
-            @Min(1) @NotNull @PathVariable Long id,
-            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+            @Min(1) @NotNull @PathVariable(name = "id") Long categoryId,
+            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO,
+            Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
-                = financialTransactionCategoryService.updateFinancialTransactionCategory(id, financialTransactionCategoryUpdateDTO);
+                = financialTransactionCategoryService.updateFinancialTransactionCategory(categoryId, userId, financialTransactionCategoryUpdateDTO);
+
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable Long id) {
-        financialTransactionCategoryService.deleteFinancialTransactionCategory(id);
+    public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable(name = "id")  Long categoryId, Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(categoryId, userId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

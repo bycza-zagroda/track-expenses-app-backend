@@ -38,7 +38,8 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
     @Override
     public FinancialTransactionCategoryDTO createFinancialTransactionCategory(
-            @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO) {
+            @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
+            Long userId) {
 
         User user = getUserByUserId(financialTransactionCategoryCreateDTO.userId());
 
@@ -54,44 +55,57 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     @Override
-    public FinancialTransactionCategoryDetailedDTO findById(@Min(1) @NotNull Long id) {
-        FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository.findById(id)
+    public FinancialTransactionCategoryDetailedDTO findCategoryForUser(@Min(1) @NotNull Long categoryId, Long userId) {
+
+        FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository
+                .findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d not found", id)));
+                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
+
         BigInteger numberOfFinancialTransactions =
-                financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id);
+                financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(categoryId);
+
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
 
         return new FinancialTransactionCategoryDetailedDTO(financialTransactionCategoryDTO, numberOfFinancialTransactions);
     }
 
+
     @Override
-    public List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories() {
-        return financialTransactionCategoryRepository.findAll().stream()
+    public List<FinancialTransactionCategoryDTO> getFinancialTransactionCategories(Long userId) {
+
+        List<FinancialTransactionCategory> financialTransactionCategories = financialTransactionCategoryRepository
+                .findAllByUserId(userId)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                        String.format("Financial transaction categories not found for user with id: %d", userId)));
+
+        return financialTransactionCategories.stream()
                 .map(financialTransactionCategoryModelMapper::mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO)
                 .toList();
     }
 
+
+
     @Override
 
-    public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long id) {
-        if (financialTransactionCategoryRepository.existsById(id)) {
-            financialTransactionCategoryRepository.deleteById(id);
+    public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long categoryId, Long userId) {
+        if (financialTransactionCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
+            financialTransactionCategoryRepository.deleteById(categoryId);
         } else {
             throw new AppRuntimeException(
                     ErrorCode.FTC001,
-                    String.format("Financial transaction category with given id: %d does not exist", id));
+                    String.format("Financial transaction category with id: %d not found for user ", categoryId));
         }
     }
 
     @Transactional
     public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
-            Long id, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
+            Long categoryId, Long userId, FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO) {
         FinancialTransactionCategory financialTransactionCategory
-                = financialTransactionCategoryRepository.findById(id)
+                = financialTransactionCategoryRepository.findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d not found", id)));
+                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
 
         User user = getUserByUserId(financialTransactionCategoryUpdateDTO.userId());
 
@@ -107,5 +121,6 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         return  userRepository.findById(userId).orElseThrow(() ->
                 new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
     }
+
 }
 

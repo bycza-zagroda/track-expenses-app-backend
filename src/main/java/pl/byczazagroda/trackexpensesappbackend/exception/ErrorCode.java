@@ -25,7 +25,8 @@ public enum ErrorCode {
     U007("U007", "PASSWORD_TOO_LONG", 400),
 
     S001("S001", "UNAUTHORIZED", 401),
-    S002("S002", "FORBIDDEN", 403);
+    S002("S002", "FORBIDDEN", 403),
+    S003("S003", "REFRESH_TOKEN_NOT_VALID", 403);
 
     private final String businessStatus;
     private final String businessMessage;

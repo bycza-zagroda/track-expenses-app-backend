@@ -89,7 +89,7 @@ public class FinancialTransactionCategoryServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         //when
         FinancialTransactionCategoryDTO fTCResult =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO);
+                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, USER_ID_1L);
         //then
         assertEquals(financialTransactionCategoryDTO, fTCResult);
     }
@@ -119,7 +119,7 @@ public class FinancialTransactionCategoryServiceImplTest {
         categoryList.add(categoryThird);
 
         //when
-        when(financialTransactionCategoryRepository.findAll()).thenReturn(categoryList);
+        when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(Optional.of(categoryList));
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryFirst))
                 .thenReturn(categoryFirstDTO);
         when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categorySecond))
@@ -128,7 +128,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 .thenReturn(categoryThirdDTO);
 
         List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
-                financialTransactionCategoryService.getFinancialTransactionCategories();
+                financialTransactionCategoryService.getFinancialTransactionCategories(USER_ID_1L);
 
         //then
         Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryFirstDTO);
@@ -140,8 +140,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category exists should delete it successfully")
     void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
         //when
-        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(true);
-        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
+        when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(true);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L);
 
         //then
         verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
@@ -151,11 +151,11 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category doesn't exist should throw an exception")
     void shouldFailToDeleteFinancialTransactionCategory_WhenIdNotExists() {
         //when
-        when(financialTransactionCategoryRepository.existsById(anyLong())).thenReturn(false);
+        when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(false);
 
         //then
         Assertions.assertThrows(AppRuntimeException.class,
-                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L));
+                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                         FinancialTransactionType.INCOME,USER_ID_1L);
 
         //when
-        when(financialTransactionCategoryRepository.findById(id)).thenReturn(Optional.of(financialTransactionCategory));
+        when(financialTransactionCategoryRepository.findByIdAndUserId(id, USER_ID_1L)).thenReturn(Optional.of(financialTransactionCategory));
         when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id))
                 .thenReturn(numberOfFinancialTransactions);
         when(financialTransactionCategoryModelMapper
@@ -183,7 +183,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 .thenReturn(financialTransactionCategoryDTO);
 
         FinancialTransactionCategoryDetailedDTO foundFinancialTransactionCategory =
-                financialTransactionCategoryService.findById(id);
+                financialTransactionCategoryService.findCategoryForUser(id, USER_ID_1L);
 
         //then
         Assertions.assertEquals(financialTransactionCategoryDTO,
@@ -196,10 +196,13 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when financial transaction category doesn't exist should throw an exception")
     void shouldFailToReadFinancialTransactionCategoryById_WhenIdDoNotExists() {
         //when
-        when(financialTransactionCategoryRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(financialTransactionCategoryRepository
+                .findByIdAndUserId(anyLong(), anyLong()))
+                .thenReturn(Optional.empty());
 
         //then
-        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService.findById(1L));
+        Assertions.assertThrows(AppRuntimeException.class,
+                () -> financialTransactionCategoryService.findCategoryForUser(1L, 1L));
     }
 
     private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {

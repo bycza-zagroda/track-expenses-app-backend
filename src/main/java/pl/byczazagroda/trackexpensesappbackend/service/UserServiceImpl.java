@@ -2,6 +2,9 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +20,11 @@ import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -107,7 +112,7 @@ public class UserServiceImpl implements UserService {
         return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
-    private String createAccessToken(User user) {
+    public String createAccessToken(User user) {
         return JWT.create()
                 .withSubject(user.getId().toString())
                 .withExpiresAt(Instant.now().plusMillis(Long.parseLong(expireTime)))
@@ -119,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    private Cookie createRefreshTokenCookie(User user) {
+    public Cookie createRefreshTokenCookie(User user) {
         String token = JWT.create()
                 .withSubject(user.getId().toString())
                 .withExpiresAt(Instant.now().plusMillis(Long.parseLong(refreshExpireTime)))
@@ -129,6 +134,56 @@ public class UserServiceImpl implements UserService {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    public boolean validateTokenSignature(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            System.out.println("Token verification failed: " + exception.getMessage());
+            return false;
+        }
+    }
+
+    public boolean validateTokenExpiry(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+
+            return jwt.getExpiresAt().after(new Date());
+        } catch (JWTDecodeException exception) {
+            return false;
+        }
+    }
+
+    public User getUserFromToken(String token) {
+        String userId = JWT.decode(token).getSubject();
+
+        return userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.U006,
+                        "User with this id does not exist"));
+    }
+
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response,
+                               String refreshToken, String accessToken) {
+        if (!validateTokenSignature(refreshToken) && !validateTokenExpiry(refreshToken)) {
+            throw new AppRuntimeException(ErrorCode.S003,
+                    "Refresh token is not valid");
+        }
+
+        String accessTokenWithoutBearer = accessToken.replace("Bearer ", "");
+        if (!validateTokenSignature(accessTokenWithoutBearer)) {
+            throw new AppRuntimeException(ErrorCode.S003,
+                    "Access token is not valid");
+        }
+
+        User user = getUserFromToken(refreshToken);
+        String newAccessToken = createAccessToken(user);
+        Cookie newRefreshTokenCookie = createRefreshTokenCookie(user);
+
+        response.addCookie(newRefreshTokenCookie);
+
+        return newAccessToken;
     }
 
     private void validatePasswordLength(String password) {

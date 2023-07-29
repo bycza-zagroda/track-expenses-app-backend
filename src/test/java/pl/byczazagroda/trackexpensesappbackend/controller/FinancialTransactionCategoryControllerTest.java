@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -19,10 +21,14 @@ import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCatego
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCategoryService;
 import pl.byczazagroda.trackexpensesappbackend.service.FinancialTransactionCategoryServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.service.UserServiceImpl;
 
+import java.security.Principal;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,14 +61,18 @@ class FinancialTransactionCategoryControllerTest {
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;
 
+    @MockBean
+    private UserServiceImpl userService;
+
     @Test
+    @WithMockUser(username = "1")
     @DisplayName("when getting all financial transaction categories " +
             "should return financial transaction category DTOs list and response status OK")
     void shouldResponseStatusOKAndFinancialTransactionCategoryDTOsList() throws Exception {
 
         // given
         List<FinancialTransactionCategoryDTO> categoriesListDTO = createFinancialTransactionCategoryDTOList();
-        given(financialTransactionCategoryService.getFinancialTransactionCategories())
+        given(financialTransactionCategoryService.getFinancialTransactionCategories(USER_ID_1L))
                 .willReturn(categoriesListDTO);
 
         // when
