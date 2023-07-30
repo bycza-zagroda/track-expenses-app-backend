@@ -58,7 +58,7 @@ public class FinancialTransactionCategoryController {
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createFinancialTransactionCategory(
-            @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
+            @Valid @RequestBody FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
             Principal principal) {
 
         Long userId = Long.valueOf(principal.getName());
