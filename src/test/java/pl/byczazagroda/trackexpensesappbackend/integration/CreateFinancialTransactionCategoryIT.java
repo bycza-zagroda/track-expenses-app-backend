@@ -1,9 +1,15 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -14,17 +20,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCa
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-
-import javax.validation.ConstraintViolationException;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode.TEA003;
 
 class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
@@ -49,122 +44,127 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-
-    @DisplayName("Should successfully create financial transaction category")
+    @DisplayName("Should return ResponseStatus IsCreated when create financial transaction category")
     @Test
-    void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategorySuccessfully(
+    void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        User testUser = createTestUser();
-        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
+        var testUser = createTestUser();
+        var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
-                        FinancialTransactionType.INCOME,
-                        testUser.getId());
+                FinancialTransactionType.INCOME,
+                testUser.getId());
 
-        mockMvc.perform(post("/api/categories")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                .with(user(String.valueOf(testUser.getId())))
-                        .with(csrf()))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Category"))
-                .andExpect(jsonPath("$.type").value("INCOME"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId())))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Category"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value("INCOME"));
 
-        assertEquals(1, financialTransactionCategoryRepository.count());
+        Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
     }
 
-    @DisplayName("Should return error when name length is greater than 30")
+    @DisplayName("Should return ResponseStatus BadRequest when name length is greater than 30")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnValidationError()
+    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnBadRequest()
             throws Exception {
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
-                        FinancialTransactionType.INCOME,
-                        1L);
+                FinancialTransactionType.INCOME,
+                1L);
 
-        var result = mockMvc.perform(post("/api/categories")
-                        .contentType(APPLICATION_JSON)
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(user("1")))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                        .with(SecurityMockMvcRequestPostProcessors.user("1")))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode()));
 
-
-        assertEquals(0, financialTransactionCategoryRepository.count());
-        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
-        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
+        Assertions.assertEquals(0, financialTransactionCategoryRepository.count());
+        Assertions.assertTrue(result.andReturn().getResolvedException() instanceof MethodArgumentNotValidException);
+        Assertions.assertEquals(ErrorCode.TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
-    @DisplayName("Should return error when name is empty")
+    @DisplayName("Should return ResponseStatus BadRequest when name is empty")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnValidationError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnBadRequest() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
-                        FinancialTransactionType.INCOME,
-                        1L);
+                FinancialTransactionType.INCOME,
+                1L);
 
-        var result = mockMvc.perform(post("/api/categories")
-                        .contentType(APPLICATION_JSON)
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(user("1"))
-                        .with(csrf()))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                        .with(SecurityMockMvcRequestPostProcessors.user("1"))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode()));
 
-        assertEquals(0, financialTransactionCategoryRepository.count());
-        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
-        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
+        Assertions.assertTrue(result.andReturn().getResolvedException() instanceof MethodArgumentNotValidException);
+        Assertions.assertEquals(ErrorCode.TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
-    @DisplayName("Should return error when name contains invalid characters")
+    @DisplayName("Should return ResponseStatus BadRequest when name contains invalid characters")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnError(
+    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenReturnShouldBadRequest(
     ) throws Exception {
         User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Catego*&*^ry@",
-                        FinancialTransactionType.INCOME,
-                        1L);
+                FinancialTransactionType.INCOME,
+                1L);
 
-        var result = mockMvc.perform(post("/api/categories")
-                        .contentType(APPLICATION_JSON)
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(user(String.valueOf(testUser.getId()))))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode()));
 
-
-        assertEquals(0, financialTransactionCategoryRepository.count());
-        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
-        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
+        Assertions.assertTrue(result.andReturn().getResolvedException() instanceof MethodArgumentNotValidException);
+        Assertions.assertEquals(ErrorCode.TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
-    @DisplayName("Should return error when type is empty")
+    @DisplayName("Should return ResponseStatus BadRequest when type is empty")
     @Test
-    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnValidationError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
         User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Category",
-                        null,
-                        1L);
+                null,
+                1L);
 
-        var result = mockMvc.perform(post("/api/categories")
-                        .contentType(APPLICATION_JSON)
+        var result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(user(String.valueOf(testUser.getId()))))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode()));
 
-
-        assertEquals(0, financialTransactionCategoryRepository.count());
-        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
-        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
+        Assertions.assertTrue(result.andReturn().getResolvedException() instanceof MethodArgumentNotValidException);
+        Assertions.assertEquals(ErrorCode.TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
     private User createTestUser() {
