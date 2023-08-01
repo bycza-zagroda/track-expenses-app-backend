@@ -118,7 +118,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return ResponseStatus BadRequest when name contains invalid characters")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenReturnShouldBadRequest(
+    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnBadRequest(
     ) throws Exception {
         User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
