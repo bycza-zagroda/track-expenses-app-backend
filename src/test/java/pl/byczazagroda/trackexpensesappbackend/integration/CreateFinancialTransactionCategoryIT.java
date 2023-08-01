@@ -6,17 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
+import javax.validation.ConstraintViolationException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -69,19 +70,18 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.type").value("INCOME"));
 
         assertEquals(1, financialTransactionCategoryRepository.count());
-
-
     }
 
     @DisplayName("Should return error when name length is greater than 30")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnValidationError()
+            throws Exception {
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
                         FinancialTransactionType.INCOME,
                         1L);
 
-        mockMvc.perform(post("/api/categories")
+        var result = mockMvc.perform(post("/api/categories")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user("1")))
@@ -90,17 +90,20 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
                 .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
+
         assertEquals(0, financialTransactionCategoryRepository.count());
+        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
+        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
     @DisplayName("Should return error when name is empty")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnValidationError() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
                         FinancialTransactionType.INCOME,
                         1L);
 
-        mockMvc.perform(post("/api/categories")
+        var result = mockMvc.perform(post("/api/categories")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user("1"))
@@ -111,6 +114,8 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         assertEquals(0, financialTransactionCategoryRepository.count());
+        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
+        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
     @DisplayName("Should return error when name contains invalid characters")
@@ -123,7 +128,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         FinancialTransactionType.INCOME,
                         1L);
 
-        mockMvc.perform(post("/api/categories")
+        var result = mockMvc.perform(post("/api/categories")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user(String.valueOf(testUser.getId()))))
@@ -132,19 +137,22 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
                 .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
+
         assertEquals(0, financialTransactionCategoryRepository.count());
+        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
+        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
     @DisplayName("Should return error when type is empty")
     @Test
-    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnError() throws Exception {
+    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnValidationError() throws Exception {
         User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Category",
                         null,
                         1L);
 
-        mockMvc.perform(post("/api/categories")
+        var result = mockMvc.perform(post("/api/categories")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(user(String.valueOf(testUser.getId()))))
@@ -153,7 +161,10 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
                 .andExpect(jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
+
         assertEquals(0, financialTransactionCategoryRepository.count());
+        assertTrue(result.andReturn().getResolvedException() instanceof ConstraintViolationException);
+        assertEquals(TEA003.getBusinessStatusCode(), result.andReturn().getResponse().getStatus());
     }
 
     private User createTestUser() {
