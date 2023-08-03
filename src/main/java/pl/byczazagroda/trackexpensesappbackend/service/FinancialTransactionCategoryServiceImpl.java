@@ -41,7 +41,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
             @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
             Long userId) {
 
-        User user = getUserByUserId(financialTransactionCategoryCreateDTO.userId());
+        User user = getUserByUserId(userId);
 
         FinancialTransactionCategory financialTransactionCategory = FinancialTransactionCategory
                 .builder().name(financialTransactionCategoryCreateDTO.name()).type(financialTransactionCategoryCreateDTO
