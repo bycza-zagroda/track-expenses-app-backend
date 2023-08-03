@@ -1,6 +1,5 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +21,21 @@ public class UserLogoutIT extends BaseIntegrationTestIT {
     @Autowired
     private UserRepository userRepository;
 
-    private String validAccessToken;
-
-    @BeforeEach
-    public void setup() {
-        User user = new User();
-        user.setUserName("test");
-        user.setPassword("password");
-        user.setEmail("test@example.com");
-        user.setUserStatus(UserStatus.VERIFIED);
-        userRepository.save(user);
-
-        validAccessToken = userService.createAccessToken(user);
-        userService.createRefreshTokenCookie(user);
-    }
 
     @DisplayName("When request user logout, should return 200 OK and remove refresh_token cookie")
     @Test
     void testRemoveRefreshToken_whenUserLogout_thenShouldReturnOkAndRemoveRefreshTokenFromCookie() throws Exception {
+
+        User user = new User();
+        user.setUserName("userName");
+        user.setPassword("userPassword");
+        user.setEmail("user@server.com");
+        user.setUserStatus(UserStatus.VERIFIED);
+        userRepository.save(user);
+
+        String validAccessToken = userService.createAccessToken(user);
+        userService.createRefreshTokenCookie(user);
+
         mockMvc.perform(post("/api/auth/logout")
                         .header("Authorization", "Bearer " + validAccessToken))
                 .andExpect(status().isOk())
