@@ -5,5 +5,5 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public record FinancialTransactionCategoryUpdateDTO(@NotBlank String name, @NotNull FinancialTransactionType type,
-                                                    @NotNull Long userId) { }
+public record FinancialTransactionCategoryUpdateDTO(@NotBlank String name, @NotNull FinancialTransactionType type) {
+}
