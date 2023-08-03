@@ -77,19 +77,23 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
-                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE,USER_ID_1L);
+                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME,
                 CATEGORY_TYPE);
         financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
         when(financialTransactionCategoryRepository.save(any())).thenReturn(financialTransactionCategory);
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(
-                FINANCIAL_TRANSACTION_CATEGORY_ID_1L, CATEGORY_NAME, CATEGORY_TYPE,USER_ID_1L);
-        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
+                FINANCIAL_TRANSACTION_CATEGORY_ID_1L, CATEGORY_NAME, CATEGORY_TYPE, USER_ID_1L);
+        when(financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
                 .thenReturn(financialTransactionCategoryDTO);
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
+
         //when
         FinancialTransactionCategoryDTO fTCResult =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, USER_ID_1L);
+                financialTransactionCategoryService
+                        .createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, USER_ID_1L);
+
         //then
         assertEquals(financialTransactionCategoryDTO, fTCResult);
     }
