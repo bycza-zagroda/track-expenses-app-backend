@@ -17,8 +17,7 @@ public interface FinancialTransactionCategoryRepository extends JpaRepository<Fi
     @Query(nativeQuery = false, value = "select c from FinancialTransactionCategory c where c.user.id = :userId")
     Optional<List <FinancialTransactionCategory>> findAllByUserId(Long userId);
 
-    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM FinancialTransactionCategory c WHERE c.id = :id and c.user.id = :userId")
-    boolean existsByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
-
-
+    @Query(value = "SELECT COUNT(c) > 0 as result FROM FinancialTransactionCategory c WHERE c.id = :id AND c.user.id = :userId")
+    boolean existsByIdAndUserId(Long id, Long userId);
+    
 }
