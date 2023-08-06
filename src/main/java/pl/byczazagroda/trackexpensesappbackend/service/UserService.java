@@ -20,10 +20,6 @@ public interface UserService {
 
     User getUserFromToken(String token);
 
-    boolean validateTokenSignature(String token);
-
-    boolean validateTokenExpiry(String token);
-
     String createAccessToken(User user);
 
     Cookie createRefreshTokenCookie(User user);
