@@ -186,6 +186,14 @@ public class UserServiceImpl implements UserService {
         return newAccessToken;
     }
 
+    @Override
+    public void deleteRefreshTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refresh_token", null);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     private void validatePasswordLength(String password) {
         if (password.length() < SHORTEST_PASSWORD_LENGTH) {
             throw new AppRuntimeException(
