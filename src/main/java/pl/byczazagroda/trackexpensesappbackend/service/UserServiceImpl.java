@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     public String createAccessToken(User user) {
         return JWT.create()
                 .withSubject(user.getId().toString())
-                .withExpiresAt(Instant.now().plusMillis(15000))
+                .withExpiresAt(Instant.now().plusMillis(Long.parseLong(expireTime)))
                 .withClaim("token_type", "AUTH")
                 .withIssuedAt(Instant.now())
                 .withClaim("username", user.getUserName())
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
     public Cookie createRefreshTokenCookie(User user) {
         String token = JWT.create()
                 .withSubject(user.getId().toString())
-                .withExpiresAt(Instant.now().plusMillis(120_000))
+                .withExpiresAt(Instant.now().plusMillis(Long.parseLong(refreshExpireTime)))
                 .withClaim("token_type", "REFRESH")
                 .withIssuedAt(Instant.now())
                 .sign(Algorithm.HMAC256(secret));
