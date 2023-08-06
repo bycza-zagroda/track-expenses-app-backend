@@ -169,13 +169,10 @@ public class UserServiceImpl implements UserService {
 
     private void validatePasswordLength(String password) {
         if (password.length() < SHORTEST_PASSWORD_LENGTH) {
-            throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
+            throw new AppRuntimeException(ErrorCode.U004, "Password must be at least 8 characters."
             );
         } else if (password.length() > GREATEST_PASSWORD_LENGTH) {
-            throw new AppRuntimeException(ErrorCode.U007,
-                    "Password must consist of no more that 100 characters."
+            throw new AppRuntimeException(ErrorCode.U007, "Password must consist of no more that 100 characters."
             );
         }
     }
@@ -184,10 +181,10 @@ public class UserServiceImpl implements UserService {
         try {
             JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
             return true;
-        } catch (TokenExpiredException exception) {
+        } catch (TokenExpiredException ex) {
             return true;
-        } catch (JWTVerificationException exception) {
-            log.info("Token verification failed: " + exception.getMessage());
+        } catch (JWTVerificationException ex) {
+            log.info("Token verification failed: " + ex.getMessage());
             return false;
         }
     }
@@ -203,11 +200,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean validatePassword(String password) {
-
         return password.matches(RegexConstant.PASSWORD_PATTERN);
     }
-    private boolean validateEmail(String email) {
 
+    private boolean validateEmail(String email) {
         return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
