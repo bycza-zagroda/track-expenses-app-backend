@@ -83,11 +83,11 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ErrorCode.TEA002.getBusinessStatus()),
+                                .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ErrorCode.TEA002.getBusinessMessage()),
+                                .value(ErrorCode.TEA003.getBusinessMessage()),
                         MockMvcResultMatchers.jsonPath("$.statusCode")
-                                .value(ErrorCode.TEA002.getBusinessStatusCode())
+                                .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
 
         Assertions.assertEquals(0, financialTransactionCategoryRepository.count());
@@ -108,11 +108,11 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ErrorCode.TEA002.getBusinessStatus()),
+                                .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ErrorCode.TEA002.getBusinessMessage()),
+                                .value(ErrorCode.TEA003.getBusinessMessage()),
                         MockMvcResultMatchers.jsonPath("$.statusCode")
-                                .value(ErrorCode.TEA002.getBusinessStatusCode())
+                                .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
     }
 
@@ -121,8 +121,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnBadRequest(
     ) throws Exception {
         User testUser = createTestUser();
+        var categoryNameForWrongPathTest  = "`-'+=|\\/?,.<>%&(){}[];:" + "\"";
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
-                "Catego*&*^ry@",
+                categoryNameForWrongPathTest,
                 FinancialTransactionType.INCOME,
                 1L);
 
@@ -133,11 +134,11 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ErrorCode.TEA002.getBusinessStatus()),
+                                .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ErrorCode.TEA002.getBusinessMessage()),
+                                .value(ErrorCode.TEA003.getBusinessMessage()),
                         MockMvcResultMatchers.jsonPath("$.statusCode")
-                                .value(ErrorCode.TEA002.getBusinessStatusCode())
+                                .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
     }
 
@@ -157,19 +158,19 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ErrorCode.TEA002.getBusinessStatus()),
+                                .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ErrorCode.TEA002.getBusinessMessage()),
+                                .value(ErrorCode.TEA003.getBusinessMessage()),
                         MockMvcResultMatchers.jsonPath("$.statusCode")
-                                .value(ErrorCode.TEA002.getBusinessStatusCode())
+                                .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
     }
 
     private User createTestUser() {
         final User userOne = User.builder()
                 .id(1L)
-                .userName("userone")
-                .email("Email@wp.pl")
+                .userName("UserOne")
+                .email("user@server.domain.com")
                 .password("Password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
