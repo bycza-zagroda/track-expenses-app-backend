@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public record FinancialTransactionCategoryCreateDTO(
-        @NotNull
         @Pattern(regexp = RegexConstant.CATEGORY_NAME_PATTERN)
         String name,
         @NotNull FinancialTransactionType type,
