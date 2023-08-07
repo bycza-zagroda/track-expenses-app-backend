@@ -19,5 +19,5 @@ public interface FinancialTransactionCategoryRepository extends JpaRepository<Fi
 
     @Query(value = "SELECT COUNT(c) > 0 as result FROM FinancialTransactionCategory c WHERE c.id = :id AND c.user.id = :userId")
     boolean existsByIdAndUserId(Long id, Long userId);
-    
+
 }

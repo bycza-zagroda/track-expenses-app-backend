@@ -29,9 +29,11 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     private UserService userService;
 
     private static final String AUTHORIZATION = "Authorization";
+
     private static final String BEARER = "Bearer ";
 
     private final Long nonExistentCategoryId = 999L;
+
     private final String deleteCategoryUrl = "/api/categories/{id}";
 
     @Test
@@ -86,6 +88,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
                 .password("Password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
+
         return userRepository.save(user);
     }
 
@@ -95,6 +98,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
                 .user(user)
                 .type(FinancialTransactionType.INCOME)
                 .build();
+
         return categoryRepository.save(category);
     }
 
