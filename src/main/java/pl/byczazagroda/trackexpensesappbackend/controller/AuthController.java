@@ -32,14 +32,16 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logoutUser() {
-        //TODO
+    public ResponseEntity<Void> logoutUser(HttpServletResponse response) {
+        userService.deleteRefreshTokenCookie(response);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<Void> registerUser(@Valid @RequestBody AuthRegisterDTO authRegisterDTO) {
         userService.registerUser(authRegisterDTO);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

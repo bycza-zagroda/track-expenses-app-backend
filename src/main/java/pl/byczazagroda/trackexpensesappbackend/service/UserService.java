@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.service;
 
 
-import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
@@ -21,14 +20,12 @@ public interface UserService {
 
     User getUserFromToken(String token);
 
-    boolean validateTokenSignature(String token);
-
-    boolean validateTokenExpiry(String token);
-
     String createAccessToken(User user);
 
     Cookie createRefreshTokenCookie(User user);
 
-    String refreshToken(HttpServletRequest request, HttpServletResponse response, String refreshToken, String accessToken) throws Exception;
+    String refreshToken(HttpServletRequest request, HttpServletResponse response,
+                        String refreshToken, String accessToken) throws Exception;
 
+    void deleteRefreshTokenCookie(HttpServletResponse response);
 }
