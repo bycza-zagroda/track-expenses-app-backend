@@ -174,7 +174,6 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .password("Password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
-                .build();
 
         return userRepository.save(userOne);
     }
