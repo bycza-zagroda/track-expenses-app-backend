@@ -2,10 +2,10 @@ package pl.byczazagroda.trackexpensesappbackend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,20 +13,20 @@ import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.regex.RegexConstant;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Validated
@@ -103,15 +103,7 @@ public class UserServiceImpl implements UserService {
         return createAccessToken(u);
     }
 
-    private boolean validatePassword(String password) {
-
-        return password.matches(RegexConstant.PASSWORD_PATTERN);
-    }
-    private boolean validateEmail(String email) {
-
-        return email.matches(RegexConstant.EMAIL_PATTERN);
-    }
-
+    @Override
     public String createAccessToken(User user) {
         return JWT.create()
                 .withSubject(user.getId().toString())
@@ -123,7 +115,7 @@ public class UserServiceImpl implements UserService {
                 .withClaim("authorities", List.of())
                 .sign(Algorithm.HMAC256(secret));
     }
-
+    @Override
     public Cookie createRefreshTokenCookie(User user) {
         String token = JWT.create()
                 .withSubject(user.getId().toString())
@@ -135,27 +127,7 @@ public class UserServiceImpl implements UserService {
         cookie.setHttpOnly(true);
         return cookie;
     }
-
-    public boolean validateTokenSignature(String token) {
-        try {
-            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
-            return true;
-        } catch (JWTVerificationException exception) {
-            System.out.println("Token verification failed: " + exception.getMessage());
-            return false;
-        }
-    }
-
-    public boolean validateTokenExpiry(String token) {
-        try {
-            DecodedJWT jwt = JWT.decode(token);
-
-            return jwt.getExpiresAt().after(new Date());
-        } catch (JWTDecodeException exception) {
-            return false;
-        }
-    }
-
+    @Override
     public User getUserFromToken(String token) {
         String userId = JWT.decode(token).getSubject();
 
@@ -164,9 +136,10 @@ public class UserServiceImpl implements UserService {
                         "User with this id does not exist"));
     }
 
+    @Override
     public String refreshToken(HttpServletRequest request, HttpServletResponse response,
                                String refreshToken, String accessToken) {
-        if (!validateTokenSignature(refreshToken) && !validateTokenExpiry(refreshToken)) {
+        if (!validateTokenSignatureAndExpiry(refreshToken)) {
             throw new AppRuntimeException(ErrorCode.S003,
                     "Refresh token is not valid");
         }
@@ -186,17 +159,52 @@ public class UserServiceImpl implements UserService {
         return newAccessToken;
     }
 
+    @Override
+    public void deleteRefreshTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refresh_token", null);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     private void validatePasswordLength(String password) {
         if (password.length() < SHORTEST_PASSWORD_LENGTH) {
-            throw new AppRuntimeException(
-                    ErrorCode.U004,
-                    "Password must be at least 8 characters."
+            throw new AppRuntimeException(ErrorCode.U004, "Password must be at least 8 characters."
             );
         } else if (password.length() > GREATEST_PASSWORD_LENGTH) {
-            throw new AppRuntimeException(ErrorCode.U007,
-                    "Password must consist of no more that 100 characters."
+            throw new AppRuntimeException(ErrorCode.U007, "Password must consist of no more that 100 characters."
             );
         }
+    }
+
+    private boolean validateTokenSignature(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            return true;
+        } catch (TokenExpiredException ex) {
+            return true;
+        } catch (JWTVerificationException ex) {
+            log.info("Token verification failed: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    private boolean validateTokenSignatureAndExpiry(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            log.info("Token verification failed: " + exception.getMessage());
+            return false;
+        }
+    }
+
+    private boolean validatePassword(String password) {
+        return password.matches(RegexConstant.PASSWORD_PATTERN);
+    }
+
+    private boolean validateEmail(String email) {
+        return email.matches(RegexConstant.EMAIL_PATTERN);
     }
 
 }
