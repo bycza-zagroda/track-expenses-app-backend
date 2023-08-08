@@ -13,14 +13,14 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
+
+    public static final long USER_ID_1L = 1L;
 
     @Autowired
     private FinancialTransactionRepository financialTransactionRepository;
@@ -47,16 +47,15 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        var testUser = createTestUser();
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
                 FinancialTransactionType.INCOME,
-                testUser.getId());
+                USER_ID_1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId())))
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L)))
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isCreated(),
@@ -74,12 +73,12 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
                 FinancialTransactionType.INCOME,
-                1L);
+                USER_ID_1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user("1")))
+                        .with(SecurityMockMvcRequestPostProcessors.user(Long.toString(USER_ID_1L))))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
@@ -96,15 +95,14 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should return ResponseStatus BadRequest when name is empty")
     @Test
     void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnBadRequest() throws Exception {
-        User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
                 FinancialTransactionType.INCOME,
-                testUser.getId());
+                USER_ID_1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user(testUser.getId().toString()))
+                        .with(SecurityMockMvcRequestPostProcessors.user(Long.toString(USER_ID_1L)))
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
@@ -121,17 +119,16 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnBadRequest(
     ) throws Exception {
-        User testUser = createTestUser();
         var categoryNameForWrongPathTest  = "`-'+=|\\/?,.<>%&(){}[];:" + "\"";
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 categoryNameForWrongPathTest,
                 FinancialTransactionType.INCOME,
-                1L);
+                USER_ID_1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
+                        .with(SecurityMockMvcRequestPostProcessors.user(Long.toString(USER_ID_1L))))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
@@ -143,19 +140,18 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 );
     }
 
-    @DisplayName("Should return BadRequest when type is empty")
+    @DisplayName("Should return ResponseStatus BadRequest when type is empty")
     @Test
     void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
-        User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Category",
                 null,
-                1L);
+                USER_ID_1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
+                        .with(SecurityMockMvcRequestPostProcessors.user(Long.toString(USER_ID_1L))))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
@@ -165,18 +161,6 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         MockMvcResultMatchers.jsonPath("$.statusCode")
                                 .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
     }
 
 }
