@@ -143,7 +143,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 );
     }
 
-    @DisplayName("Should return NotFound when type is empty")
+    @DisplayName("Should return BadRequest when type is empty")
     @Test
     void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
         User testUser = createTestUser();
@@ -157,7 +157,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isNotFound(),
+                        MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.jsonPath("$.status")
                                 .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
