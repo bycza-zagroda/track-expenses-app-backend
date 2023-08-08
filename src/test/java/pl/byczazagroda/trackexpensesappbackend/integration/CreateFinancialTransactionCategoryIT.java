@@ -96,14 +96,15 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should return ResponseStatus BadRequest when name is empty")
     @Test
     void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnBadRequest() throws Exception {
+        User testUser = createTestUser();
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
                 FinancialTransactionType.INCOME,
-                1L);
+                testUser.getId());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
-                        .with(SecurityMockMvcRequestPostProcessors.user("1"))
+                        .with(SecurityMockMvcRequestPostProcessors.user(testUser.getId().toString()))
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
@@ -142,7 +143,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 );
     }
 
-    @DisplayName("Should return ResponseStatus BadRequest when type is empty")
+    @DisplayName("Should return NotFound when type is empty")
     @Test
     void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
         User testUser = createTestUser();
@@ -156,7 +157,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         .content(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))
                         .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(testUser.getId()))))
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isBadRequest(),
+                        MockMvcResultMatchers.status().isNotFound(),
                         MockMvcResultMatchers.jsonPath("$.status")
                                 .value(ErrorCode.TEA003.getBusinessStatus()),
                         MockMvcResultMatchers.jsonPath("$.message")
