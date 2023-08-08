@@ -20,6 +20,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRe
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +31,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.time.Instant;
 
 @ExtendWith(MockitoExtension.class)
 public class FinancialTransactionCategoryServiceImplTest {
@@ -77,7 +76,7 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
-                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
+                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE, USER_ID_1L);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME,
                 CATEGORY_TYPE);
         financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
@@ -103,20 +102,26 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
         //given
         FinancialTransactionCategory categoryFirst =
-                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST, FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST,
+                        FinancialTransactionType.INCOME);
         FinancialTransactionCategory categorySecond =
-                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND, FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND,
+                        FinancialTransactionType.INCOME);
         FinancialTransactionCategory categoryThird =
-                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD, FinancialTransactionType.INCOME);
+                createFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD,
+                        FinancialTransactionType.INCOME);
         FinancialTransactionCategoryDTO categoryFirstDTO =
-                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST,
-                        FinancialTransactionType.INCOME,USER_ID_1L);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_1L,
+                        FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST,
+                        FinancialTransactionType.INCOME, USER_ID_1L);
         FinancialTransactionCategoryDTO categorySecondDTO =
-                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_2L, FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND,
-                        FinancialTransactionType.INCOME,USER_ID_1L);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_2L,
+                        FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND,
+                        FinancialTransactionType.INCOME, USER_ID_1L);
         FinancialTransactionCategoryDTO categoryThirdDTO =
-                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_3L, FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD,
-                        FinancialTransactionType.INCOME,USER_ID_1L);
+                new FinancialTransactionCategoryDTO(FINANCIAL_TRANSACTION_CATEGORY_ID_3L,
+                        FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD,
+                        FinancialTransactionType.INCOME, USER_ID_1L);
         List<FinancialTransactionCategory> categoryList = new ArrayList<>();
         categoryList.add(categoryFirst);
         categoryList.add(categorySecond);
@@ -124,11 +129,14 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         //when
         when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(Optional.of(categoryList));
-        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryFirst))
+        when(financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryFirst))
                 .thenReturn(categoryFirstDTO);
-        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categorySecond))
+        when(financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categorySecond))
                 .thenReturn(categorySecondDTO);
-        when(financialTransactionCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryThird))
+        when(financialTransactionCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryThird))
                 .thenReturn(categoryThirdDTO);
 
         List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
@@ -145,7 +153,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
         //when
         when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(true);
-        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L);
+        financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L,
+                USER_ID_1L);
 
         //then
         verify(financialTransactionCategoryRepository, times(1)).deleteById(any(Long.class));
@@ -159,12 +168,13 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         //then
         Assertions.assertThrows(AppRuntimeException.class,
-                () -> financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L));
+                () -> financialTransactionCategoryService
+                        .deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L, USER_ID_1L));
     }
 
     @Test
-    @DisplayName("when finding with proper financial transaction category id " +
-            "should successfully find financial transaction category and number of financial transaction")
+    @DisplayName("when finding with proper financial transaction category id "
+            + "should successfully find financial transaction category and number of financial transaction")
     void shouldSuccessfullyFindFinancialTransactionCategory_WhenFindingWithProperFinancialTransactionCategoryId() {
         //given
         Long id = 1L;
@@ -176,10 +186,11 @@ public class FinancialTransactionCategoryServiceImplTest {
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 new FinancialTransactionCategoryDTO(id, FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME,
-                        FinancialTransactionType.INCOME,USER_ID_1L);
+                        FinancialTransactionType.INCOME, USER_ID_1L);
 
         //when
-        when(financialTransactionCategoryRepository.findByIdAndUserId(id, USER_ID_1L)).thenReturn(Optional.of(financialTransactionCategory));
+        when(financialTransactionCategoryRepository.findByIdAndUserId(id, USER_ID_1L))
+                .thenReturn(Optional.of(financialTransactionCategory));
         when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(id))
                 .thenReturn(numberOfFinancialTransactions);
         when(financialTransactionCategoryModelMapper
@@ -209,7 +220,8 @@ public class FinancialTransactionCategoryServiceImplTest {
                 () -> financialTransactionCategoryService.findCategoryForUser(1L, 1L));
     }
 
-    private FinancialTransactionCategory createFinancialTransactionCategory(String name, FinancialTransactionType type) {
+    private FinancialTransactionCategory createFinancialTransactionCategory(String name,
+                                                                            FinancialTransactionType type) {
         return FinancialTransactionCategory.builder()
                 .name(name)
                 .type(type)
