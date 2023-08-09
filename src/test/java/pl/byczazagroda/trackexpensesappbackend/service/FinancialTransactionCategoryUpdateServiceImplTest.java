@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class FTCategoryUpdateServiceImplTest {
+public class FinancialTransactionCategoryUpdateServiceImplTest {
 
     private static final long VALID_ID = 1L;
 
@@ -53,7 +53,7 @@ public class FTCategoryUpdateServiceImplTest {
             = new FinancialTransactionCategoryDTO(VALID_ID, NAME, TYPE_INCOME, USER_ID_1L);
 
     private static final FinancialTransactionCategoryUpdateDTO VALID_UPDATE_CATEGORY_DTO
-            = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME, USER_ID_1L);
+            = new FinancialTransactionCategoryUpdateDTO(NAME, TYPE_INCOME);
 
     @Mock
     private FinancialTransactionCategoryRepository repository;

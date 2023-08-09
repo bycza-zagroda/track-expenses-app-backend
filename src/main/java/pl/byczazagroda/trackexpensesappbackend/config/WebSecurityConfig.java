@@ -34,7 +34,8 @@ public class WebSecurityConfig {
                         .antMatchers("/").permitAll()
                         .antMatchers("/api/auth/login").permitAll()
                         .antMatchers("/api/auth/refresh").permitAll()
-                        .antMatchers("/api/users/me", "/api/categories/**", "/api/wallets/**").authenticated()
+                        .antMatchers("/api/users/me", "/api/categories/**", "/api/wallets/**", "/api/auth/logout")
+                        .authenticated()
                         .anyRequest().permitAll());
         http
                 .exceptionHandling()

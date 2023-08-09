@@ -41,7 +41,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
             @Valid FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO,
             Long userId) {
 
-        User user = getUserByUserId(financialTransactionCategoryCreateDTO.userId());
+        User user = getUserByUserId(userId);
 
         FinancialTransactionCategory financialTransactionCategory = FinancialTransactionCategory
                 .builder().name(financialTransactionCategoryCreateDTO.name()).type(financialTransactionCategoryCreateDTO
@@ -88,7 +88,6 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
 
     @Override
-
     public void deleteFinancialTransactionCategory(@Min(1) @NotNull Long categoryId, Long userId) {
         if (financialTransactionCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
             financialTransactionCategoryRepository.deleteById(categoryId);
@@ -107,7 +106,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
                         String.format("Financial transaction category with id: %d not found for user ", categoryId)));
 
-        User user = getUserByUserId(financialTransactionCategoryUpdateDTO.userId());
+        User user = getUserByUserId(userId);
 
         financialTransactionCategory.setName(financialTransactionCategoryUpdateDTO.name());
         financialTransactionCategory.setType(financialTransactionCategoryUpdateDTO.type());
@@ -123,4 +122,3 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
 }
-
