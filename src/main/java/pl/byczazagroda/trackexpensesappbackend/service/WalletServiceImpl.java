@@ -6,8 +6,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
@@ -18,9 +18,11 @@ import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -74,12 +76,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void deleteWalletById(@Min(1) @NotNull Long id, Long userId) {
-        Wallet wallet = walletRepository.findById(id)
+    public void deleteWalletById(@Min(1) @NotNull Long walletId, Long userId) {
+        Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
                             ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", id));
+                            String.format("Wallet with id: %d does not exist", walletId));
                 });
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
@@ -87,16 +89,16 @@ public class WalletServiceImpl implements WalletService {
                     "You don't have permissions to delete that wallet"
             );
         }
-        walletRepository.deleteById(id);
+        walletRepository.deleteById(walletId);
     }
 
     @Override
-    public WalletDTO findById(@Min(1) @NotNull Long id, Long userId) {
-        Wallet wallet = walletRepository.findById(id)
+    public WalletDTO findById(@Min(1) @NotNull Long walletId, Long userId) {
+        Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
                             ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", id));
+                            String.format("Wallet with id: %d does not exist", walletId));
                 });
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(

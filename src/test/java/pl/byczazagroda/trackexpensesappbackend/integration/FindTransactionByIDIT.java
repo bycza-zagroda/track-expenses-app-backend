@@ -1,17 +1,11 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -25,13 +19,13 @@ import java.time.Instant;
 public class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @BeforeEach
-    void clearDatabase() {
+    private void clearDatabase() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
     }
@@ -40,33 +34,35 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @Test
     @Disabled
     public void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
-
-        Assertions.assertEquals(1, financialTransactionRepository.count());
+// TODO Stream2
+//        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
+//        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
+//
+//        Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
     @Disabled
     public void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT001.getBusinessStatusCode()));
-
-        Assertions.assertEquals(1, financialTransactionRepository.count());
+// TODO Stream2
+//        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
+//        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT001.getBusinessStatusCode()));
+//
+//        Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet, String description) {

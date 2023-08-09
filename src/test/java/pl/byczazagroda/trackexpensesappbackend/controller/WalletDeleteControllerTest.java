@@ -5,12 +5,12 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -57,13 +57,15 @@ class WalletDeleteControllerTest {
     @Test
     @DisplayName("when delete wallet correctly should return response status OK")
     void shouldReturnResponseStatusOK_WhenDeleteWalletCorrectly() throws Exception {
+        //fixme do poprawki
         //given
         WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         //then
         result.andExpect(status().isOk());
@@ -75,7 +77,7 @@ class WalletDeleteControllerTest {
     void shouldReturnResponseStatusNoContent_WhenWalletIdIsZero() throws Exception {
         //given
         WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
-        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(ID_0L);
+        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(ID_0L, USER_ID_1L);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", ID_0L)
