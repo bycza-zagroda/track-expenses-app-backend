@@ -1,5 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -131,7 +134,8 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO("!@`$%^&*()_+|-=[];',./{}:<", FinancialTransactionType.EXPENSE);
+                new FinancialTransactionCategoryUpdateDTO("!@`$%^&*()_+|-=[];',./{}:<",
+                        FinancialTransactionType.EXPENSE);
 
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
@@ -152,16 +156,20 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
     @DisplayName("Should not update FT category when category type is invalid")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryTypeIsInvalid_thenReturnBadRequest() throws Exception {
-        User user = createUser("user@domain.server.com");
+        User user = createUser("user@server.com");
         String accessToken = userService.createAccessToken(user);
-
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
+
+        Map<String, String> categoryMap = Map.of(
+                "name", "TEST",
+                "type", "INVALID_CATEGORY_TYPE"
+        );
 
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"TEST\", \"type\": \"INVALID_CATEGORY_TYPE\"}")
+                        .content(generateJSON(categoryMap))
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -176,13 +184,13 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
     @DisplayName("Should not update FT category when category doesn't exists")
     @Test
     void testUpdateFTCategory_whenCategoryNotExists_thenReturnIsNotFound() throws Exception {
-        User user = createUser("user@domain.server.com");
+        User user = createUser("user@server.com");
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
                 new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
-        Long categoryId = 999L;
+        Long categoryId = 0L;
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, categoryId)
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
@@ -236,6 +244,10 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
                 .build();
 
         return financialTransactionCategoryRepository.save(financialTransactionCategory);
+    }
+
+    private String generateJSON(Map<String, String> fromValue) {
+        return (new ObjectMapper()).valueToTree(fromValue).toString();
     }
 
 }
