@@ -190,7 +190,7 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
                 new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
-        Long categoryId = 0L;
+        Long categoryId = 999L;
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, categoryId)
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
