@@ -39,7 +39,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO, Long userId) {
         String walletName = walletCreateDTO.name();
-        User walletOwner = userRepository.findById(userId).get();
+        User walletOwner = getUserByUserId(userId);
 
         Wallet wallet = new Wallet(walletName, walletOwner);
 
@@ -124,4 +124,10 @@ public class WalletServiceImpl implements WalletService {
         }
         return listOfWalletDTO;
     }
+
+    private User getUserByUserId(Long userId) {
+        return  userRepository.findById(userId).orElseThrow(() ->
+                new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
+    }
+
 }
