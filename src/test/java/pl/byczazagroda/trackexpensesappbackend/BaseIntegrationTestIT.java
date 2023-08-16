@@ -18,7 +18,12 @@ import org.testcontainers.utility.DockerImageName;
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTestIT {
 
+    public static final String AUTHORIZATION = "Authorization";
+
+    public static final String BEARER = "Bearer ";
+
     static final MySQLContainer<?> MY_SQL_CONTAINER;
+
     static final int TESTCONTAINER_STARTUP_TIMEOUT = 480;
 
     static {
