@@ -2,11 +2,9 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -18,6 +16,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -27,9 +26,9 @@ import static org.hamcrest.Matchers.hasSize;
 
 class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
 
-    static private final String WALLET_NAME = "wallet";
+    private static final String WALLET_NAME = "wallet";
 
-    static private final String WALLET_NAME_TOO_LONG = "The quick, brown fox jumps over";
+    private static final String WALLET_NAME_TOO_LONG = "The quick, brown fox jumps over";
 
     @Autowired
     private WalletRepository walletRepository;
@@ -40,24 +39,32 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @BeforeEach
     void clearDatabase() {
         walletRepository.deleteAll();
         financialTransactionRepository.deleteAll();
         userRepository.deleteAll();
     }
+
     //fixme, new issue, required improve method for wallets
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
-        List<Wallet> wallets = createListTestWallets();
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+
+        List<Wallet> wallets = createListTestWallets(testUser);
         Wallet wallet1 = wallets.get(0);
         Wallet wallet2 = wallets.get(1);
         Wallet wallet3 = wallets.get(2);
         Wallet wallet4 = wallets.get(4);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(wallet1.getId()))
@@ -75,9 +82,13 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
-        createTestWallet();
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+
+        createTestWallet(testUser);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME_TOO_LONG)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()));
@@ -88,9 +99,13 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name does not exist should return null array")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
-        createTestWallet();
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+
+        createTestWallet(testUser);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", "notExistingName")
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(0)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0]").doesNotExist());
@@ -106,44 +121,44 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         return userRepository.save(userOne);
     }
 
-    private Wallet createTestWallet() {
+    private Wallet createTestWallet(User user) {
         final Wallet testWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(user)
                 .creationDate(Instant.now())
                 .name("TestWallet")
                 .build();
         return walletRepository.save(testWallet);
     }
 
-    private List<Wallet> createListTestWallets() {
+    private List<Wallet> createListTestWallets(User testUser) {
 
         List<Wallet> wallets = new ArrayList<>();
 
         final Wallet firstWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(testUser)
                 .creationDate(Instant.now())
                 .name("WalletTest")
                 .build();
 
         final Wallet secondWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(testUser)
                 .creationDate(Instant.now())
                 .name("wallet")
                 .build();
 
         final Wallet thirdWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(testUser)
                 .creationDate(Instant.now())
                 .name("WALLET")
                 .build();
 
         final Wallet forthWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(testUser)
                 .creationDate(Instant.now())
                 .name("Bag")
                 .build();
         final Wallet fifthWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(testUser)
                 .creationDate(Instant.now())
                 .name("Wallet Test")
                 .build();

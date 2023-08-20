@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -60,14 +60,15 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name contains illegal letters should return response status bad request")
     void shouldNotCreateWalletAndReturnResponseStatusBadRequestStatus_WhenWalletNameContainsIllegalLetters() throws Exception {
         // given
-        WalletCreateDTO dto = new WalletCreateDTO(INVALID_NAME, createTestUserDTO());
-        given(walletService.createWallet(dto))
+        WalletCreateDTO dto = new WalletCreateDTO(INVALID_NAME);
+        given(walletService.createWallet(dto, USER_ID_1L))
                 .willReturn(new WalletDTO(WALLET_ID_1L, INVALID_NAME, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isBadRequest());
@@ -77,14 +78,15 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is empty should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsEmpty() throws Exception {
         // given
-        WalletCreateDTO dto = new WalletCreateDTO("", createTestUserDTO());
-        given(walletService.createWallet(dto))
+        WalletCreateDTO dto = new WalletCreateDTO("");
+        given(walletService.createWallet(dto, USER_ID_1L))
                 .willReturn(new WalletDTO(WALLET_ID_1L, "", DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isBadRequest());
@@ -94,14 +96,15 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is null should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsNull() throws Exception {
         // given
-        WalletCreateDTO dto = new WalletCreateDTO(null, createTestUserDTO());
-        given(walletService.createWallet(dto))
+        WalletCreateDTO dto = new WalletCreateDTO(null);
+        given(walletService.createWallet(dto, USER_ID_1L))
                 .willReturn(new WalletDTO(WALLET_ID_1L, null, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isBadRequest());
@@ -111,14 +114,15 @@ class WalletCreateControllerTest {
     @DisplayName("when wallet name is too long should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletNameIsTooLong() throws Exception {
         // given
-        WalletCreateDTO dto = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS, createTestUserDTO());
-        given(walletService.createWallet(dto))
+        WalletCreateDTO dto = new WalletCreateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
+        given(walletService.createWallet(dto, USER_ID_1L))
                 .willReturn(new WalletDTO(WALLET_ID_1L, TOO_LONG_NAME_MORE_THAN_20_LETTERS, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(dto)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isBadRequest());

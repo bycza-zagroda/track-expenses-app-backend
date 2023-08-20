@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -14,8 +13,11 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.math.BigDecimal;
@@ -25,23 +27,29 @@ import java.time.Instant;
 public class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @Autowired
-    FinancialTransactionRepository financialTransactionRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
-    void clearDatabase() {
+    private void clearDatabase() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("Should return proper financial transaction when search Id exist in database")
     @Test
     @Disabled
     public void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
+        User testUser = createTestUser();
+        Wallet wallet = walletRepository.save(new Wallet("TestWallet", testUser));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -57,8 +65,11 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @Test
     @Disabled
     public void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet"));
+        User testUser = createTestUser();
+
+        Wallet wallet = walletRepository.save(new Wallet("TestWallet", testUser));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -77,6 +88,18 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
                 .type(FinancialTransactionType.INCOME)
                 .description(description)
                 .build());
+    }
+
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .id(1L)
+                .userName("UserOne")
+                .email("user@server.domain.com")
+                .password("Password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+
+        return userRepository.save(userOne);
     }
 
 }

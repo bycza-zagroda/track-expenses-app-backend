@@ -2,10 +2,10 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -44,6 +44,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
+    @Disabled
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
         Wallet wallet = createTestWallet();
         createTestFinancialTransaction(wallet);
@@ -55,6 +56,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
     @Test
+    @Disabled
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", 1L).accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())

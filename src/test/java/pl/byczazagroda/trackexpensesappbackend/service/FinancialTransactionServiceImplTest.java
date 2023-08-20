@@ -21,8 +21,9 @@ import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelM
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
@@ -206,7 +207,7 @@ class FinancialTransactionServiceImplTest {
 
     @Test
     @DisplayName("update financial transaction with valid parameters")
-    void shouldUpdateFinancialTransactionWhenValidParametersAreGiven(){
+    void shouldUpdateFinancialTransactionWhenValidParametersAreGiven() {
         //given
         FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
 
@@ -226,16 +227,14 @@ class FinancialTransactionServiceImplTest {
                 .thenReturn(Optional.of(financialTransaction));
 
         //when
-        FinancialTransactionDTO result
-                    = financialTransactionService
-                    .updateFinancialTransaction(ID_1L,updateDTO);
+        FinancialTransactionDTO result = financialTransactionService.updateFinancialTransaction(ID_1L, updateDTO);
 
         //then
         assertAll(
-                ()->assertEquals(updateDTO.amount(), result.amount()),
-                ()->assertEquals(updateDTO.description(), result.description()),
-                ()->assertEquals(updateDTO.type(), result.type()),
-                ()->assertEquals(updateDTO.date(), result.date()));
+                () -> assertEquals(updateDTO.amount(), result.amount()),
+                () -> assertEquals(updateDTO.description(), result.description()),
+                () -> assertEquals(updateDTO.type(), result.type()),
+                () -> assertEquals(updateDTO.date(), result.date()));
 
         verify(financialTransactionRepository, atMostOnce()).save(any());
         verify(financialTransactionRepository, atMostOnce()).findById(any());
@@ -261,7 +260,7 @@ class FinancialTransactionServiceImplTest {
         financialTransactionsList.add(financialTransaction1);
         financialTransactionsList.add(financialTransaction2);
 
-        Wallet wallet = new Wallet("Random wallet");
+        Wallet wallet = new Wallet("Random wallet", createTestUser());
         wallet.setId(ID_1L);
         wallet.setCreationDate(DATE_NOW);
 
@@ -350,7 +349,18 @@ class FinancialTransactionServiceImplTest {
     private FinancialTransactionDTO createFinancialTransactionDTO() {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, null);
     }
+
     private FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
-        return new FinancialTransactionUpdateDTO(TEN,DATE_NOW, DESCRIPTION, EXPENSE,null);
+        return new FinancialTransactionUpdateDTO(TEN, DATE_NOW, DESCRIPTION, EXPENSE, null);
+    }
+
+    private User createTestUser() {
+        return User.builder()
+                .id(1L)
+                .userName("userone")
+                .email("Email@wp.pl")
+                .password("password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
     }
 }

@@ -2,20 +2,20 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +27,8 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void clearTestDB() {
@@ -34,19 +36,21 @@ class CreateWalletIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-   //fixme, new issue, required improve method for wallets
     @DisplayName("It should create a new wallet and return wallet DTO")
     @Test
-    @Disabled
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+
         final UserDTO testUserDTO = createTestUserDTO();
-        WalletCreateDTO newWallet = new WalletCreateDTO("Wallet Name1", testUserDTO);
+        WalletCreateDTO newWallet = new WalletCreateDTO("Wallet Name1");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet)));
+                .content(objectMapper.writeValueAsString(newWallet))
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
         response.andExpect(status().isCreated())
@@ -59,12 +63,15 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G", createTestUserDTO());
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+        WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet)));
+                .content(objectMapper.writeValueAsString(newWallet))
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
         response.andExpect(status().isBadRequest())
@@ -79,12 +86,15 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong", createTestUserDTO());
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+        WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet)));
+                .content(objectMapper.writeValueAsString(newWallet))
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
         response.andExpect(status().isBadRequest())
@@ -103,6 +113,18 @@ class CreateWalletIT extends BaseIntegrationTestIT {
                 .password("password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
+    }
+
+    private User createTestUser() {
+        final User userOne = User.builder()
+                .id(1L)
+                .userName("UserOne")
+                .email("user@server.domain.com")
+                .password("Password1@")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
+
+        return userRepository.save(userOne);
     }
 
 }

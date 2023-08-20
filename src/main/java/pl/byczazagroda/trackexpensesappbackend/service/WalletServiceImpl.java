@@ -6,19 +6,23 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -30,61 +34,86 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletModelMapper walletModelMapper;
+    private final UserRepository userRepository;
 
     @Override
-    public WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO) {
-
+    public WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO, Long userId) {
         String walletName = walletCreateDTO.name();
-        Wallet wallet = new Wallet(walletName);
+        User walletOwner = getUserByUserId(userId);
+
+        Wallet wallet = new Wallet(walletName, walletOwner);
+
         Wallet savedWallet = walletRepository.save(wallet);
         return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
     }
 
     @Override
     @Transactional
-    public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO dto) {
+    public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO dto, Long userId) {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new AppRuntimeException(
                             ErrorCode.W003,
                             String.format("Wallet with id: %d does not exist", id));
                 });
+        if (!wallet.getUser().getId().equals(userId)) {
+            throw new AppRuntimeException(
+                    ErrorCode.W005,
+                    "You don't have permissions to update that wallet"
+            );
+        }
+
         wallet.setName(dto.name());
 
         return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
     }
 
     @Override
-    public List<WalletDTO> getWallets() {
-        return walletRepository.findAllByOrderByNameAsc().stream()
+    public List<WalletDTO> getWallets(Long userId) {
+        return walletRepository.findAllByUserIdOrderByNameAsc(userId).stream()
                 .map(walletModelMapper::mapWalletEntityToWalletDTO)
                 .toList();
     }
 
     @Override
-    public void deleteWalletById(@Min(1) @NotNull Long id) {
-        if (walletRepository.existsById(id)) {
-            walletRepository.deleteById(id);
-        } else {
+    public void deleteWalletById(@Min(1) @NotNull Long walletId, Long userId) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> {
+                    throw new AppRuntimeException(
+                            ErrorCode.W003,
+                            String.format("Wallet with id: %d does not exist", walletId));
+                });
+        if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
-                    ErrorCode.W003,
-                    String.format("Wallet with given id: %d does not exist", id));
+                    ErrorCode.W005,
+                    "You don't have permissions to delete that wallet"
+            );
         }
+        walletRepository.deleteById(walletId);
     }
 
     @Override
-    public WalletDTO findById(@Min(1) @NotNull Long id) {
-        Optional<Wallet> wallet = walletRepository.findById(id);
-        return wallet.map(walletModelMapper::mapWalletEntityToWalletDTO)
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.W003,
-                        String.format("Wallet with id: %s not found", id)));
+    public WalletDTO findById(@Min(1) @NotNull Long walletId, Long userId) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> {
+                    throw new AppRuntimeException(
+                            ErrorCode.W003,
+                            String.format("Wallet with id: %d does not exist", walletId));
+                });
+        if (!wallet.getUser().getId().equals(userId)) {
+            throw new AppRuntimeException(
+                    ErrorCode.W005,
+                    "You don't have permissions to view that wallet"
+            );
+        }
+        return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
     }
 
     @Override
-    public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name) {
+    public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name, Long userId) {
         List<WalletDTO> listOfWalletDTO;
         try {
-            listOfWalletDTO = walletRepository.findAllByNameIsContainingIgnoreCase(name)
+            listOfWalletDTO = walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, name)
                     .stream()
                     .map(walletModelMapper::mapWalletEntityToWalletDTO)
                     .toList();
@@ -95,4 +124,10 @@ public class WalletServiceImpl implements WalletService {
         }
         return listOfWalletDTO;
     }
+
+    private User getUserByUserId(Long userId) {
+        return  userRepository.findById(userId).orElseThrow(() ->
+                new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
+    }
+
 }

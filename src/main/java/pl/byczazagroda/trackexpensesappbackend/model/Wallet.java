@@ -61,8 +61,9 @@ public class Wallet implements Serializable {
             orphanRemoval = true)
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
-    public Wallet(String name) {
+    public Wallet(String name, User user) {
         this.name = name;
+        this.user = user;
         this.creationDate = Instant.now();
     }
 

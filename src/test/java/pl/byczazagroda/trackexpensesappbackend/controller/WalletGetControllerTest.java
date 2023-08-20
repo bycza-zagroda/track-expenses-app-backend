@@ -5,7 +5,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,15 +12,16 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
@@ -36,7 +36,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WalletController.class,
@@ -47,22 +46,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class WalletGetControllerTest {
 
-    private static final Long WALLET_ID_0L = 0L;
-
-    private static final Long WALLET_ID_1L = 1L;
-
-    private static final Long USER_ID_1L = 1L;
-
-    private static final Long WALLET_ID_2L = 2L;
-
-    private static final Long USER_ID_2L = 2L;
-
-    private static final Long WALLET_ID_3L = 3L;
-
-    private static final Long USER_ID_3L = 3L;
-
     public static final long ID_100L = 100L;
-
+    private static final Long WALLET_ID_0L = 0L;
+    private static final Long WALLET_ID_1L = 1L;
+    private static final Long USER_ID_1L = 1L;
+    private static final Long WALLET_ID_2L = 2L;
+    private static final Long USER_ID_2L = 2L;
+    private static final Long WALLET_ID_3L = 3L;
+    private static final Long USER_ID_3L = 3L;
     private static final String WALLET_NAME = "Wallet name";
 
     private static final Instant DATE_1 = Instant.parse("2022-09-24T19:09:35.573036Z");
@@ -92,7 +83,8 @@ class WalletGetControllerTest {
     void shouldResponseStatusOKAndReturnEmptyList() throws Exception {
         // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/wallets")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
                 .getResponse();
@@ -107,15 +99,15 @@ class WalletGetControllerTest {
     void shouldResponseStatusOKAndAllWalletsList() throws Exception {
         // given
         List<WalletDTO> listDTO = createListOfWalletsDTO();
-        given(walletService.getWallets())
+        given(walletService.getWallets(USER_ID_1L))
                 .willReturn(listDTO);
 
         // when
 
         // then
         mockMvc.perform(get("/api/wallets")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
 // Value of returned items should be greater than 0 when testing Controller for unit(!) test
@@ -137,10 +129,11 @@ class WalletGetControllerTest {
         WalletDTO wallet = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
 
         // when
-        when(walletService.findById(WALLET_ID_1L)).thenReturn(wallet);
+        when(walletService.findById(WALLET_ID_1L, USER_ID_1L)).thenReturn(wallet);
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isOk())
@@ -148,17 +141,17 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by does not exist id should return response status not found")
+    @DisplayName("when finding wallet by id does not exist should return response status not found")
     void shouldReturnResponseStatusNotFound_WhenWalletByIdDoesNotExist() throws Exception {
         // given
         WalletDTO wallet = new WalletDTO(WALLET_ID_1L, "", DATE_NOW, USER_ID_1L);
         doThrow(new AppRuntimeException(ErrorCode.W003, ""))
-                .when(walletService).findById(ID_100L);
+                .when(walletService).findById(ID_100L, USER_ID_1L);
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", ID_100L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(wallet))));
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
         resultActions.andExpect(status().isNotFound());
@@ -170,12 +163,12 @@ class WalletGetControllerTest {
         //given
         WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
         doThrow(ConstraintViolationException.class)
-                .when(walletService).findById(WALLET_ID_0L);
+                .when(walletService).findById(WALLET_ID_0L, USER_ID_1L);
 
         //when
         ResultActions result = mockMvc.perform(get("/api/wallets/{id}", WALLET_ID_0L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         //then
         result.andExpect(status().is4xxClientError());
@@ -188,15 +181,16 @@ class WalletGetControllerTest {
         String walletNameSearched = WALLET_NAME;
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();
         List<WalletDTO> foundedWalletsDTO = List.of(new WalletDTO(WALLET_ID_2L, WALLET_NAME, DATE_2, USER_ID_2L));
-        given(walletService.getWallets()).willReturn(listOfWalletsDTO);
-        given(walletService.findAllByNameIgnoreCase(walletNameSearched)).willReturn(foundedWalletsDTO);
+        given(walletService.getWallets(USER_ID_1L)).willReturn(listOfWalletsDTO);
+        given(walletService.findAllByNameIgnoreCase(walletNameSearched, USER_ID_1L)).willReturn(foundedWalletsDTO);
 
         // when
 
         // then
         mockMvc.perform(get("/api/wallets/wallets/{name}", walletNameSearched)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print()).andExpect(status().isOk())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))))
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(foundedWalletsDTO.size()));
 // Value of returned items should be greater than 0 when testing Controller for unit(!) test
 //                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(ID_OF_WALLET_2))
