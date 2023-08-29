@@ -34,7 +34,9 @@ public class WebSecurityConfig {
                         .antMatchers("/").permitAll()
                         .antMatchers("/api/auth/login").permitAll()
                         .antMatchers("/api/auth/refresh").permitAll()
-                        .antMatchers("/api/users/me", "/api/transactions/**", "/api/categories/**", "/api/wallets/**", "/api/auth/logout")
+                        .antMatchers("/api/users/me",
+                                "/api/transactions/**", "/api/categories/**", "/api/wallets/**",
+                                "/api/auth/logout")
                         .authenticated()
                         .anyRequest().permitAll());
         http
