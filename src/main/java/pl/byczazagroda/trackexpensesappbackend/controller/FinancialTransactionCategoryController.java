@@ -64,7 +64,8 @@ public class FinancialTransactionCategoryController {
         Long userId = Long.valueOf(principal.getName());
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
-                financialTransactionCategoryService.createFinancialTransactionCategory(financialTransactionCategoryCreateDTO, userId);
+                financialTransactionCategoryService.createFinancialTransactionCategory(
+                        financialTransactionCategoryCreateDTO, userId);
 
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.CREATED);
     }
@@ -78,13 +79,15 @@ public class FinancialTransactionCategoryController {
         Long userId = Long.valueOf(principal.getName());
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
-                = financialTransactionCategoryService.updateFinancialTransactionCategory(categoryId, userId, financialTransactionCategoryUpdateDTO);
+                = financialTransactionCategoryService.updateFinancialTransactionCategory(
+                categoryId, userId, financialTransactionCategoryUpdateDTO);
 
         return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFinancialTransactionCategoryById(@Min(1) @NotNull @PathVariable(name = "id")  Long categoryId, Principal principal) {
+    public ResponseEntity<Void> deleteFinancialTransactionCategoryById(
+            @Min(1) @NotNull @PathVariable(name = "id") Long categoryId, Principal principal) {
 
         Long userId = Long.valueOf(principal.getName());
 

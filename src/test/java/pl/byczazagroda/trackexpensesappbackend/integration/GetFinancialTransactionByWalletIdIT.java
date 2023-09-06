@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -18,6 +18,7 @@ import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -36,6 +37,10 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
+
     @BeforeEach
     void clearTestDB() {
         financialTransactionRepository.deleteAll();
@@ -46,17 +51,28 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
     void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
-        Wallet wallet = createTestWallet();
+        // given
+        User user = createTestUser();
+        Wallet wallet = createTestWallet(user);
+        String accessToken = userService.createAccessToken(user);
+
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
-        mockMvc.perform(get("/api/transactions")
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
-                .queryParam("walletId", String.valueOf(wallet.getId())))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(financialTransaction.getId()))
-                .andExpect(jsonPath("$.[0].amount").value(financialTransaction.getAmount()))
-                .andExpect(jsonPath("$.[0].description").value(financialTransaction.getDescription()))
-                .andExpect(jsonPath("$.[0].type").value(financialTransaction.getType().name()))
-                .andExpect(jsonPath("$.[0].date").value(financialTransaction.getDate().toString()));
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
+                .queryParam("walletId", String.valueOf(wallet.getId())));
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                jsonPath("$.[0].id").value(financialTransaction.getId()),
+                jsonPath("$.[0].amount").value(financialTransaction.getAmount()),
+                jsonPath("$.[0].description").value(financialTransaction.getDescription()),
+                jsonPath("$.[0].type").value(financialTransaction.getType().name()),
+                jsonPath("$.[0].date").value(financialTransaction.getDate().toString())
+        );
 
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
@@ -65,13 +81,22 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
     void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
-        mockMvc.perform(get("/api/transactions")
+        // given
+        User testUser = createTestUser();
+        String accessToken = userService.createAccessToken(testUser);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .queryParam("walletId", "1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()))
-                .andExpect(jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
+                .queryParam("walletId", "1"));
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isNotFound(),
+                jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()),
+                jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()),
+                jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
 
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(0, walletRepository.count());
@@ -87,9 +112,9 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
         return userRepository.save(userOne);
     }
 
-    private Wallet createTestWallet() {
+    private Wallet createTestWallet(User user) {
         final Wallet testWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(user)
                 .creationDate(Instant.now())
                 .name("test_wallet")
                 .build();
