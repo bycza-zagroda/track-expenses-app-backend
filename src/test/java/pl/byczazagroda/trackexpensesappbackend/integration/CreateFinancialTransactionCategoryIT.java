@@ -52,8 +52,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         User user = createTestUser();
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
-                FinancialTransactionType.INCOME,
-                user.getId());
+                FinancialTransactionType.INCOME);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,8 +74,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
             throws Exception {
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
-                FinancialTransactionType.INCOME,
-                USER_ID_1L);
+                FinancialTransactionType.INCOME);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,8 +97,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnBadRequest() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
-                FinancialTransactionType.INCOME,
-                USER_ID_1L);
+                FinancialTransactionType.INCOME);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,8 +122,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         var categoryNameForWrongPathTest = "`-'+=|\\/?,.<>%&(){}[];:" + "\"";
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 categoryNameForWrongPathTest,
-                FinancialTransactionType.INCOME,
-                USER_ID_1L);
+                FinancialTransactionType.INCOME);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -148,8 +144,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Category",
-                null,
-                USER_ID_1L);
+                null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
