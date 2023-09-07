@@ -76,7 +76,7 @@ public class FinancialTransactionCategoryServiceImplTest {
     void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
-                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE, USER_ID_1L);
+                new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME,
                 CATEGORY_TYPE);
         financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);

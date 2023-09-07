@@ -12,6 +12,5 @@ public record FinancialTransactionCategoryCreateDTO(
         @NotBlank
         @Pattern(regexp = RegexConstant.CATEGORY_NAME_PATTERN)
         String name,
-        @NotNull FinancialTransactionType type,
-        @NotNull Long userId) {
+        @NotNull FinancialTransactionType type) {
 }
