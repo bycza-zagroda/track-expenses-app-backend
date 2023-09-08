@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
@@ -21,6 +21,7 @@ import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCa
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,15 +35,22 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
      * {@link  pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
      */
     private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
+
     @Autowired
     private FinancialTransactionRepository financialTransactionRepository;
+
     @Autowired
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+
     @Autowired
     private WalletRepository walletRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
 
     @BeforeEach
     void clearDatabase() {
@@ -53,25 +61,34 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should successfully create financial transaction")
     @Test
-    void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase() throws Exception {
-        Wallet savedWallet = createTestWallet();
-        FinancialTransactionCreateDTO financialTransactionCreateDTO
-                = new FinancialTransactionCreateDTO(
+    void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase()
+            throws Exception {
+        // given
+        User user = createTestUser();
+        String accessToken = userService.createAccessToken(user);
+
+        Wallet savedWallet = createTestWallet(user);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("5.0"),
-                "Test Description",
+                "Description test",
                 Instant.ofEpochSecond(1L),
                 FinancialTransactionType.EXPENSE,
                 null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(jsonPath("$.amount").value(financialTransactionCreateDTO.amount()))
-                .andExpect(jsonPath("$.type").value(financialTransactionCreateDTO.type().toString()))
-                .andExpect(jsonPath("$.description").value(financialTransactionCreateDTO.description()));
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
+
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isCreated(),
+                jsonPath("$.amount").value(financialTransactionCreateDTO.amount()),
+                jsonPath("$.type").value(financialTransactionCreateDTO.type().toString()),
+                jsonPath("$.description").value(financialTransactionCreateDTO.description()
+                ));
 
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(1, financialTransactionRepository.count());
@@ -80,31 +97,43 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @DisplayName("Should return Wallet Not Found message when creating financial transaction wallet Id that doesnt exist in database")
     @Test
     void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage() throws Exception {
+        // given
+        User user = createTestUser();
+        String accessToken = userService.createAccessToken(user);
+
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 1L,
                 new BigDecimal("5.0"),
-                "Test Description",
+                "Description test",
                 Instant.ofEpochSecond(1L),
                 FinancialTransactionType.EXPENSE,
                 null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
-        Assertions.assertEquals(0, walletRepository.count());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isNotFound(),
+                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode())
+        );
+
         Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
     @DisplayName("Should return bad request and validation failed error when creating financial transaction with amount exceeding limit")
     @Test
     void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
-        Wallet savedWallet = createTestWallet();
+        // given
+        User user = createTestUser();
+        String accessToken = userService.createAccessToken(user);
+
+        Wallet savedWallet = createTestWallet(user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 MAX_ALLOWED_TRANSACTION_AMOUNT,
@@ -113,15 +142,18 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
                 FinancialTransactionType.EXPENSE,
                 null);
 
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
+                .accept(MediaType.APPLICATION_JSON));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
 
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
@@ -130,12 +162,13 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @DisplayName("When financial transaction type does not match with category type should throw exception")
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
-        Wallet savedWallet = createTestWallet();
+        // given
+        User user = createTestUser();
+        String accessToken = userService.createAccessToken(user);
 
-        FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory();
-
-        FinancialTransactionCreateDTO financialTransactionCreateDTO =
-                new FinancialTransactionCreateDTO(
+        Wallet savedWallet = createTestWallet(user);
+        FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory(user);
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("10"),
                 "Test Description",
@@ -143,14 +176,21 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
                 FinancialTransactionType.EXPENSE,
                 ftCategory.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT002.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT002.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT002.getBusinessStatusCode()));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(financialTransactionCreateDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.FT002.getBusinessStatus()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.FT002.getBusinessMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.FT002.getBusinessStatusCode()));
 
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
@@ -158,30 +198,31 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     }
 
     private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("Email@wp.pl")
-                .password("Password1@")
+        final User user = User.builder()
+                .userName("userOne")
+                .email("email@server.com")
+                .password("Password1!")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
-        return userRepository.save(userOne);
+        return userRepository.save(user);
     }
 
-    private Wallet createTestWallet() {
+    private Wallet createTestWallet(User user) {
         final Wallet testWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(user)
                 .creationDate(Instant.now())
                 .name("TestWallet")
                 .build();
         return walletRepository.save(testWallet);
     }
 
-    private FinancialTransactionCategory createTestFinancialTransactionCategory() {
+    private FinancialTransactionCategory createTestFinancialTransactionCategory(User user) {
         final FinancialTransactionCategory testFinancialTransactionCategory = FinancialTransactionCategory.builder()
                 .name("name")
                 .type(FinancialTransactionType.INCOME)
-                .user(createTestUser())
+                .user(user)
                 .build();
         return financialTransactionCategoryRepository.save(testFinancialTransactionCategory);
     }
+
 }

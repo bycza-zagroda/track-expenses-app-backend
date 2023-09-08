@@ -68,7 +68,8 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
 
-        return new FinancialTransactionCategoryDetailedDTO(financialTransactionCategoryDTO, numberOfFinancialTransactions);
+        return new FinancialTransactionCategoryDetailedDTO(
+                financialTransactionCategoryDTO, numberOfFinancialTransactions);
     }
 
 
@@ -81,10 +82,10 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                         String.format("Financial transaction categories not found for user with id: %d", userId)));
 
         return financialTransactionCategories.stream()
-                .map(financialTransactionCategoryModelMapper::mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO)
+                .map(financialTransactionCategoryModelMapper
+                        ::mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO)
                 .toList();
     }
-
 
 
     @Override
@@ -117,7 +118,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     }
 
     private User getUserByUserId(Long userId) {
-        return  userRepository.findById(userId).orElseThrow(() ->
+        return userRepository.findById(userId).orElseThrow(() ->
                 new AppRuntimeException(ErrorCode.U005, String.format("User with id: %d doesn't exist.", userId)));
     }
 
