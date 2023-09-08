@@ -44,6 +44,11 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
+
     @BeforeEach
     void clearDatabase() {
         walletRepository.deleteAll();
@@ -89,6 +94,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
         Assertions.assertEquals(1, walletRepository.count());
     }
+
     @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
@@ -171,7 +177,8 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .user(user)
                 .build());
     }
-    private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {
+
+    private FinancialTransaction createTestFinancialTransaction(Wallet wallet, User user) {
         return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(new BigDecimal("10.0"))

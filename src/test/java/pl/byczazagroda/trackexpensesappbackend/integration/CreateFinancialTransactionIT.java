@@ -216,11 +216,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         return walletRepository.save(testWallet);
     }
 
-    private FinancialTransactionCategory createTestFinancialTransactionCategory() {
+    private FinancialTransactionCategory createTestFinancialTransactionCategory(User user) {
         final FinancialTransactionCategory testFinancialTransactionCategory = FinancialTransactionCategory.builder()
                 .name("name")
                 .type(FinancialTransactionType.INCOME)
-                .user(createTestUser())
+                .user(user)
                 .build();
         return financialTransactionCategoryRepository.save(testFinancialTransactionCategory);
     }

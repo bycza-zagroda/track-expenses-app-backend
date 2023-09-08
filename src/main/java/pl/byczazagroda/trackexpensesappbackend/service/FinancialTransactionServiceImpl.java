@@ -93,7 +93,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         } else {
             throw new AppRuntimeException(
                     ErrorCode.FT001,
-                    String.format("FinancialTransaction with given id: %d does not exist", id));
+                    String.format("FinancialTransaction with given id: %d does not exist", financialTransactionId));
         }
     }
 
@@ -103,9 +103,10 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             @Min(1) @NotNull Long financialTransactionId,
             @Valid FinancialTransactionUpdateDTO uDTO, Long userId) {
 
-        FinancialTransaction entity = financialTransactionRepository.findById(id)
+        FinancialTransaction ftEntity = financialTransactionRepository
+                .findByIdAndWalletUserId(financialTransactionId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001,
-                        String.format("Financial transaction with id: %d not found", id)));
+                        String.format("Financial transaction with id: %d not found", financialTransactionId)));
 
         FinancialTransactionCategory financialTransactionCategory = null;
         Long categoryId = uDTO.categoryId();
@@ -121,11 +122,12 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                                 uDTO.type(), financialTransactionCategory.getType()));
             }
         }
-        entity.setFinancialTransactionCategory(financialTransactionCategory);
-        entity.setType(uDTO.type());
-        entity.setAmount(uDTO.amount());
-        entity.setDescription(uDTO.description());
-        entity.setDate(uDTO.date());
+
+        ftEntity.setFinancialTransactionCategory(financialTransactionCategory);
+        ftEntity.setType(uDTO.type());
+        ftEntity.setAmount(uDTO.amount());
+        ftEntity.setDescription(uDTO.description());
+        ftEntity.setDate(uDTO.date());
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(ftEntity);
     }
