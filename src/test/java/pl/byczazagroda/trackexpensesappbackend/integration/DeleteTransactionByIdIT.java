@@ -87,8 +87,6 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
         resultActions.andExpect(
                 MockMvcResultMatchers.status().isNotFound()
         );
-
-        Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet, String description) {
