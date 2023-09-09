@@ -1,7 +1,7 @@
 [<ins>English</ins>](README.md) - [Polish](README.pl.md)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](docs/LICENSE)
-[![](https://img.shields.io/github/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml/develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
+[![](https://img.shields.io/github/actions/workflow/status/bycza-zagroda/track-expenses-app-backend/run_tests.yml?branch=develop)](https://github.com/bycza-zagroda/track-expenses-app-backend/actions)
 [![codecov](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend/branch/develop/graph/badge.svg?token=WMXYJX2FWH)](https://codecov.io/gh/bycza-zagroda/track-expenses-app-backend)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bycza-zagroda_track-expenses-app-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bycza-zagroda_track-expenses-app-backend)
 <br>
