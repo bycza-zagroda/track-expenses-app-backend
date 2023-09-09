@@ -30,7 +30,6 @@ springdoc:
     path: /docs/swagger
     enabled: true
 
-#TODO before release we should change this and use an environment variable
 jwt:
   secret: ${JWT_SECRET}
   exp: ${JWT_EXP} # one week

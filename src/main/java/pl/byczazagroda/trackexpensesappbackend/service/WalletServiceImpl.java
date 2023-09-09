@@ -29,7 +29,6 @@ import java.util.List;
 @Service
 @Validated
 @RequiredArgsConstructor
-//fixme, new issue, required improve method for wallets
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
@@ -51,11 +50,9 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public WalletDTO updateWallet(@Min(1) @NotNull Long id, @Valid WalletUpdateDTO dto, Long userId) {
         Wallet wallet = walletRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new AppRuntimeException(
-                            ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", id));
-                });
+                .orElseThrow(() -> new AppRuntimeException(
+                        ErrorCode.W003,
+                        String.format("Wallet with id: %d does not exist", id)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,
@@ -78,11 +75,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void deleteWalletById(@Min(1) @NotNull Long walletId, Long userId) {
         Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> {
-                    throw new AppRuntimeException(
-                            ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", walletId));
-                });
+                .orElseThrow(() -> new AppRuntimeException(
+                        ErrorCode.W003,
+                        String.format("Wallet with id: %d does not exist", walletId)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,
@@ -95,11 +90,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO findById(@Min(1) @NotNull Long walletId, Long userId) {
         Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> {
-                    throw new AppRuntimeException(
+                .orElseThrow(() ->  new AppRuntimeException(
                             ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", walletId));
-                });
+                            String.format("Wallet with id: %d does not exist", walletId)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,
