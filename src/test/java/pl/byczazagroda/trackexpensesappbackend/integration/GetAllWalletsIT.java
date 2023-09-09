@@ -2,18 +2,19 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import java.time.Instant;
 import java.util.List;
@@ -32,6 +33,8 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
     @BeforeEach
     public void clearTestDB() {
         walletRepository.deleteAll();
@@ -40,30 +43,29 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
 
     @Test
     @DisplayName("when getting all wallets should return wallets DTOs list and response status OK")
-    @Disabled
     void shouldResponseStatusOKAndWalletDTOsList() throws Exception {
         //given
         List<Wallet> savedWallets = createListTestWallets();
-
+        List<User> testUser = createListTestUsers();
+        String accessToken = userService.createAccessToken(testUser.get(0));
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets"));
 
         // then
-        response.andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(savedWallets.size())))
-                .andExpect(jsonPath("$.[0].name").value(savedWallets.get(0).getName()))
-                .andExpect(jsonPath("$.[0].id").value(savedWallets.get(0).getId()))
-                .andExpect(jsonPath("$.[1].name").value(savedWallets.get(1).getName()))
-                .andExpect(jsonPath("$.[1].id").value(savedWallets.get(1).getId()))
-                .andExpect(jsonPath("$.[2].name").value(savedWallets.get(2).getName()))
-                .andExpect(jsonPath("$.[2].id").value(savedWallets.get(2).getId()))
-                .andExpect(jsonPath("$.[3].name").value(savedWallets.get(3).getName()))
-                .andExpect(jsonPath("$.[3].id").value(savedWallets.get(3).getId()));
+        response.andExpectAll(status().isOk(),
+                  MockMvcResultMatchers.jsonPath("$.*", hasSize(savedWallets.size())),
+                  MockMvcResultMatchers.jsonPath("$.[0].name").value(savedWallets.get(0).getName()),
+                  MockMvcResultMatchers.jsonPath("$.[0].id").value(savedWallets.get(0).getId()),
+                  MockMvcResultMatchers.jsonPath("$.[1].name").value(savedWallets.get(1).getName()),
+                  MockMvcResultMatchers.jsonPath("$.[1].id").value(savedWallets.get(1).getId()),
+                  MockMvcResultMatchers.jsonPath("$.[2].name").value(savedWallets.get(2).getName()),
+                  MockMvcResultMatchers.jsonPath("$.[2].id").value(savedWallets.get(2).getId()),
+                  MockMvcResultMatchers.jsonPath("$.[3].name").value(savedWallets.get(3).getName()),
+                  MockMvcResultMatchers.jsonPath("$.[3].id").value(savedWallets.get(3).getId()));
     }
 
     @Test
     @DisplayName("when getting all wallets should return no wallets DTOs list and response status OK")
-    @Disabled
     void shouldResponseStatusOKAndEmptyWalletDTOsList() throws Exception {
         //given
 
