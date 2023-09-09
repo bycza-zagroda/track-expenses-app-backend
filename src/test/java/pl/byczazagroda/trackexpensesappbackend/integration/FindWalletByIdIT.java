@@ -51,6 +51,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @Test
     @Disabled
     void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
+        createTestUser();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/{id}", 1L).accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn();
