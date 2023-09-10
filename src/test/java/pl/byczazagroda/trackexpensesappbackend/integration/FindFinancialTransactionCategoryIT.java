@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
+class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @Autowired
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
@@ -37,7 +37,7 @@ public class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @DisplayName("When search category by id should return proper financial transaction category")
     @Test
-    public void testGetFinancialTransactionCategory_whenProperId_shouldReturnFinancialTransactionCategory()
+    void testGetFinancialTransactionCategory_whenProperId_shouldReturnFinancialTransactionCategory()
             throws Exception {
         User user = createUser();
         FinancialTransactionCategory fTCategory = testFinancialTransactionCategory(user);
@@ -55,25 +55,25 @@ public class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return message financial transaction category not found and HttpStatus Not Found")
     @Test
-    public void testGetFinancialTransactionCategory_whenIdIsNotExists_shouldReturnErrorCodeAndStatus404()
+    void testGetFinancialTransactionCategory_whenIdIsNotExists_shouldReturnErrorCodeAndStatus404()
             throws Exception {
         final Long nonExistentCategoryId = 999L;
         User user = createUser();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", nonExistentCategoryId)
-                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
 
     @DisplayName("Should return list of financial transaction categories")
     @Test
-    public void testGetFinancialTransactionCategories() throws Exception {
+    void testGetFinancialTransactionCategories() throws Exception {
         User user = createUser();
         FinancialTransactionCategory ftc1 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc2 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc3 = testFinancialTransactionCategory(user);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories")
-                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(ftc1.getId()))
                 .andExpect(jsonPath("$.[1].id").value(ftc2.getId()))
@@ -99,11 +99,11 @@ public class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     private User createUser() {
         User user = User.builder()
-            .userName("test")
-            .password("password")
-            .email("test@example.com")
-            .userStatus(UserStatus.VERIFIED)
-            .build();
+                .userName("test")
+                .password("password")
+                .email("test@example.com")
+                .userStatus(UserStatus.VERIFIED)
+                .build();
 
         return userRepository.save(user);
     }

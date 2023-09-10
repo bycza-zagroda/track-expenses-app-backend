@@ -24,7 +24,7 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
+class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
     private static final String ENDPOINT_CATEGORIES_PATCH = "/api/categories/{id}";
 
@@ -53,24 +53,11 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value(financialTransactionCategory.getId()),
-                jsonPath("$.name").value(financialTransactionCategoryUpdateDTO.name()),
-                jsonPath("$.type").value(financialTransactionCategoryUpdateDTO.type().toString()),
-                jsonPath("$.userId").value(user.getId())
-        );
+        resultActions.andExpectAll(status().isOk(), jsonPath("$.id").value(financialTransactionCategory.getId()), jsonPath("$.name").value(financialTransactionCategoryUpdateDTO.name()), jsonPath("$.type").value(financialTransactionCategoryUpdateDTO.type().toString()), jsonPath("$.userId").value(user.getId()));
     }
 
     @DisplayName("Should not update FT category when category name length > 30")
@@ -81,23 +68,11 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         String categoryNameTooLong = "ThisIsVeryLongNameForCategoryMoreThan30Characters";
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO(categoryNameTooLong, FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO(categoryNameTooLong, FinancialTransactionType.EXPENSE);
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpectAll(
-                status().is5xxServerError(),
-                jsonPath("$.status").value(ErrorCode.TEA004.getBusinessStatus()),
-                jsonPath("$.message").value(ErrorCode.TEA004.getBusinessMessage()),
-                jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode())
-        );
+        resultActions.andExpectAll(status().is5xxServerError(), jsonPath("$.status").value(ErrorCode.TEA004.getBusinessStatus()), jsonPath("$.message").value(ErrorCode.TEA004.getBusinessMessage()), jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode()));
     }
 
     @DisplayName("Should not update FT category when category name is empty")
@@ -107,23 +82,11 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO("", FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO("", FinancialTransactionType.EXPENSE);
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpectAll(
-                status().isBadRequest(),
-                jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()),
-                jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
-                jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode())
-        );
+        resultActions.andExpectAll(status().isBadRequest(), jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()), jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()), jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
     }
 
     @DisplayName("Should not update FT category when category name contains invalid characters")
@@ -133,24 +96,11 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO("!@`$%^&*()_+|-=[];',./{}:<",
-                        FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO("!@`$%^&*()_+|-=[];',./{}:<", FinancialTransactionType.EXPENSE);
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpectAll(
-                status().is5xxServerError(),
-                jsonPath("$.status").value(ErrorCode.TEA004.getBusinessStatus()),
-                jsonPath("$.message").value(ErrorCode.TEA004.getBusinessMessage()),
-                jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode())
-        );
+        resultActions.andExpectAll(status().is5xxServerError(), jsonPath("$.status").value(ErrorCode.TEA004.getBusinessStatus()), jsonPath("$.message").value(ErrorCode.TEA004.getBusinessMessage()), jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode()));
     }
 
     @DisplayName("Should not update FT category when category type is invalid")
@@ -160,25 +110,11 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         String accessToken = userService.createAccessToken(user);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
 
-        Map<String, String> categoryMap = Map.of(
-                "name", "TEST",
-                "type", "INVALID_CATEGORY_TYPE"
-        );
+        Map<String, String> categoryMap = Map.of("name", "TEST", "type", "INVALID_CATEGORY_TYPE");
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(generateJSON(categoryMap))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(generateJSON(categoryMap)).accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpectAll(
-                status().isBadRequest(),
-                jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()),
-                jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
-                jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode())
-        );
+        resultActions.andExpectAll(status().isBadRequest(), jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()), jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()), jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
     }
 
     @DisplayName("Should not update FT category when category doesn't exists")
@@ -187,17 +123,10 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
         User user = createUser("user@server.com");
         String accessToken = userService.createAccessToken(user);
 
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
         Long categoryId = 999L;
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, categoryId)
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, categoryId).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isNotFound());
     }
@@ -211,37 +140,21 @@ public class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT 
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user2);
 
-        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
-                new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
+        FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO = new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                        .accept(MediaType.APPLICATION_JSON)
-        );
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId()).header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO)).accept(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isNotFound());
     }
 
     private User createUser(String email) {
-        final User userOne = User.builder()
-                .userName("UserTest")
-                .email(email)
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
+        final User userOne = User.builder().userName("UserTest").email(email).password("Password1@").userStatus(UserStatus.VERIFIED).build();
 
         return userRepository.save(userOne);
     }
 
     private FinancialTransactionCategory createFinancialTransactionCategory(User user) {
-        final FinancialTransactionCategory financialTransactionCategory = FinancialTransactionCategory.builder()
-                .name(CATEGORY_NAME + user.getId())
-                .type(FinancialTransactionType.INCOME)
-                .user(user)
-                .build();
+        final FinancialTransactionCategory financialTransactionCategory = FinancialTransactionCategory.builder().name(CATEGORY_NAME + user.getId()).type(FinancialTransactionType.INCOME).user(user).build();
 
         return financialTransactionCategoryRepository.save(financialTransactionCategory);
     }

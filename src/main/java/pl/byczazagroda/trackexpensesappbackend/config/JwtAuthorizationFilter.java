@@ -26,8 +26,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    private final String UNAUTHORIZED_MESSAGE = "Unauthorized";
-
     private final String secret;
 
     public JwtAuthorizationFilter(String secret) {
