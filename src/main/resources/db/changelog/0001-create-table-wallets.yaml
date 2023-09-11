@@ -1,21 +1,7 @@
 databaseChangeLog:
-  - changeSet:
-      id: "1"
-      author: mirekgab
-      runOnChange: true
-      runAlways: true
-      preConditions:
-        - onFail: MARK_RAN
-        - tableExists:
-            tableName: wallets
-      changes:
-        - dropTable:
-            tableName: wallets
   -  changeSet:
        id: "create table wallets"
        author: iwona007
-       runOnChange: true
-       runAlways: true
        changes:
          -  createTable:
               tableName: wallets

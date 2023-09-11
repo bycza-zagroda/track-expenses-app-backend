@@ -1,7 +1,6 @@
 package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +37,10 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @Disabled
-    @DisplayName("When a new user is registered, it should create the user and return CREATED status")
+    @DisplayName("When a new user is registered, it should save user and return CREATED status")
     @Test
-    void testRegisterUser_whenNewUser_thenShouldCreateUser() throws Exception {
+    void testRegisterUser_whenNewUserIsAdded_thenShouldCreateUserAndReturn201Status() throws Exception {
+
         mockMvc.perform(post(REGISTER_USER_URL)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(REGISTER_DTO)))
@@ -54,7 +53,6 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
         assertNotEquals(REGISTER_DTO.password(), user.getPassword());
     }
 
-    @Disabled
     @DisplayName("When trying to register a user that already exists, it should return BAD_REQUEST")
     @Test
     void testRegisterUser_whenUserAlreadyExists_thenShouldReturnErrorResponse() throws Exception {

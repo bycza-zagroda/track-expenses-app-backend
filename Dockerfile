@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine as stage1
+FROM eclipse-temurin:17-jdk-alpine AS stage1
 WORKDIR /opt/app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./

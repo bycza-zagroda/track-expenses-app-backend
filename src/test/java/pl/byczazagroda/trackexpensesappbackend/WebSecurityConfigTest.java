@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {WebSecurityConfig.class, ErrorStrategy.class}))
 @ActiveProfiles("test")
-public class WebSecurityConfigTest {
+class WebSecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;

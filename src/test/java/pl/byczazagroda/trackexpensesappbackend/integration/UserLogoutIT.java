@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserLogoutIT extends BaseIntegrationTestIT {
+ class UserLogoutIT extends BaseIntegrationTestIT {
 
     @Autowired
     private UserService userService;
@@ -45,7 +45,7 @@ public class UserLogoutIT extends BaseIntegrationTestIT {
 
     @DisplayName("When request user logout without earlier login, should return 401 Unauthorized status")
     @Test
-    public void testLogout_shouldReturnUnauthorizedWhenUserIsNotAuthenticated() throws Exception {
+  void testLogout_shouldReturnUnauthorizedWhenUserIsNotAuthenticated() throws Exception {
         mockMvc.perform(post("/api/auth/logout"))
                 .andExpect(status().isUnauthorized());
 
