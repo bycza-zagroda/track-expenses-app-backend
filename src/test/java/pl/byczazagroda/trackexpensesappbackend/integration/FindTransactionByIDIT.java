@@ -10,11 +10,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -48,9 +48,9 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @DisplayName("Should return proper financial transaction when search Id exist in database")
     @Test
     void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        Wallet testWallet = createTestWallet();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet testWallet = createTestWallet(user);
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
-        User user = testWallet.getUser();
         String accessToken = userService.createAccessToken(user);
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
@@ -71,9 +71,8 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
     void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-
-        Wallet testWallet = createTestWallet();
-        User user = testWallet.getUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet testWallet = createTestWallet(user);
         String accessToken = userService.createAccessToken(user);
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
 
@@ -101,23 +100,9 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
                 .build());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet() {
-
-        User testUser = createTestUser();
+    private Wallet createTestWallet(User user) {
         final Wallet testWallet = Wallet.builder()
-                .user(testUser)
+                .user(user)
                 .creationDate(Instant.now())
                 .name("TestWallet")
                 .build();

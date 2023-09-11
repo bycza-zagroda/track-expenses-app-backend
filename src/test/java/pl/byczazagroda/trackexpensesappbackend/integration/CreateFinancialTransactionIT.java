@@ -10,12 +10,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -64,7 +64,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase()
             throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         Wallet savedWallet = createTestWallet(user);
@@ -98,7 +98,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
@@ -130,7 +130,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         Wallet savedWallet = createTestWallet(user);
@@ -163,7 +163,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         Wallet savedWallet = createTestWallet(user);
@@ -195,16 +195,6 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
-    }
-
-    private User createTestUser() {
-        final User user = User.builder()
-                .userName("userOne")
-                .email("email@server.com")
-                .password("Password1!")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(user);
     }
 
     private Wallet createTestWallet(User user) {

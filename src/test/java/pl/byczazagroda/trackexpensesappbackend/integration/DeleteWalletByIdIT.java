@@ -10,11 +10,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -49,10 +49,11 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
-        Wallet testWallet = createTestWallet();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet testWallet = createTestWallet(user);
         FinancialTransaction testFinancialTransaction =  createTestFinancialTransaction(testWallet);
-        User user = testWallet.getUser();
         String accessToken = userService.createAccessToken(user);
+
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", testWallet.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testFinancialTransaction))
@@ -66,8 +67,8 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
     @Test
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
-        Wallet testWallet = createTestWallet();
-        User user = testWallet.getUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet testWallet = createTestWallet(user);
         String accessToken = userService.createAccessToken(user);
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", 5L)
@@ -94,19 +95,9 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
                 .build());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet() {
+    private Wallet createTestWallet(User user) {
         final Wallet testWallet = Wallet.builder()
-                .user(createTestUser())
+                .user(user)
                 .creationDate(Instant.now())
                 .name("TestWallet")
                 .build();

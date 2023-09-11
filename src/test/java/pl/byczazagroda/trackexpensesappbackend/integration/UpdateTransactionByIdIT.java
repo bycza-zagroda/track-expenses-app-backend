@@ -10,13 +10,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -60,7 +60,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
         Wallet wallet = createTestWallet(user);
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
@@ -99,7 +99,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         Wallet wallet = createTestWallet(user);
@@ -140,7 +140,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateTransactionById_whenIdIsNotFoundInDB_thenReturnIsNotFound() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(
@@ -187,16 +187,6 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .description("Test description")
                 .financialTransactionCategory(createTestFinancialTransactionCategory(user))
                 .build());
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
     }
 
     private Wallet createTestWallet(User user) {
