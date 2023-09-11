@@ -2,7 +2,11 @@ package pl.byczazagroda.trackexpensesappbackend;
 
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+
+import java.time.Instant;
 
 public class IntegrationTestUtils {
 
@@ -26,5 +30,14 @@ public class IntegrationTestUtils {
                 .build();
 
         return userRepository.save(userOne);
+    }
+
+    public static Wallet createTestWallet(WalletRepository walletRepository, User user) {
+        final Wallet testWallet = Wallet.builder()
+                .user(user)
+                .creationDate(Instant.now())
+                .name("test_wallet")
+                .build();
+        return walletRepository.save(testWallet);
     }
 }

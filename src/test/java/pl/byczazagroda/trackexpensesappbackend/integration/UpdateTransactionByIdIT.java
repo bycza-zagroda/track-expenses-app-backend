@@ -62,7 +62,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         // given
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         Long categoryId = ft.getFinancialTransactionCategory().getId();
 
@@ -102,7 +102,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         ft.setFinancialTransactionCategory(null);
         ft.setDescription(null);
@@ -189,12 +189,4 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
                 .build());
     }
 
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }

@@ -50,7 +50,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = createTestWallet(user);
+        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction testFinancialTransaction =  createTestFinancialTransaction(testWallet);
         String accessToken = userService.createAccessToken(user);
 
@@ -68,7 +68,7 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = createTestWallet(user);
+        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", 5L)
@@ -93,15 +93,6 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
                 .type(FinancialTransactionType.INCOME)
                 .description("Test transaction")
                 .build());
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
     }
 
 }

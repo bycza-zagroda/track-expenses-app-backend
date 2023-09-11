@@ -67,7 +67,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = createTestWallet(user);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 new BigDecimal("5.0"),
@@ -133,7 +133,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = createTestWallet(user);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 MAX_ALLOWED_TRANSACTION_AMOUNT,
@@ -166,7 +166,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = createTestWallet(user);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory(user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
@@ -195,15 +195,6 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
     }
 
     private FinancialTransactionCategory createTestFinancialTransactionCategory(User user) {

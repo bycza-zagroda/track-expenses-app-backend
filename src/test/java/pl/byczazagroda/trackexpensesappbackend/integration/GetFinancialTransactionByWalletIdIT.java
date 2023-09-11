@@ -53,7 +53,7 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
         // given
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
@@ -100,15 +100,6 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
 
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(0, walletRepository.count());
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("test_wallet")
-                .build();
-        return walletRepository.save(testWallet);
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {

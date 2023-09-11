@@ -53,7 +53,7 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction ft = createTestFinancialTransaction(wallet, "Test Transaction");
 
         // when
@@ -76,7 +76,7 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
         // given
         User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -100,12 +100,4 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
                         .build());
     }
 
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }

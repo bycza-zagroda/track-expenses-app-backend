@@ -18,8 +18,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
-import java.time.Instant;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 class FindWalletByIdIT extends BaseIntegrationTestIT {
@@ -43,7 +41,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
         User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
-        Wallet wallet = createTestWallet(testUser);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, testUser);
 
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -52,9 +50,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpectAll(
-                        MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("$.id").value(wallet.getId()),
-                        MockMvcResultMatchers.jsonPath("$.name").value(wallet.getName()));
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath("$.id").value(wallet.getId()),
+                MockMvcResultMatchers.jsonPath("$.name").value(wallet.getName()));
         Assertions.assertEquals(1, walletRepository.count());
     }
 
@@ -76,18 +74,8 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
-
     private AuthLoginDTO createAuthLoginDtoTest() {
         return new AuthLoginDTO("email@wp.pl", "Password1@", true);
     }
-
 
 }

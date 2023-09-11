@@ -49,7 +49,7 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @Test
     void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = createTestWallet(user);
+        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
         String accessToken = userService.createAccessToken(user);
 
@@ -59,11 +59,11 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpectAll(
-               MockMvcResultMatchers.status().isOk(),
-        MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()),
-        MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()),
-        MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()),
-        MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()),
+                MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()),
+                MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()),
+                MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
 
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
@@ -72,7 +72,7 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @Test
     void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = createTestWallet(user);
+        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
 
@@ -100,12 +100,4 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
                 .build());
     }
 
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }

@@ -17,8 +17,6 @@ import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
-import java.time.Instant;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +42,7 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
         User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet savedWallet = createTestWallet(user);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
 
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
@@ -70,7 +68,7 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         //given
         User user = IntegrationTestUtils.createTestUser(userRepository);
         long walletId = 3L;
-        Wallet savedWallet = createTestWallet(user);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
@@ -85,14 +83,6 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         response.andExpect(status().isNotFound());
     }
 
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }
 
 
