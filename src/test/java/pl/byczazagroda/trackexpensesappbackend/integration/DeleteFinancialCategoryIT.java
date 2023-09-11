@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
@@ -39,7 +39,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should delete category when user is owner and category exists")
     void shouldDeleteCategoryWhenExists() throws Exception {
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String token = userService.createAccessToken(testUser);
         FinancialTransactionCategory testCategory = createFinancialTransactionCategory(testUser);
         Long testCategoryId = testCategory.getId();
@@ -55,7 +55,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category ID is non-existent")
     void shouldNotDeleteCategoryWhenNotExists() throws Exception {
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String token = userService.createAccessToken(testUser);
 
         mockMvc.perform(delete(deleteCategoryUrl, nonExistentCategoryId)
@@ -67,8 +67,8 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category belongs to another user")
     void shouldNotDeleteCategoryWhenBelongsToAnotherUser() throws Exception {
-        User testUser = createTestUser();
-        User otherUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
+        User otherUser = IntegrationTestUtils.createTestUser(userRepository);
         String token = userService.createAccessToken(testUser);
         FinancialTransactionCategory otherCategory = createFinancialTransactionCategory(otherUser);
         Long otherCategoryId = otherCategory.getId();
@@ -79,17 +79,6 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(status().isNotFound());
 
         assertThat(categoryRepository.existsById(otherCategoryId)).isTrue();
-    }
-
-    private User createTestUser() {
-        final User user = User.builder()
-                .userName("Test_Name")
-                .email("Email@mail.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(user);
     }
 
     private FinancialTransactionCategory createFinancialTransactionCategory(User user) {

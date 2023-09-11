@@ -10,10 +10,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -50,10 +50,10 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccessfully() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         FinancialTransaction ft = createTestFinancialTransaction(wallet, "Test Transaction");
 
         // when
@@ -74,9 +74,9 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         // given
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = createTestWallet(user);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -100,22 +100,4 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
                         .build());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("Email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }

@@ -9,15 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
-
-import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,8 +41,9 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
-        Wallet savedWallet = createTestWallet();
-        String accessToken = userService.createAccessToken(savedWallet.getUser());
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        String accessToken = userService.createAccessToken(user);
 
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
@@ -67,9 +66,10 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         //given
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         long walletId = 3L;
-        Wallet savedWallet = createTestWallet();
-        String accessToken = userService.createAccessToken(savedWallet.getUser());
+        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        String accessToken = userService.createAccessToken(user);
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
         // when
@@ -83,26 +83,6 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         response.andExpect(status().isNotFound());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("Email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet() {
-
-        User testUser = createTestUser();
-        final Wallet testWallet = Wallet.builder()
-                .user(testUser)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }
 
 

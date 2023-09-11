@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -40,7 +41,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
 
         final UserDTO testUserDTO = createTestUserDTO();
@@ -63,7 +64,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
         WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G");
 
@@ -86,7 +87,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
         WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong");
 
@@ -113,18 +114,6 @@ class CreateWalletIT extends BaseIntegrationTestIT {
                 .password("password1@")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
     }
 
 }

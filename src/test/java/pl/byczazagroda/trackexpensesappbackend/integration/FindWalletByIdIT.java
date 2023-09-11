@@ -9,16 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
-
-import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -41,9 +39,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("It should return wallet DTO by given id")
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
-        Wallet wallet = createTestWallet(testUser);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, testUser);
 
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -52,16 +50,16 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpectAll(
-                        MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("$.id").value(wallet.getId()),
-                        MockMvcResultMatchers.jsonPath("$.name").value(wallet.getName()));
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath("$.id").value(wallet.getId()),
+                MockMvcResultMatchers.jsonPath("$.name").value(wallet.getName()));
         Assertions.assertEquals(1, walletRepository.count());
     }
 
     @DisplayName("It should return status Not Found when it cannot find by given id")
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
 
         WalletCreateDTO testWalletDto = new WalletCreateDTO("TestWalletName");
@@ -76,28 +74,8 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
-
     private AuthLoginDTO createAuthLoginDtoTest() {
         return new AuthLoginDTO("email@wp.pl", "Password1@", true);
     }
-
 
 }
