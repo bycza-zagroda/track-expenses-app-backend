@@ -69,15 +69,6 @@ class WalletCreateServiceImplTest {
     @MockBean
     private WalletModelMapper walletModelMapper;
 
-    @NotNull
-    private static Wallet createTestWalletForUser(User user) {
-        Wallet wallet = new Wallet();
-        wallet.setId(ID_1L);
-        wallet.setUser(user);
-
-        return wallet;
-    }
-
     @Test
     @DisplayName("when wallet data are correct should create wallet successfully")
     void shouldCreateWalletSuccessfully_WhenWalletDataAreCorrect() {
@@ -201,6 +192,15 @@ class WalletCreateServiceImplTest {
                 .password("Password1!")
                 .userStatus(UserStatus.VERIFIED)
                 .build();
+    }
+
+    @NotNull
+    private static Wallet createTestWalletForUser(User user) {
+        Wallet wallet = new Wallet();
+        wallet.setId(ID_1L);
+        wallet.setUser(user);
+
+        return wallet;
     }
 
 }
