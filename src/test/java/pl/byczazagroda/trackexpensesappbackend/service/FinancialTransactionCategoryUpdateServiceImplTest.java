@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class FinancialTransactionCategoryUpdateServiceImplTest {
+class FinancialTransactionCategoryUpdateServiceImplTest {
 
     private static final long VALID_ID = 1L;
 
@@ -76,7 +76,7 @@ public class FinancialTransactionCategoryUpdateServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO);
-        assertEquals(dto, VALID_CATEGORY_DTO);
+        assertEquals(VALID_CATEGORY_DTO, dto);
     }
 
     @Test

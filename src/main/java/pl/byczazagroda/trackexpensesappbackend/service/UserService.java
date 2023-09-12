@@ -25,7 +25,7 @@ public interface UserService {
     Cookie createRefreshTokenCookie(User user);
 
     String refreshToken(HttpServletRequest request, HttpServletResponse response,
-                        String refreshToken, String accessToken) throws Exception;
+                        String refreshToken, String accessToken);
 
     void deleteRefreshTokenCookie(HttpServletResponse response);
 }

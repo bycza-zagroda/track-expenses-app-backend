@@ -9,11 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -52,8 +52,8 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
     void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
         // given
-        User user = createTestUser();
-        Wallet wallet = createTestWallet(user);
+        User user = IntegrationTestUtils.createTestUser(userRepository);
+        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
@@ -82,7 +82,7 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
     void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         // given
-        User testUser = createTestUser();
+        User testUser = IntegrationTestUtils.createTestUser(userRepository);
         String accessToken = userService.createAccessToken(testUser);
 
         // when
@@ -100,25 +100,6 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
 
         Assertions.assertEquals(0, financialTransactionRepository.count());
         Assertions.assertEquals(0, walletRepository.count());
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("test_wallet")
-                .build();
-        return walletRepository.save(testWallet);
     }
 
     private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {

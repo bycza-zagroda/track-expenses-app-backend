@@ -10,11 +10,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
+import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
@@ -49,7 +49,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        User user = createTestUser();
+        User user = IntegrationTestUtils.createTestUser(userRepository);
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
                 FinancialTransactionType.INCOME);
@@ -159,18 +159,6 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         MockMvcResultMatchers.jsonPath("$.statusCode")
                                 .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
     }
 
 }
