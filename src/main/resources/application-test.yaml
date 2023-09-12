@@ -1,7 +1,7 @@
 #Datasource
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/trackexpensesapptest?useUnicode=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/trackexpensesapptest?useUnicode=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,7 +11,11 @@ spring:
 
   liquibase:
     change-log: db/dbchangelog-test.yaml
-    drop-first: true
 
 server:
   port: 8090
+
+jwt:
+  secret: blabla
+  exp: 604800000 # one week
+  refresh-exp: 31536000000 # one year

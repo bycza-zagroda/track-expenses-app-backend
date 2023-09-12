@@ -11,7 +11,6 @@ spring:
 
   liquibase:
     change-log: db/dbchangelog-prod.yaml
-    drop-first: true # TODO delete this line before release version 1.0.0
 
 server:
   port: 9090

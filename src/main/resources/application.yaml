@@ -1,6 +1,6 @@
 application:
   group: zagrodnicy (Bycza-zagroda)
-  version: 0.5.0
+  version: 0.6.0
 
 spring:
   banner:
@@ -30,8 +30,7 @@ springdoc:
     path: /docs/swagger
     enabled: true
 
-#TODO before release we should change this and use an environment variable
 jwt:
-  secret: Blabla
-  exp: 604800000 # one week
-  refresh-exp: 31536000000 # one year
+  secret: ${JWT_SECRET}
+  exp: ${JWT_EXP} # one week
+  refresh-exp: ${JWT_REFRESH_EXP} # one year

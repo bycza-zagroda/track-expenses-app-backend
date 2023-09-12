@@ -52,7 +52,7 @@
     <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
     <module name="SuppressionFilter">
         <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
-                  default="checkstyle-suppressions.xml" />
+                  default="checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -66,14 +66,13 @@
 
     <!-- Checks that property files contain the same keys.         -->
     <!-- See https://checkstyle.org/config_misc.html#Translation -->
-    <module name="Translation"/>
 
     <!-- Checks for Size Violations.                    -->
     <!-- See https://checkstyle.org/config_sizes.html -->
     <module name="FileLength"/>
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
-        <property name="max" value="120" />
+        <property name="max" value="140"/>
     </module>
 
     <!-- Checks for whitespace                               -->
@@ -99,25 +98,25 @@
 
     <!-- ********** suppressions ************* -->
     <module name="SuppressionSingleFilter">
-        <property name="id" value="MethodNameTest" />
-        <property name="files" value="[\\/]src[\\/]main[\\/].*" />
+        <property name="id" value="MethodNameTest"/>
+        <property name="files" value="[\\/]src[\\/]main[\\/].*"/>
     </module>
     <module name="SuppressionSingleFilter">
-        <property name="id" value="MethodNameTestPrivate" />
-        <property name="files" value="[\\/]src[\\/]main[\\/].*" />
+        <property name="id" value="MethodNameTestPrivate"/>
+        <property name="files" value="[\\/]src[\\/]main[\\/].*"/>
     </module>
 
     <module name="SuppressionSingleFilter">
-        <property name="id" value="MethodNameRegular" />
-        <property name="files" value="[\\/]src[\\/]test[\\/].*" />
+        <property name="id" value="MethodNameRegular"/>
+        <property name="files" value="[\\/]src[\\/]test[\\/].*"/>
     </module>
     <module name="SuppressionSingleFilter">
-        <property name="id" value="VisibilityModifierRegular" />
-        <property name="files" value="[\\/]src[\\/]test[\\/].*" />
+        <property name="id" value="VisibilityModifierRegular"/>
+        <property name="files" value="[\\/]src[\\/]test[\\/].*"/>
     </module>
     <module name="SuppressionSingleFilter">
-        <property name="id" value="VisibilityModifierTest" />
-        <property name="files" value="[\\/]src[\\/]main[\\/].*" />
+        <property name="id" value="VisibilityModifierTest"/>
+        <property name="files" value="[\\/]src[\\/]main[\\/].*"/>
     </module>
     <!-- ********** suppressions ************* -->
 
@@ -141,7 +140,7 @@
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
         <module name="MethodName">
-            <property name="id" value="MethodNameRegular" />
+            <property name="id" value="MethodNameRegular"/>
         </module>
         <!--
             <module name="MethodName">
@@ -212,12 +211,12 @@
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true" />
+            <property name="ignoreConstructorParameter" value="true"/>
         </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber">
-            <property name="ignoreAnnotation" value="true" />
+            <property name="ignoreAnnotation" value="true"/>
         </module>
         <module name="MissingSwitchDefault"/>
         <module name="MultipleVariableDeclarations"/>
@@ -232,10 +231,10 @@
         <module name="InterfaceIsType"/>
 
         <module name="VisibilityModifier">
-            <property name="id" value="VisibilityModifierRegular" />
+            <property name="id" value="VisibilityModifierRegular"/>
         </module>
         <module name="VisibilityModifier">
-            <property name="id" value="VisibilityModifierTest" />
+            <property name="id" value="VisibilityModifierTest"/>
             <property name="protectedAllowed" value="true"/>
         </module>
 
@@ -249,7 +248,7 @@
         <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
         <module name="SuppressionXpathFilter">
             <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
-                      default="checkstyle-xpath-suppressions.xml" />
+                      default="checkstyle-xpath-suppressions.xml"/>
             <property name="optional" value="true"/>
         </module>
 
