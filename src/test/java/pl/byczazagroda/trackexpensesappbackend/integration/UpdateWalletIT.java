@@ -41,8 +41,8 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
-        User user = userRepository.save(TestUtils.createTestUser());
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
 
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
@@ -66,9 +66,9 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         //given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         final long walletId = 3L;
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 

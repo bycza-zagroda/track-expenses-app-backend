@@ -49,8 +49,8 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @Test
     void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId()
             throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "description example");
         String accessToken = userService.createAccessToken(user);
 
@@ -71,8 +71,8 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
     void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet, "description example");
 

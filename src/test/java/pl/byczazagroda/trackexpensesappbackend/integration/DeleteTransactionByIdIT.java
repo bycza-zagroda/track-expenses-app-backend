@@ -50,11 +50,11 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccessfully() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         FinancialTransaction ft = createTestFinancialTransaction(wallet, "description example");
 
@@ -76,9 +76,9 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders

@@ -61,9 +61,9 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId()
             throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         Long categoryId = ft.getFinancialTransactionCategory().getId();
 
@@ -101,10 +101,10 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         ft.setFinancialTransactionCategory(null);
         ft.setDescription(null);
@@ -142,7 +142,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateTransactionById_whenIdIsNotFoundInDB_thenReturnIsNotFound() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(

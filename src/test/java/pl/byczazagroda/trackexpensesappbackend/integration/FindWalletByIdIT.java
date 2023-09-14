@@ -39,9 +39,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("It should return wallet DTO by given id")
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -58,7 +58,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("It should return status Not Found when it cannot find by given id")
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
 
         WalletCreateDTO testWalletDto = new WalletCreateDTO("TestWalletName");

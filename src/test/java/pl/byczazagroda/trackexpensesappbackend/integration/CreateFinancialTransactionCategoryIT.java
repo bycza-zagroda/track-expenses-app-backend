@@ -49,7 +49,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",

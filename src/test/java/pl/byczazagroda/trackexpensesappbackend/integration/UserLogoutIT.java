@@ -26,7 +26,7 @@ class UserLogoutIT extends BaseIntegrationTestIT {
     @Test
     void testRemoveRefreshToken_whenUserLogout_thenShouldReturnOkAndRemoveRefreshTokenFromCookie() throws Exception {
 
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String validAccessToken = userService.createAccessToken(user);
         userService.createRefreshTokenCookie(user);

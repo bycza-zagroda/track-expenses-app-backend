@@ -35,7 +35,7 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
 
     @BeforeEach
     public void setup() {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         validAccessToken = userService.createAccessToken(user);
         Cookie refreshTokenCookie = userService.createRefreshTokenCookie(user);

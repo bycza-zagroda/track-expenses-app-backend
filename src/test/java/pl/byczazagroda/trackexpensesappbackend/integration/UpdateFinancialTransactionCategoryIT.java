@@ -49,7 +49,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should update FT category when user is owner and category exists")
     @Test
     void testUpdateFTCategory_whenUserIsOwnerCategory_thenShouldReturnStatusOK() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -75,7 +75,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name length > 30")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameIsTooLong_thenReturnBadRequest() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -101,7 +101,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name is empty")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameIsEmpty_thenReturnBadRequest() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -126,7 +126,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name contains invalid characters")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameContainsInvalidCharacters_thenReturnBadRequest() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -151,7 +151,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category type is invalid")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryTypeIsInvalid_thenReturnBadRequest() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
@@ -175,7 +175,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category doesn't exists")
     @Test
     void testUpdateFTCategory_whenCategoryNotExists_thenReturnIsNotFound() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -196,8 +196,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when user is not owner")
     @Test
     void testUpdateFTCategory_whenUserIsNotOwner_thenReturnIsNotFound() throws Exception {
-        User user1 = userRepository.save(TestUtils.createTestUserWithEmail(null, "user1@server.com"));
-        User user2 = userRepository.save(TestUtils.createTestUserWithEmail(null, "user2@server.com"));
+        User user1 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user1@server.com"));
+        User user2 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user2@server.com"));
 
         String accessToken = userService.createAccessToken(user1);
 

@@ -32,7 +32,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should delete category when user is owner and category exists")
     void shouldDeleteCategoryWhenExists() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String token = userService.createAccessToken(user);
 
@@ -50,7 +50,7 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category ID is non-existent")
     void shouldNotDeleteCategoryWhenNotExists() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String token = userService.createAccessToken(user);
 
@@ -64,9 +64,9 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category belongs to another user")
     void shouldNotDeleteCategoryWhenBelongsToAnotherUser() throws Exception {
-        User user1 = userRepository.save(TestUtils.createTestUser());
+        User user1 = userRepository.save(TestUtils.createUserForTest());
 
-        User user2 = userRepository.save(TestUtils.createTestUser());
+        User user2 = userRepository.save(TestUtils.createUserForTest());
 
         String token = userService.createAccessToken(user1);
         FinancialTransactionCategory otherCategory = createFinancialTransactionCategory(user2);

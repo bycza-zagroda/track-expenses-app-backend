@@ -48,9 +48,9 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         String accessToken = userService.createAccessToken(user);
 
@@ -65,8 +65,8 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
     @Test
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
 
         final long notExistingWalletId = 999L;

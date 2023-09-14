@@ -39,7 +39,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testGetFinancialTransactionCategory_whenProperId_shouldReturnFinancialTransactionCategory()
             throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory fTCategory = testFinancialTransactionCategory(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", fTCategory.getId())
@@ -58,7 +58,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testGetFinancialTransactionCategory_whenIdIsNotExists_shouldReturnErrorCodeAndStatus404()
             throws Exception {
         final Long nonExistentCategoryId = 999L;
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", nonExistentCategoryId)
                         .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
                 .andExpect(status().isNotFound())
@@ -68,7 +68,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should return list of financial transaction categories")
     @Test
     void testGetFinancialTransactionCategories() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory ftc1 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc2 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc3 = testFinancialTransactionCategory(user);

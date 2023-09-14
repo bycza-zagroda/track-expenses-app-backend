@@ -55,7 +55,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
 
         List<Wallet> wallets = createListTestWallets(user);
@@ -85,9 +85,9 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME_TOO_LONG)
                         .accept(MediaType.APPLICATION_JSON)
@@ -102,9 +102,9 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name does not exist should return null array")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", "notExistingName")
                         .accept(MediaType.APPLICATION_JSON)

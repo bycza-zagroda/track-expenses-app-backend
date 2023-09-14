@@ -64,11 +64,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase()
             throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 wallet.getId(),
@@ -101,7 +101,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage()
             throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
@@ -134,11 +134,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
@@ -169,11 +169,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = walletRepository.save(TestUtils.createTestWallet(user));
+        Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory(user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(

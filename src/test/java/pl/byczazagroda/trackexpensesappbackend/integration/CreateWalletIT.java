@@ -41,7 +41,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
 
         final UserDTO userDTO = createTestUserDTO();
@@ -64,7 +64,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
         WalletCreateDTO walletCreateDTO = new WalletCreateDTO("@3H*(G");
 
@@ -87,7 +87,7 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User user = userRepository.save(TestUtils.createTestUser());
+        User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = userService.createAccessToken(user);
         WalletCreateDTO walletCreateDTO = new WalletCreateDTO("nameOfThisWalletIsTooLong");
 
