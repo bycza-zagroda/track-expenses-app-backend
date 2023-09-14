@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
@@ -52,8 +52,8 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
     void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        User user = userRepository.save(TestUtils.createTestUser());
+        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
@@ -82,12 +82,12 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
     void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         // given
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/transactions")
-                        .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
                 .queryParam("walletId", "1"));
 

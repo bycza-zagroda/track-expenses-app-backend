@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
@@ -13,9 +13,14 @@ import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RefreshTokenIT extends BaseIntegrationTestIT {
+
+    private final String invalidAccessToken = "invalid_access_token";
+
+    private final String invalidRefreshToken = "invalid_refresh_token";
 
     @Autowired
     private UserRepository userRepository;
@@ -24,13 +29,13 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
     private UserService userService;
 
     private String validAccessToken;
+
     private String validRefreshToken;
-    private final String invalidAccessToken = "invalid_access_token";
-    private final String invalidRefreshToken = "invalid_refresh_token";
+
 
     @BeforeEach
     public void setup() {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createTestUser());
 
         validAccessToken = userService.createAccessToken(user);
         Cookie refreshTokenCookie = userService.createRefreshTokenCookie(user);

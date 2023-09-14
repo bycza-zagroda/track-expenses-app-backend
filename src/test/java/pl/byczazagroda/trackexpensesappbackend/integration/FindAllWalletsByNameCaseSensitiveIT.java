@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -50,18 +50,20 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     }
 
     //fixme, new issue, required improve method for wallets
+    @SuppressWarnings("checkstyle:MagicNumber")
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
 
-        List<Wallet> wallets = createListTestWallets(testUser);
+        List<Wallet> wallets = createListTestWallets(user);
         Wallet wallet1 = wallets.get(0);
         Wallet wallet2 = wallets.get(1);
         Wallet wallet3 = wallets.get(2);
         Wallet wallet4 = wallets.get(4);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken))
@@ -76,16 +78,16 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[3].name").value(wallet4.getName()));
 
-        Assertions.assertEquals(5, walletRepository.count());
+        Long numberOfWallets = 5L;
+        Assertions.assertEquals(numberOfWallets, walletRepository.count());
     }
 
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
-
-        IntegrationTestUtils.createTestWallet(walletRepository, testUser);
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
+        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME_TOO_LONG)
                         .accept(MediaType.APPLICATION_JSON)
@@ -100,10 +102,10 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @DisplayName("When search name does not exist should return null array")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
+        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
 
-        IntegrationTestUtils.createTestWallet(walletRepository, testUser);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", "notExistingName")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken))
@@ -113,7 +115,6 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     }
 
     private List<Wallet> createListTestWallets(User testUser) {
-
         List<Wallet> wallets = new ArrayList<>();
 
         final Wallet firstWallet = Wallet.builder()

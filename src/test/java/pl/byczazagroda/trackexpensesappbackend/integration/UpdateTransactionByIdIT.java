@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
@@ -58,11 +58,12 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
 
     @DisplayName("Update financial transaction with new data provided in DTO when ID found in database")
     @Test
-    void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
+    void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId()
+            throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createTestUser());
         String accessToken = userService.createAccessToken(user);
-        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         Long categoryId = ft.getFinancialTransactionCategory().getId();
 
@@ -95,14 +96,15 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createTestUser());
         String accessToken = userService.createAccessToken(user);
 
-        Wallet wallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        Wallet wallet = walletRepository.save(TestUtils.createTestWallet(user));
         FinancialTransaction ft = createTestFinancialTransaction(wallet, user);
         ft.setFinancialTransactionCategory(null);
         ft.setDescription(null);
@@ -140,7 +142,7 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateTransactionById_whenIdIsNotFoundInDB_thenReturnIsNotFound() throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createTestUser());
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionUpdateDTO updateDTO = new FinancialTransactionUpdateDTO(

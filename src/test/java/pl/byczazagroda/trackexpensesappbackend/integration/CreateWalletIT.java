@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -41,21 +41,21 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_thenReturnWalletDTO() throws Exception {
         // given
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
 
-        final UserDTO testUserDTO = createTestUserDTO();
-        WalletCreateDTO newWallet = new WalletCreateDTO("Wallet Name1");
+        final UserDTO userDTO = createTestUserDTO();
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO("Wallet Name1");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet))
+                .content(objectMapper.writeValueAsString(walletCreateDTO))
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
         response.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(newWallet.name()));
+                .andExpect(jsonPath("$.name").value(walletCreateDTO.name()));
 
         Assertions.assertEquals(1, walletRepository.count());
     }
@@ -64,14 +64,14 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
-        WalletCreateDTO newWallet = new WalletCreateDTO("@3H*(G");
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO("@3H*(G");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet))
+                .content(objectMapper.writeValueAsString(walletCreateDTO))
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
@@ -87,14 +87,14 @@ class CreateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
         // given
-        User testUser = IntegrationTestUtils.createTestUser(userRepository);
-        String accessToken = userService.createAccessToken(testUser);
-        WalletCreateDTO newWallet = new WalletCreateDTO("nameOfThisWalletIsTooLong");
+        User user = userRepository.save(TestUtils.createTestUser());
+        String accessToken = userService.createAccessToken(user);
+        WalletCreateDTO walletCreateDTO = new WalletCreateDTO("nameOfThisWalletIsTooLong");
 
         // when
         ResultActions response = mockMvc.perform(post("/api/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newWallet))
+                .content(objectMapper.writeValueAsString(walletCreateDTO))
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         // then
