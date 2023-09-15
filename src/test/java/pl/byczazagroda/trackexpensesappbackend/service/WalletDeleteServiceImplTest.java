@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.controller.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
@@ -63,7 +64,11 @@ class WalletDeleteServiceImplTest {
     @DisplayName("when wallet with id does not exist should not delete wallet")
     void shouldNotDeleteWallet_WhenWalletWithIdDoesNotExist() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
+
+        FIXME this part now:
+
+
         Wallet wallet = Wallet
                 .builder().name(NAME_1)
                 .id(ID_1L)

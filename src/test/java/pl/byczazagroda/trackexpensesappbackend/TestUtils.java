@@ -22,6 +22,9 @@ public final class TestUtils {
     public static final Long FINANCIAL_TRANSACTION_ID_1L = 1L;
 
     public static final Long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+    public static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
+    public static final FinancialTransactionType EXAMPLE_FINANCIAL_TRANSACTION_TYPE = FinancialTransactionType.INCOME;
+    public static final Instant EXAMPLE_CATEGORY_CREATION_DATE = Instant.now();
 
     private TestUtils() {
     }
@@ -143,16 +146,17 @@ public final class TestUtils {
      * @return {@code FinancialTransactionCategory} list
      */
     public static List<FinancialTransactionCategory> createFinancialTransactionCategoryListForTest(int count) {
-        final String name = "Example category name_";
-        final FinancialTransactionType financialTransactionType = FinancialTransactionType.INCOME;
+        final String name = EXAMPLE_CATEGORY_NAME;
+        final FinancialTransactionType financialTransactionType = EXAMPLE_FINANCIAL_TRANSACTION_TYPE;
 
         ArrayList<FinancialTransactionCategory> list = new ArrayList<>(count);
         for (long i = 1; i <= count; i++) {
             list.add(FinancialTransactionCategory.builder()
                     .id(i)
-                    .name(name + count)
+                    .name(name + i)
                     .type(financialTransactionType)
-                    .creationDate(Instant.now())
+                    .creationDate(EXAMPLE_CATEGORY_CREATION_DATE)
+                    .user(createUserForTest(USER_ID_1L))
                     .build()
             );
         }
@@ -173,17 +177,17 @@ public final class TestUtils {
      * @param count number of elements to create
      * @return {@code FinancialTransactionCategoryDTO} list
      */
-    public static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOListForTest(int count, Long userId) {
-        final String categoryName = "Example category DTO name_";
-        final FinancialTransactionType categoryType = FinancialTransactionType.INCOME;
+    public static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOListForTest(int count) {
+        final String name = EXAMPLE_CATEGORY_NAME;
+        final FinancialTransactionType categoryType = EXAMPLE_FINANCIAL_TRANSACTION_TYPE;
 
         ArrayList<FinancialTransactionCategoryDTO> list = new ArrayList<>(count);
-        for (long id = 1; id <= count; id++) {
+        for (long i = 1; i <= count; i++) {
             list.add(new FinancialTransactionCategoryDTO(
-                    id,
-                    categoryName + id,
+                    i,
+                    name + i,
                     categoryType,
-                    userId)
+                    USER_ID_1L)
             );
         }
 

@@ -76,6 +76,7 @@ class FinancialTransactionCategoryUpdateServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO);
+
         assertEquals(VALID_CATEGORY_DTO, dto);
     }
 
@@ -87,6 +88,7 @@ class FinancialTransactionCategoryUpdateServiceImplTest {
                 AppRuntimeException.class,
                 () -> service.updateFinancialTransactionCategory(INVALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO)
         );
+
         assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(repository, never()).save(any());
     }
