@@ -35,27 +35,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class FinancialTransactionCategoryServiceImplTest {
 
-    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
-
-    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
-
-    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
-
-    private static final long USER_ID_1L = 1L;
-
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
-
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
-
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
-
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME = "example name";
-
     public static final String CATEGORY_NAME = "Name";
-
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;
-
-
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
+    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+    private static final long USER_ID_1L = 1L;
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
+    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME = "example name";
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
@@ -77,9 +66,11 @@ public class FinancialTransactionCategoryServiceImplTest {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
                 new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
-        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(CATEGORY_NAME,
-                CATEGORY_TYPE);
+
+        FinancialTransactionCategory financialTransactionCategory =
+                createFinancialTransactionCategory(CATEGORY_NAME, CATEGORY_TYPE);
         financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
+
         when(financialTransactionCategoryRepository.save(any())).thenReturn(financialTransactionCategory);
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO = new FinancialTransactionCategoryDTO(
                 FINANCIAL_TRANSACTION_CATEGORY_ID_1L, CATEGORY_NAME, CATEGORY_TYPE, USER_ID_1L);
@@ -101,11 +92,18 @@ public class FinancialTransactionCategoryServiceImplTest {
     @DisplayName("when finding financial transaction categories should successfully return categoryDTOs list")
     void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
         //given
-        List<FinancialTransactionCategory> categoryList = TestUtils.createFinancialTransactionCategoryListForTest(3);
-        List<FinancialTransactionCategoryDTO> categoryDTOList = TestUtils.createFinancialTransactionCategoryDTOListForTest(3);
+        User user = TestUtils.createUserForTest();
+        final int categoryCounter = 3;
+        List<FinancialTransactionCategory> categoryList =
+                TestUtils.createFinancialTransactionCategoryListForTest(
+                        categoryCounter, FinancialTransactionType.INCOME, user);
+
+        List<FinancialTransactionCategoryDTO> categoryDTOList =
+                TestUtils.createFinancialTransactionCategoryDTOListForTest(
+                        categoryCounter, FinancialTransactionType.INCOME, user.getId());
 
         //when
-        when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(Optional.of(categoryList));
+        when(financialTransactionCategoryRepository.findAllByUserId(user.getId())).thenReturn(Optional.of(categoryList));
         when(financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(categoryList.get(0)))
                 .thenReturn(categoryDTOList.get(0));
@@ -117,7 +115,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 .thenReturn(categoryDTOList.get(2));
 
         List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
-                financialTransactionCategoryService.getFinancialTransactionCategories(USER_ID_1L);
+                financialTransactionCategoryService.getFinancialTransactionCategories(user.getId());
 
 
         //then
@@ -163,7 +161,7 @@ public class FinancialTransactionCategoryServiceImplTest {
                 FinancialTransactionType.INCOME);
         financialTransactionCategory.setId(FINANCIAL_TRANSACTION_CATEGORY_ID_1L);
 
-        BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
+        final BigInteger numberOfFinancialTransactions = BigInteger.valueOf(5);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 new FinancialTransactionCategoryDTO(

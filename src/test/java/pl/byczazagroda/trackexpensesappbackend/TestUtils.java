@@ -145,18 +145,20 @@ public final class TestUtils {
      * @param count number of elements to create
      * @return {@code FinancialTransactionCategory} list
      */
-    public static List<FinancialTransactionCategory> createFinancialTransactionCategoryListForTest(int count) {
+    public static List<FinancialTransactionCategory> createFinancialTransactionCategoryListForTest(
+            int count,
+            FinancialTransactionType type,
+            User user) {
         final String name = EXAMPLE_CATEGORY_NAME;
-        final FinancialTransactionType financialTransactionType = EXAMPLE_FINANCIAL_TRANSACTION_TYPE;
 
         ArrayList<FinancialTransactionCategory> list = new ArrayList<>(count);
         for (long i = 1; i <= count; i++) {
             list.add(FinancialTransactionCategory.builder()
                     .id(i)
                     .name(name + i)
-                    .type(financialTransactionType)
+                    .type(type)
                     .creationDate(EXAMPLE_CATEGORY_CREATION_DATE)
-                    .user(createUserForTest(USER_ID_1L))
+                    .user(user)
                     .build()
             );
         }
@@ -175,19 +177,23 @@ public final class TestUtils {
      * The method does not set the <b>id</b> property - the value is set by the database
      *
      * @param count number of elements to create
+     * @param type {@link FinancialTransactionType Financial Transaction Type}
+     * @param userId
      * @return {@code FinancialTransactionCategoryDTO} list
      */
-    public static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOListForTest(int count) {
+    public static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOListForTest(
+            int count,
+            FinancialTransactionType type,
+            Long userId) {
         final String name = EXAMPLE_CATEGORY_NAME;
-        final FinancialTransactionType categoryType = EXAMPLE_FINANCIAL_TRANSACTION_TYPE;
 
         ArrayList<FinancialTransactionCategoryDTO> list = new ArrayList<>(count);
         for (long i = 1; i <= count; i++) {
             list.add(new FinancialTransactionCategoryDTO(
                     i,
                     name + i,
-                    categoryType,
-                    USER_ID_1L)
+                    type,
+                    userId)
             );
         }
 

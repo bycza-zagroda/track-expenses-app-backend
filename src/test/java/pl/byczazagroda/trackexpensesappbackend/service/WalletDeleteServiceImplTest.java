@@ -16,16 +16,15 @@ import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
 
 import java.time.Instant;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @Validated
@@ -64,35 +63,22 @@ class WalletDeleteServiceImplTest {
     @DisplayName("when wallet with id does not exist should not delete wallet")
     void shouldNotDeleteWallet_WhenWalletWithIdDoesNotExist() {
         //given
-        User user = TestUtils.createUserForTest();
-
-        FIXME this part now:
-
-
-        Wallet wallet = Wallet
-                .builder().name(NAME_1)
-                .id(ID_1L)
-                .creationDate(DATE_NOW)
-                .user(user)
-                .build();
+        User user = TestUtils.createUserForTest(1L);
 
         //when
         when(walletRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> walletService.deleteWalletById(ID_5L, USER_ID_1L)).isInstanceOf(AppRuntimeException.class);
-        assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(() -> walletService.deleteWalletById(ID_5L, USER_ID_1L))
-                .withMessage(ErrorCode.W003.getBusinessMessage());
-    }
+        AppRuntimeException appRuntimeException = assertThrows(
+                AppRuntimeException.class,
+                () -> walletService.deleteWalletById(ID_5L, USER_ID_1L));
 
-    private User createTestUser() {
-        return User.builder()
-                .id(USER_ID_1L)
-                .userName("userone")
-                .email("Email@wp.pl")
-                .password("password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
+        assertAll(
+                () -> assertEquals(ErrorCode.W003.getBusinessStatusCode(), appRuntimeException.getBusinessStatusCode()),
+                () -> assertEquals(ErrorCode.W003.getBusinessMessage(), appRuntimeException.getBusinessMessage()),
+                () -> assertEquals(ErrorCode.W003.getBusinessStatus(), appRuntimeException.getBusinessStatus())
+        );
+
     }
 
 }
