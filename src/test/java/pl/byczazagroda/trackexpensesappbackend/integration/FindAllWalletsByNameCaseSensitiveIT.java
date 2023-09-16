@@ -50,7 +50,6 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     }
 
     //fixme, new issue, required improve method for wallets
-    @SuppressWarnings("checkstyle:MagicNumber")
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()

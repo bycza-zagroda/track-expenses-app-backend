@@ -36,15 +36,15 @@ import static org.mockito.Mockito.when;
 public class FinancialTransactionCategoryServiceImplTest {
 
     public static final String CATEGORY_NAME = "Name";
+
     public static final FinancialTransactionType CATEGORY_TYPE = FinancialTransactionType.EXPENSE;
+
     private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_1L = 1L;
-    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_2L = 2L;
-    private static final long FINANCIAL_TRANSACTION_CATEGORY_ID_3L = 3L;
+
     private static final long USER_ID_1L = 1L;
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_FIRST = "First";
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_SECOND = "Second";
-    private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_THIRD = "Third";
+
     private static final String FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME = "example name";
+
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
@@ -117,14 +117,8 @@ public class FinancialTransactionCategoryServiceImplTest {
         List<FinancialTransactionCategoryDTO> returnedFinancialTransactionCategoryDTOsList =
                 financialTransactionCategoryService.getFinancialTransactionCategories(user.getId());
 
-
         //then
-//        todo Maybe we should verify not every element but one list with elements at once?
-        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList, categoryDTOList);
-
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryDTOList.get(0));
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(1), categoryDTOList.get(1));
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(2), categoryDTOList.get(2));
+        Assertions.assertEquals(categoryDTOList, returnedFinancialTransactionCategoryDTOsList);
     }
 
     @Test
