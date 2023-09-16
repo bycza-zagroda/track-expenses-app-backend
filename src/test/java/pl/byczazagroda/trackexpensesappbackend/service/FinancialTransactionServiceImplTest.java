@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
@@ -22,7 +23,6 @@ import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
@@ -87,13 +87,10 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("When financial transaction type and financial transaction category type are different throw AppRuntimeException")
     void testCreateFinancialTransaction_WhenTransactionTypeDoesNotMatchCategoryType_ThenThrowAppRunTimeException() {
         //given
-        User user = createTestUser();
-        user.setId(ID_1L);
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO ftCreateDTO = createFinancialTransactionCreateDTO();
-        Wallet wallet = new Wallet();
-        wallet.setId(ID_1L);
-        wallet.setUser(user);
+        Wallet wallet = TestUtils.createWalletForTest(user);
 
         when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(wallet));
         FinancialTransaction ft = createEntityFinancialTransaction(ID_1L);
@@ -120,7 +117,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
     void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.empty());
@@ -138,7 +135,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction when valid parameters are given")
     void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE, ID_1L);
@@ -173,12 +170,9 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("create financial transaction with empty description")
     void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction() {
         //given
-        User user = createTestUser();
-        user.setId(ID_1L);
+        User user = TestUtils.createUserForTest();
 
-        Wallet wallet = new Wallet();
-        wallet.setId(ID_1L);
-        wallet.setUser(user);
+        Wallet wallet = TestUtils.createWalletForTest(user);
 
         FinancialTransactionCreateDTO ftCreateDTO = new FinancialTransactionCreateDTO(
                 ID_1L, ONE, EMPTY, DATE_NOW, EXPENSE, ID_1L);
@@ -217,7 +211,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not update financial transaction without valid id and throw AppRuntimeException")
     void shouldThrowExceptionWhenUpdatingFinancialTransactionWithInvalidId() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
         when(financialTransactionRepository.findByIdAndWalletUserId(any(), any())).thenReturn(Optional.empty());
@@ -238,7 +232,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("update financial transaction with valid parameters")
     void shouldUpdateFinancialTransactionWhenValidParametersAreGiven() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionUpdateDTO ftUpdateDTO = createFinancialTransactionUpdateDTO();
 
@@ -280,7 +274,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
     void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransaction financialTransaction1 = createEntityFinancialTransaction(ID_1L);
         FinancialTransactionDTO financialTransactionDTO1 = createFinancialTransactionDTO();
@@ -296,9 +290,7 @@ class FinancialTransactionServiceImplTest {
         financialTransactionsList.add(financialTransaction1);
         financialTransactionsList.add(financialTransaction2);
 
-        Wallet wallet = new Wallet("Random wallet", createTestUser());
-        wallet.setId(ID_1L);
-        wallet.setCreationDate(DATE_NOW);
+        Wallet wallet = TestUtils.createWalletForTest(TestUtils.createUserForTest());
 
         financialTransaction1.setWallet(wallet);
         financialTransaction2.setWallet(wallet);
@@ -329,7 +321,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when financial transaction id doesn't exist should not return transaction")
     void shouldNotReturnFinancialTransactionById_WhenIdNotExist() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         //when
         when(financialTransactionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
@@ -345,7 +337,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when finding with proper financial transaction id should successfully find transaction")
     void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransaction financialTransaction = createEntityFinancialTransaction(ID_1L);
 
@@ -368,7 +360,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when deleting financial transaction that does not exist should throw an exception")
     void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
         //given
-        User user = createTestUser();
+        User user = TestUtils.createUserForTest();
 
         //when
         when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
@@ -396,16 +388,6 @@ class FinancialTransactionServiceImplTest {
 
     private FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
         return new FinancialTransactionUpdateDTO(TEN, DATE_NOW, DESCRIPTION, EXPENSE, ID_1L);
-    }
-
-    private User createTestUser() {
-        return User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("email@server.com")
-                .password("Password1!")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
@@ -39,7 +39,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testGetFinancialTransactionCategory_whenProperId_shouldReturnFinancialTransactionCategory()
             throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory fTCategory = testFinancialTransactionCategory(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", fTCategory.getId())
@@ -58,7 +58,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testGetFinancialTransactionCategory_whenIdIsNotExists_shouldReturnErrorCodeAndStatus404()
             throws Exception {
         final Long nonExistentCategoryId = 999L;
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", nonExistentCategoryId)
                         .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))))
                 .andExpect(status().isNotFound())
@@ -68,7 +68,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should return list of financial transaction categories")
     @Test
     void testGetFinancialTransactionCategories() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory ftc1 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc2 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc3 = testFinancialTransactionCategory(user);
@@ -82,7 +82,8 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(jsonPath("$.[1].name").value(ftc2.getName()))
                 .andExpect(jsonPath("$.[2].name").value(ftc3.getName()));
 
-        Assertions.assertEquals(3, financialTransactionCategoryRepository.count());
+        final long financialTransactionCategoryCount = 3L;
+        Assertions.assertEquals(financialTransactionCategoryCount, financialTransactionCategoryRepository.count());
     }
 
     private FinancialTransactionCategory testFinancialTransactionCategory(User user) {

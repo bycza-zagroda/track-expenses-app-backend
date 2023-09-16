@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
@@ -47,15 +47,15 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return proper financial transaction when search Id exist in database")
     @Test
-    void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
+    void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId()
+            throws Exception {
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "description example");
         String accessToken = userService.createAccessToken(user);
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testFinancialTransaction))
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpectAll(
@@ -71,16 +71,17 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
     void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(testWallet, "Test1");
+        FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet, "description example");
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
+        final long notExistingFinancialTransactionId = 999L;
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(
+                        "/api/transactions/{id}",
+                        notExistingFinancialTransactionId)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testFinancialTransaction))
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
-
 
         resultActions.andExpectAll(MockMvcResultMatchers.status().isNotFound(),
                 MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()),

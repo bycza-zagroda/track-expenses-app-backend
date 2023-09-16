@@ -10,7 +10,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
@@ -49,7 +49,8 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
                 FinancialTransactionType.INCOME);

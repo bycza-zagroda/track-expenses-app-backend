@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
@@ -49,7 +49,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should update FT category when user is owner and category exists")
     @Test
     void testUpdateFTCategory_whenUserIsOwnerCategory_thenShouldReturnStatusOK() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
@@ -58,10 +59,10 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                .accept(MediaType.APPLICATION_JSON));
+                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
+                        .accept(MediaType.APPLICATION_JSON));
 
         resultActions.andExpectAll(
                 status().isOk(),
@@ -74,7 +75,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name length > 30")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameIsTooLong_thenReturnBadRequest() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
@@ -84,10 +86,10 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, financialTransactionCategory.getId())
-                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
-                .accept(MediaType.APPLICATION_JSON));
+                        .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(financialTransactionCategoryUpdateDTO))
+                        .accept(MediaType.APPLICATION_JSON));
 
         resultActions.andExpectAll(
                 status().is5xxServerError(),
@@ -99,7 +101,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name is empty")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameIsEmpty_thenReturnBadRequest() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
@@ -123,7 +126,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category name contains invalid characters")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryNameContainsInvalidCharacters_thenReturnBadRequest() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
@@ -147,7 +151,8 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category type is invalid")
     @Test
     void testUpdateFTCategoryFailure_whenCategoryTypeIsInvalid_thenReturnBadRequest() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
 
@@ -170,13 +175,14 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when category doesn't exists")
     @Test
     void testUpdateFTCategory_whenCategoryNotExists_thenReturnIsNotFound() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
                 new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
 
-        Long categoryId = 999L;
+        final Long categoryId = 999L;
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ENDPOINT_CATEGORIES_PATCH, categoryId)
                         .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken)
@@ -190,9 +196,10 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @DisplayName("Should not update FT category when user is not owner")
     @Test
     void testUpdateFTCategory_whenUserIsNotOwner_thenReturnIsNotFound() throws Exception {
-        User user = IntegrationTestUtils.createTestUserWithEmail(userRepository, "user@domain.server.com");
-        User user2 = IntegrationTestUtils.createTestUserWithEmail(userRepository, "user2@domain.server.com");
-        String accessToken = userService.createAccessToken(user);
+        User user1 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user1@server.com"));
+        User user2 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user2@server.com"));
+
+        String accessToken = userService.createAccessToken(user1);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user2);
 

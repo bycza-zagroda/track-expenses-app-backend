@@ -5,12 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
@@ -49,14 +48,13 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should delete wallet from a database and return status 'OK'")
     @Test
     void testDeleteWalletByIdAPI_whenWalletIdIsCorrect_thenShouldReturnAcceptAndDeleteRecord() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
-        FinancialTransaction testFinancialTransaction =  createTestFinancialTransaction(testWallet);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet);
         String accessToken = userService.createAccessToken(user);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", testWallet.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testFinancialTransaction))
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", wallet.getId())
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
@@ -67,26 +65,25 @@ class DeleteWalletByIdIT extends BaseIntegrationTestIT {
     @DisplayName("Should return is Not Found error when Id does not exist in a database")
     @Test
     void testDeleteWalletById_whenWalletIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet testWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", 5L)
-                .accept(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testWallet))
+        final long notExistingWalletId = 999L;
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/wallets/{id}", notExistingWalletId)
                 .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
         resultActions.andExpectAll(MockMvcResultMatchers.status().isNotFound(),
                 MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.W003.getBusinessStatus()),
                 MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.W003.getBusinessMessage()),
                 MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.W003.getBusinessStatusCode()));
+
         Assertions.assertEquals(1, walletRepository.count());
         Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
-    private  FinancialTransaction  createTestFinancialTransaction(Wallet wallet) {
-    return  financialTransactionRepository.save(FinancialTransaction.builder()
+    private FinancialTransaction createTestFinancialTransaction(Wallet wallet) {
+        return financialTransactionRepository.save(FinancialTransaction.builder()
                 .wallet(wallet)
                 .amount(new BigDecimal("2.0"))
                 .date(Instant.ofEpochSecond(1L))

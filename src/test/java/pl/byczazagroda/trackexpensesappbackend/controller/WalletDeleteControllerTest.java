@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,16 +15,21 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
 
 import java.time.Instant;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,8 +44,6 @@ class WalletDeleteControllerTest {
     private static final Long ID_0L = 0L;
 
     private static final Long WALLET_ID_1L = 1L;
-
-    private static final Long USER_ID_1L = 1L;
 
     private static final String NAME_1 = "Wallet name";
 
@@ -57,18 +61,19 @@ class WalletDeleteControllerTest {
     @Test
     @DisplayName("when delete wallet correctly should return response status OK")
     void shouldReturnResponseStatusOK_WhenDeleteWalletCorrectly() throws Exception {
-        //fixme do poprawki
         //given
-        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
-
+        User user = TestUtils.createUserForTest();
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO)))
-                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))));
 
         //then
-        result.andExpect(status().isOk());
+        assertAll(
+                () -> result.andExpect(status().isOk()),
+                () -> Mockito.verify(walletService, Mockito.times(1))
+                        .deleteWalletById(WALLET_ID_1L, user.getId())
+        );
     }
 
 
@@ -76,15 +81,26 @@ class WalletDeleteControllerTest {
     @DisplayName("when wallet id is zero should return response status no content")
     void shouldReturnResponseStatusNoContent_WhenWalletIdIsZero() throws Exception {
         //given
-        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, USER_ID_1L);
-        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(ID_0L, USER_ID_1L);
+        User user = TestUtils.createUserForTest();
+        WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, user.getId());
+        doThrow(ConstraintViolationException.class).when(walletService).deleteWalletById(ID_0L, user.getId());
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/wallets/{id}", ID_0L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO))));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(walletDTO)))
+                        .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(user.getId()))));
 
         //then
-        result.andExpect(status().is4xxClientError());
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
+
 }

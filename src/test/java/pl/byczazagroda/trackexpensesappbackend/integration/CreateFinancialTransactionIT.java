@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
@@ -64,12 +64,14 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase()
             throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
-                savedWallet.getId(),
+                wallet.getId(),
                 new BigDecimal("5.0"),
                 "Description test",
                 Instant.ofEpochSecond(1L),
@@ -96,9 +98,11 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return Wallet Not Found message when creating financial transaction wallet Id that doesnt exist in database")
     @Test
-    void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage() throws Exception {
+    void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage()
+            throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
@@ -130,10 +134,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
+
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),
                 MAX_ALLOWED_TRANSACTION_AMOUNT,
@@ -163,10 +169,12 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
         // given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         String accessToken = userService.createAccessToken(user);
 
-        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
+
         FinancialTransactionCategory ftCategory = createTestFinancialTransactionCategory(user);
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 savedWallet.getId(),

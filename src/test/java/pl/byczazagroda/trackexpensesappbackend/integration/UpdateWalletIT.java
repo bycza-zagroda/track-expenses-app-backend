@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.IntegrationTestUtils;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.model.User;
 import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
@@ -41,14 +41,14 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
         //given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
 
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 
         // when
-        ResultActions response = mockMvc.perform(patch("/api/wallets/{id}", savedWallet.getId())
+        ResultActions response = mockMvc.perform(patch("/api/wallets/{id}", wallet.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedWallet))
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,9 +66,9 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
     @Test
     void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         //given
-        User user = IntegrationTestUtils.createTestUser(userRepository);
-        long walletId = 3L;
-        Wallet savedWallet = IntegrationTestUtils.createTestWallet(walletRepository, user);
+        User user = userRepository.save(TestUtils.createUserForTest());
+        final long walletId = 3L;
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = userService.createAccessToken(user);
         WalletUpdateDTO updatedWallet = new WalletUpdateDTO("UpdatedWallet");
 

@@ -15,9 +15,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.WalletUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
@@ -94,13 +96,13 @@ class WalletUpdateControllerTest {
                 .willReturn(new WalletDTO(WALLET_ID_1L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
         //when
-        ResultActions result = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO)))
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        result.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest());
     }
 
     @Test
@@ -168,23 +170,30 @@ class WalletUpdateControllerTest {
                 .willReturn(new WalletDTO(null, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
         // when
-        //fixme do sprawdzenia czy do kontrolera jest przekazywany null
         ResultActions resultActions = mockMvc.perform(patch("/api/wallets/" + null)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO)))
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        resultActions.andExpect(status().is5xxServerError());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().is5xxServerError(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA004.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA004.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA004.getBusinessStatusCode())
+        );
     }
 
     @Test
     @DisplayName("when wallet id is zero should return response status bad request")
     void shouldReturnResponseStatusBadRequest_WhenWalletIdIsZero() throws Exception {
         // given
-        WalletUpdateDTO updDTO = new WalletUpdateDTO(INVALID_NAME);
-        given(walletService.updateWallet(WALLET_ID_0L, updDTO, USER_ID_1L))
-                .willReturn(new WalletDTO(WALLET_ID_0L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
+        WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
+//        given(walletService.updateWallet(WALLET_ID_0L, updDTO, USER_ID_1L))
+//                .willReturn(new WalletDTO(WALLET_ID_0L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_0L)
@@ -193,14 +202,22 @@ class WalletUpdateControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
     @Test
     @DisplayName("when wallet id is negative should return response status bad request")
     void shouldReturnResponseStatusBadRequestWhenWalletIdIsNegative() throws Exception {
         // given
-        WalletUpdateDTO updDTO = new WalletUpdateDTO(INVALID_NAME);
+        WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
         given(walletService.updateWallet(-WALLET_ID_1L, updDTO, USER_ID_1L))
                 .willReturn(new WalletDTO(-WALLET_ID_1L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
@@ -211,7 +228,15 @@ class WalletUpdateControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
     @Test
@@ -223,13 +248,21 @@ class WalletUpdateControllerTest {
                 .willReturn(new WalletDTO(1L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
         //when
-        ResultActions result = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO)))
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        result.andExpect(status().isBadRequest());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
     @Test
@@ -241,13 +274,21 @@ class WalletUpdateControllerTest {
                 .willReturn(new WalletDTO(1L, EMPTY_NAME, DATE_NOW, USER_ID_1L));
 
         // when
-        ResultActions result = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/{id}", WALLET_ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO)))
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        result.andExpect(status().isBadRequest());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
     @Test
@@ -259,13 +300,21 @@ class WalletUpdateControllerTest {
                 .willThrow(new RuntimeException("Wallet name contains illegal letters"));
 
         // when
-        ResultActions result = mockMvc.perform(patch("/api/wallets/1")
+        ResultActions resultActions = mockMvc.perform(patch("/api/wallets/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(updDTO)))
                 .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
 
         // then
-        result.andExpect(status().isBadRequest());
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.jsonPath("$.status")
+                        .value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message")
+                        .value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode")
+                        .value(ErrorCode.TEA003.getBusinessStatusCode())
+        );
     }
 
 }
