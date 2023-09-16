@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

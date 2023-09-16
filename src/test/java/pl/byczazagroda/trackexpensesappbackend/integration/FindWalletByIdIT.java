@@ -11,11 +11,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

@@ -11,14 +11,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
 
 class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 

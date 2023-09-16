@@ -24,8 +24,8 @@ import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserServiceImpl;
 

@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
 import pl.byczazagroda.trackexpensesappbackend.service.UserService;
 

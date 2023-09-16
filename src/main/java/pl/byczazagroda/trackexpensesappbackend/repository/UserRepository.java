@@ -1,7 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
 
 import java.util.Optional;
 

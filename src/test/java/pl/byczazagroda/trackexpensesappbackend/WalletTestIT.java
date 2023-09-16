@@ -10,11 +10,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
 
 class WalletTestIT extends BaseIntegrationTestIT {
 

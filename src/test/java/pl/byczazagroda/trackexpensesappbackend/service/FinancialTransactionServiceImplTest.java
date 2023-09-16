@@ -12,21 +12,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -46,8 +47,8 @@ import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.EXPENSE;
-import static pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType.INCOME;
+import static pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType.EXPENSE;
+import static pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType.INCOME;
 
 
 @ExtendWith(MockitoExtension.class)
