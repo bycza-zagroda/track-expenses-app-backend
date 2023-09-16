@@ -16,12 +16,12 @@ import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 
 import javax.validation.ConstraintViolationException;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
         controllers = WalletController.class,
         includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = {WalletRepository.class, WalletServiceImpl.class, WalletModelMapper.class, UserRepository.class}))
+                classes = {WalletRepository.class, WalletServiceImpl.class, WalletModelMapper.class, AuthRepository.class}))
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class WalletCreateServiceImplTest {
@@ -56,7 +56,7 @@ class WalletCreateServiceImplTest {
     private ErrorStrategy errorStrategy;
 
     @MockBean
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @MockBean
     private WalletRepository walletRepository;

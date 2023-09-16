@@ -17,13 +17,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 

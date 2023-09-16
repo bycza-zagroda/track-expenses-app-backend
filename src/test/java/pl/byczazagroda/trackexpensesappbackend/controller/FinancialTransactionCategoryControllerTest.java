@@ -16,16 +16,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
 import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryController;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryService;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryServiceImpl;
-import pl.byczazagroda.trackexpensesappbackend.service.UserServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryService;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.impl.FinancialTransactionCategoryServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ class FinancialTransactionCategoryControllerTest {
     private FinancialTransactionCategoryService financialTransactionCategoryService;
 
     @MockBean
-    private UserServiceImpl userService;
+    private AuthServiceImpl userService;
 
     @Test
     @WithMockUser(username = "1")

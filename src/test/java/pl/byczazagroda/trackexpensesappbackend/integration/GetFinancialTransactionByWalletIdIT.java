@@ -10,15 +10,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -35,10 +35,10 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
 
     @BeforeEach
@@ -54,7 +54,7 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet);
 
@@ -83,7 +83,7 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/transactions")

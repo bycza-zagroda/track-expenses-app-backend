@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.wallet.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;
@@ -34,7 +34,7 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletModelMapper walletModelMapper;
-    private final UserRepository userRepository;
+    private final AuthRepository userRepository;
 
     @Override
     public WalletDTO createWallet(@Valid WalletCreateDTO walletCreateDTO, Long userId) {

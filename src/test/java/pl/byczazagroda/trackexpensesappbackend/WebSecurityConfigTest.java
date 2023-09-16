@@ -11,16 +11,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
-import pl.byczazagroda.trackexpensesappbackend.controller.UserController;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.auth.AuthController;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+
 import java.time.Instant;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = UserController.class,
+@WebMvcTest(controllers = AuthController.class,
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {WebSecurityConfig.class, ErrorStrategy.class}))
 @ActiveProfiles("test")

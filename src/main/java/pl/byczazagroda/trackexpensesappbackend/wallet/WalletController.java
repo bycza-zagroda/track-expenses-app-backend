@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.byczazagroda.trackexpensesappbackend.dto.error.ErrorResponseDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.error.ErrorResponseDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;

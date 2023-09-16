@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionService;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionUpdateDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;

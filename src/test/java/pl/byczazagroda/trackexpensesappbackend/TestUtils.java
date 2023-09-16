@@ -1,11 +1,11 @@
 package pl.byczazagroda.trackexpensesappbackend;
 
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategoryDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.User;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 
 import java.time.Instant;
 import java.util.ArrayList;

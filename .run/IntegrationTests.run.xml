@@ -3,7 +3,7 @@
     <module name="track-expenses-app-backend" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="pl.byczazagroda.trackexpensesappbackend.*" />
+        <option name="PATTERN" value="pl.byczazagroda.trackexpensesappbackend.integration.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
