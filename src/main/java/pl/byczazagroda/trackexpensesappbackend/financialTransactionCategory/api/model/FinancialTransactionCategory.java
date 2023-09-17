@@ -69,11 +69,12 @@ public class FinancialTransactionCategory implements Serializable {
     private List<FinancialTransaction> financialTransactions;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @PrePersist
     protected void onCreate() {
         creationDate = Instant.now();
     }
+
 }

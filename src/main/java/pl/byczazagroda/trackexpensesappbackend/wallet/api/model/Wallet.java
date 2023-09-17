@@ -56,7 +56,7 @@ public class Wallet implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotBlank
@@ -88,4 +88,5 @@ public class Wallet implements Serializable {
         this.financialTransactionList.remove(financialTransaction);
         financialTransaction.setWallet(null);
     }
+
 }

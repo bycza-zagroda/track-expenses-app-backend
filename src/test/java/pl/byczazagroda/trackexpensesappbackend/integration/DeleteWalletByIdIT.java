@@ -23,7 +23,6 @@ import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-;
 
 class DeleteWalletByIdIT extends BaseIntegrationTestIT {
 

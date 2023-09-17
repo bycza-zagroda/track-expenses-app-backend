@@ -25,4 +25,5 @@ public class ErrorResponseDescriptionListDTO {
         this.description = description;
         this.statusCode = statusCode;
     }
+
 }

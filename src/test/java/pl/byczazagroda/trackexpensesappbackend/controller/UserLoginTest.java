@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import pl.byczazagroda.trackexpensesappbackend.auth.AuthController;
 import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
-import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
-import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,8 +92,8 @@ class UserLoginTest {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token " +
-            "and refresh token")
+    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token "
+            + "and refresh token")
     @Test
     void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsTrue_thenShouldReturnOnlyAccessTokenAndRefreshToken()
             throws Exception {
@@ -172,11 +172,12 @@ class UserLoginTest {
         final String invalidAccessToken = authAccessTokenDTO.accessToken() + "bbb";
 
         assertThrows(SignatureVerificationException.class,
-                ()-> decodedJWT
+                () -> decodedJWT
                 .verify(invalidAccessToken));
     }
 
     private String hashPassword(String password) {
         return passwordEncoder.encode(password);
     }
+
 }
