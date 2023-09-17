@@ -96,7 +96,6 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
     @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
     @Test
     void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {

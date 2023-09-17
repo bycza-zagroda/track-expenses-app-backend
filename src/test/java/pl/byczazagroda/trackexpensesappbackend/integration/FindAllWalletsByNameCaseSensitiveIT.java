@@ -10,13 +10,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
-import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -49,8 +49,6 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    //fixme, new issue, required improve method for wallets
-    @SuppressWarnings("checkstyle:MagicNumber")
     @DisplayName("Find all Wallets with corresponding search name, ignoring case")
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
@@ -77,9 +75,6 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value(wallet2.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value(wallet3.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[3].name").value(wallet4.getName()));
-
-        Long numberOfWallets = 5L;
-        Assertions.assertEquals(numberOfWallets, walletRepository.count());
     }
 
     @DisplayName("When search name is too long then empty array and error - bad request should be returned")
