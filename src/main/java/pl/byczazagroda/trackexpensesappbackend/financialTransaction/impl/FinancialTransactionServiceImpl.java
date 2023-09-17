@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Validated
-class FinancialTransactionServiceImpl implements FinancialTransactionService {
+public class FinancialTransactionServiceImpl implements FinancialTransactionService {
 
     private final FinancialTransactionRepository financialTransactionRepository;
 
