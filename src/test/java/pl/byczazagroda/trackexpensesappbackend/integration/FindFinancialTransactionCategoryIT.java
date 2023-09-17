@@ -9,11 +9,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 
 import java.time.Instant;
 
@@ -27,7 +27,7 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @BeforeEach
     public void setup() {

@@ -10,13 +10,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -26,9 +26,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @BeforeEach
     void clearDatabase() {
@@ -40,7 +40,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         ResultActions resultActions = mockMvc.perform(get("/api/wallets/{id}", wallet.getId())
@@ -59,7 +59,7 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
     @Test
     void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         WalletCreateDTO testWalletDto = new WalletCreateDTO("TestWalletName");
 

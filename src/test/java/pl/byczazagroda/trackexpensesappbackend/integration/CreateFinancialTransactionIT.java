@@ -11,17 +11,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -32,7 +32,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
 
     /**
      * The maximum value for the `amount` parameter is described as:
-     * {@link  pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
+     * {@link  FinancialTransactionCreateDTO  FinancialTransactionCreateDTO}
      */
     private static final BigDecimal MAX_ALLOWED_TRANSACTION_AMOUNT = new BigDecimal("12345678901234.99");
 
@@ -46,10 +46,10 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
 
     @BeforeEach
@@ -66,7 +66,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
@@ -103,7 +103,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = new FinancialTransactionCreateDTO(
                 1L,
@@ -136,7 +136,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
@@ -171,7 +171,7 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         Wallet savedWallet = walletRepository.save(TestUtils.createWalletForTest(user));
 

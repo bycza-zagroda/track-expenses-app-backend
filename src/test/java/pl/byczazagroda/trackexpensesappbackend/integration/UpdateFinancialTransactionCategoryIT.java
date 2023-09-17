@@ -10,14 +10,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import java.util.Map;
 
@@ -34,10 +34,10 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
 
     @BeforeEach
@@ -51,7 +51,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategory_whenUserIsOwnerCategory_thenShouldReturnStatusOK() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
@@ -77,7 +77,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategoryFailure_whenCategoryNameIsTooLong_thenReturnBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         String categoryNameTooLong = "ThisIsVeryLongNameForCategoryMoreThan30Characters";
@@ -103,7 +103,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategoryFailure_whenCategoryNameIsEmpty_thenReturnBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
@@ -128,7 +128,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategoryFailure_whenCategoryNameContainsInvalidCharacters_thenReturnBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
@@ -153,7 +153,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategoryFailure_whenCategoryTypeIsInvalid_thenReturnBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user);
 
         Map<String, String> categoryMap = Map.of("name", "TEST", "type", "INVALID_CATEGORY_TYPE");
@@ -177,7 +177,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     void testUpdateFTCategory_whenCategoryNotExists_thenReturnIsNotFound() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         FinancialTransactionCategoryUpdateDTO financialTransactionCategoryUpdateDTO =
                 new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME, FinancialTransactionType.EXPENSE);
@@ -199,7 +199,7 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         User user1 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user1@server.com"));
         User user2 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user2@server.com"));
 
-        String accessToken = userService.createAccessToken(user1);
+        String accessToken = authService.createAccessToken(user1);
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(user2);
 

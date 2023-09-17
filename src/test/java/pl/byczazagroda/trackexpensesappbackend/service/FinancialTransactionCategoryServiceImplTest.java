@@ -8,17 +8,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDetailedDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDetailedDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.impl.FinancialTransactionCategoryServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 
 import java.math.BigInteger;
 import java.time.Instant;
@@ -58,7 +59,7 @@ public class FinancialTransactionCategoryServiceImplTest {
     private FinancialTransactionRepository financialTransactionRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @DisplayName("create financial transaction category when valid parameters are provided")
     @Test

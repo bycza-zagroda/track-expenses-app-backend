@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import javax.servlet.http.Cookie;
 
@@ -23,10 +23,10 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
     private final String invalidRefreshToken = "invalid_refresh_token";
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     private String validAccessToken;
 
@@ -37,8 +37,8 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
     public void setup() {
         User user = userRepository.save(TestUtils.createUserForTest());
 
-        validAccessToken = userService.createAccessToken(user);
-        Cookie refreshTokenCookie = userService.createRefreshTokenCookie(user);
+        validAccessToken = authService.createAccessToken(user);
+        Cookie refreshTokenCookie = authService.createRefreshTokenCookie(user);
         validRefreshToken = refreshTokenCookie.getValue();
     }
 

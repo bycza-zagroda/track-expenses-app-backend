@@ -10,12 +10,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import java.time.Instant;
 import java.util.List;
@@ -31,10 +31,10 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @BeforeEach
     public void clearTestDB() {
@@ -47,7 +47,7 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     void shouldGetAllWalletsAccordingToUserCredentials() throws Exception {
         //given
         List<Wallet> savedWallets = createListTestWallets();
-        String accessToken = userService.createAccessToken(savedWallets.get(0).getUser());
+        String accessToken = authService.createAccessToken(savedWallets.get(0).getUser());
 
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets")
@@ -71,7 +71,7 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     void shouldGetEmptyWalletListForUserWhoDoesNotHaveWallet() throws Exception {
         //given
         List<User> listTestUsers = createListTestUsers();
-        String accessToken = userService.createAccessToken(listTestUsers.get(2));
+        String accessToken = authService.createAccessToken(listTestUsers.get(2));
         List<Wallet> listTestWallets = createListTestWallets();
         // when
         ResultActions response = mockMvc.perform(get("/api/wallets")

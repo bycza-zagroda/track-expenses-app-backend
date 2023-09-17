@@ -10,13 +10,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -37,10 +37,10 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     private FinancialTransactionRepository financialTransactionRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @BeforeEach
     void clearDatabase() {
@@ -56,7 +56,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
             throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
 
         List<Wallet> wallets = createListTestWallets(user);
         Wallet wallet1 = wallets.get(0);
@@ -86,7 +86,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", WALLET_NAME_TOO_LONG)
@@ -103,7 +103,7 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
     @Test
     void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
-        String accessToken = userService.createAccessToken(user);
+        String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wallets/wallets/{name}", "notExistingName")

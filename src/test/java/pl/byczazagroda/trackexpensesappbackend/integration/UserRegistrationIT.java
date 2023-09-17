@@ -5,10 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.dto.AuthRegisterDTO;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthRegisterDTO;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -30,7 +30,7 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
             new AuthRegisterDTO("InvalidEmail", "User123@", "User_Bolek");
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @BeforeEach
     void setup() {
