@@ -8,18 +8,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
 import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDTO;
 import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDetailedDTO;
-import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.impl.FinancialTransactionCategoryServiceImpl;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.impl.FinancialTransactionCategoryServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 
 import java.math.BigInteger;
 import java.time.Instant;
@@ -120,12 +120,7 @@ public class FinancialTransactionCategoryServiceImplTest {
 
 
         //then
-//        todo Maybe we should verify not every element but one list with elements at once?
-        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList, categoryDTOList);
-
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(0), categoryDTOList.get(0));
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(1), categoryDTOList.get(1));
-//        Assertions.assertEquals(returnedFinancialTransactionCategoryDTOsList.get(2), categoryDTOList.get(2));
+        Assertions.assertEquals(categoryDTOList, returnedFinancialTransactionCategoryDTOsList);
     }
 
     @Test
