@@ -24,4 +24,5 @@ public class ErrorResponseDTO {
         this.description = description;
         this.statusCode = statusCode;
     }
+
 }

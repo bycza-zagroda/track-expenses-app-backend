@@ -4,5 +4,5 @@ import lombok.Builder;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
 
 @Builder
-public record UserDTO (Long id, String userName,  String email, String password, UserStatus userStatus) {
+public record UserDTO(Long id, String userName, String email, String password, UserStatus userStatus) {
 }
