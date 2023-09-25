@@ -22,7 +22,7 @@ import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryService;
 import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.impl.FinancialTransactionCategoryServiceImpl;
 import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;

@@ -13,7 +13,7 @@ import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.
 import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto.FinancialTransactionCategoryUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 

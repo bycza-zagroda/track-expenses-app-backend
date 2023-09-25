@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.auth.userModel;
+package pl.byczazagroda.trackexpensesappbackend.auth.usermodel;
 
 public enum UserStatus {
     VERIFIED,

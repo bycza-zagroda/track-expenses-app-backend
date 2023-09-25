@@ -12,7 +12,7 @@ import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;

@@ -23,7 +23,7 @@ import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;
 import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 

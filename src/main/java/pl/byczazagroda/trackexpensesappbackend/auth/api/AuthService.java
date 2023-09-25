@@ -1,7 +1,7 @@
 package pl.byczazagroda.trackexpensesappbackend.auth.api;
 
 
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthRegisterDTO;
 

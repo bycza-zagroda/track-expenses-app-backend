@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;

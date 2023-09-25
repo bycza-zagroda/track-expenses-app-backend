@@ -26,8 +26,8 @@ import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthAccessTokenDTO;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
 import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
-import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
 
 import java.util.List;
