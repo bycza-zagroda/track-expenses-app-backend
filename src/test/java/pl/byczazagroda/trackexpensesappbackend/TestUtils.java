@@ -1,8 +1,8 @@
 package pl.byczazagroda.trackexpensesappbackend;
 
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto.FinancialTransactionCategoryDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.UserStatus;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;

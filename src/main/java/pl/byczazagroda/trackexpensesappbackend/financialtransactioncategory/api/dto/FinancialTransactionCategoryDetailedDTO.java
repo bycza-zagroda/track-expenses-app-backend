@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto;
+package pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto;
 
 import java.math.BigInteger;
 

@@ -1,8 +1,8 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.api;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.api;
 
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;

@@ -1,9 +1,9 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.api;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.api;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
 
 @Mapper(componentModel = "spring")
 public interface FinancialTransactionModelMapper {

@@ -1,7 +1,7 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 
 import java.math.BigDecimal;
 import java.time.Instant;

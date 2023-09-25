@@ -13,7 +13,7 @@ import pl.byczazagroda.trackexpensesappbackend.TestUtils;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;

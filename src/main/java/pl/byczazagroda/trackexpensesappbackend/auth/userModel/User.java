@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.general.regex.RegexConstant;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 

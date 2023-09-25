@@ -1,7 +1,7 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;

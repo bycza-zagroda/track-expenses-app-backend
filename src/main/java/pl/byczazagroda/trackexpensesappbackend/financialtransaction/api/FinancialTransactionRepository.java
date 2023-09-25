@@ -1,9 +1,9 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.api;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.api;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
 
 import java.math.BigInteger;
 import java.util.List;

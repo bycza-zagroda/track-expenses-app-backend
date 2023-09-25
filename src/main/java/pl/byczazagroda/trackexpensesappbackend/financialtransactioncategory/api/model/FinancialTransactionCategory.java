@@ -1,4 +1,4 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model;
+package pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model;
 
 
 import lombok.AllArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.byczazagroda.trackexpensesappbackend.auth.userModel.User;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

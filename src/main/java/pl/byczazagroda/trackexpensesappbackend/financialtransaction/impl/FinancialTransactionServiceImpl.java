@@ -1,18 +1,18 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransaction.impl;
+package pl.byczazagroda.trackexpensesappbackend.financialtransaction.impl;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.FinancialTransactionService;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.dto.FinancialTransactionUpdateDTO;
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionService;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model.FinancialTransactionCategory;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;

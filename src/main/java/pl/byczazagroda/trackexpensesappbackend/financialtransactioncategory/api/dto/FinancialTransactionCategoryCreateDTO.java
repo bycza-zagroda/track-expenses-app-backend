@@ -1,6 +1,6 @@
-package pl.byczazagroda.trackexpensesappbackend.financialTransactionCategory.api.dto;
+package pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto;
 
-import pl.byczazagroda.trackexpensesappbackend.financialTransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.general.regex.RegexConstant;
 
 import javax.validation.constraints.NotBlank;
