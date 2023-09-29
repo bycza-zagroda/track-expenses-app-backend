@@ -13,7 +13,6 @@ spring:
 
   liquibase:
     change-log: db/dbchangelog-dev.yaml
-    drop-first: true
 
 server:
   port: 8080

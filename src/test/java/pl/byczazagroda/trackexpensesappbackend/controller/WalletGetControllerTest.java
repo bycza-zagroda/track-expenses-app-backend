@@ -2,6 +2,7 @@ package pl.byczazagroda.trackexpensesappbackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
-import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;
+import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -79,8 +81,7 @@ class WalletGetControllerTest {
 
     @Test
     @DisplayName("when finding wallet list return empty list and response status OK")
-        //fixme The name of the test is not fully specified. It should describe the context of usage
-    void shouldResponseStatusOKAndReturnEmptyList() throws Exception {
+    void shouldResponseStatusOKAndReturnEmptyList_whenUserHasNoWallets() throws Exception {
         // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/wallets")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,18 +91,19 @@ class WalletGetControllerTest {
                 .getResponse();
 
         // then
-        assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(result.getContentAsString()).isEqualTo(Collections.emptyList().toString());
+        Assertions.assertAll(
+                () -> assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(result.getContentAsString()).isEqualTo(Collections.emptyList().toString())
+        );
     }
 
     @Test
     @DisplayName("when finding all wallets should return wallets list and response status OK")
-    void shouldResponseStatusOKAndAllWalletsList() throws Exception {
+    void shouldResponseStatusOKAndAllWalletsList_whenUserHasWallets() throws Exception {
         // given
         List<WalletDTO> listDTO = createListOfWalletsDTO();
         given(walletService.getWallets(USER_ID_1L))
                 .willReturn(listDTO);
-
         // when
 
         // then
@@ -109,7 +111,7 @@ class WalletGetControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(listDTO.size()));
 // Value of returned items should be greater than 0 when testing Controller for unit(!) test
 //                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(ID_OF_WALLET_1))
 //                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(NAME_OF_WALLET_1))

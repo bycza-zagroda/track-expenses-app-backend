@@ -5,40 +5,40 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RefreshTokenIT extends BaseIntegrationTestIT {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final String invalidAccessToken = "invalid_access_token";
+
+    private final String invalidRefreshToken = "invalid_refresh_token";
 
     @Autowired
-    private UserService userService;
+    private AuthRepository userRepository;
+
+    @Autowired
+    private AuthService authService;
 
     private String validAccessToken;
+
     private String validRefreshToken;
-    private final String invalidAccessToken = "invalid_access_token";
-    private final String invalidRefreshToken = "invalid_refresh_token";
+
 
     @BeforeEach
     public void setup() {
-        User user = new User();
-        user.setUserName("test");
-        user.setPassword("password");
-        user.setEmail("test@example.com");
-        user.setUserStatus(UserStatus.VERIFIED);
-        userRepository.save(user);
+        User user = userRepository.save(TestUtils.createUserForTest());
 
-        validAccessToken = userService.createAccessToken(user);
-        Cookie refreshTokenCookie = userService.createRefreshTokenCookie(user);
+        validAccessToken = authService.createAccessToken(user);
+        Cookie refreshTokenCookie = authService.createRefreshTokenCookie(user);
         validRefreshToken = refreshTokenCookie.getValue();
     }
 

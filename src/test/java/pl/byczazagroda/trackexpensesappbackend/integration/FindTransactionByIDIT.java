@@ -2,29 +2,29 @@ package pl.byczazagroda.trackexpensesappbackend.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-//fixme, this required add user_id and check and add new scenario with user
-public class FindTransactionByIDIT extends BaseIntegrationTestIT {
+class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @Autowired
     private FinancialTransactionRepository financialTransactionRepository;
@@ -33,10 +33,13 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
+
+    @Autowired
+    private AuthService authService;
 
     @BeforeEach
-    private void clearDatabase() {
+    public void clearDatabase() {
         financialTransactionRepository.deleteAll();
         walletRepository.deleteAll();
         userRepository.deleteAll();
@@ -44,38 +47,46 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
 
     @DisplayName("Should return proper financial transaction when search Id exist in database")
     @Test
-    @Disabled
-    public void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId() throws Exception {
-        User testUser = createTestUser();
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet", testUser));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+    void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId()
+            throws Exception {
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "description example");
+        String accessToken = authService.createAccessToken(user);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", testFinancialTransaction.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
+
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath("$.id").value(testFinancialTransaction.getId()),
+                MockMvcResultMatchers.jsonPath("$.amount").value(testFinancialTransaction.getAmount()),
+                MockMvcResultMatchers.jsonPath("$.description").value(testFinancialTransaction.getDescription()),
+                MockMvcResultMatchers.jsonPath("$.type").value(testFinancialTransaction.getType().toString()));
 
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
     @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
     @Test
-    @Disabled
-    public void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
-        User testUser = createTestUser();
+    void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
+        User user = userRepository.save(TestUtils.createUserForTest());
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+        String accessToken = authService.createAccessToken(user);
+        FinancialTransaction financialTransaction = createTestFinancialTransaction(wallet, "description example");
 
-        Wallet wallet = walletRepository.save(new Wallet("TestWallet", testUser));
-        FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "Test1");
+        final long notExistingFinancialTransactionId = 999L;
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(
+                        "/api/transactions/{id}",
+                        notExistingFinancialTransactionId)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(BaseIntegrationTestIT.AUTHORIZATION, BaseIntegrationTestIT.BEARER + accessToken));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/{id}", 999)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT001.getBusinessStatusCode()));
+        resultActions.andExpectAll(MockMvcResultMatchers.status().isNotFound(),
+                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.FT001.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.FT001.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.FT001.getBusinessStatusCode()));
 
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
@@ -88,18 +99,6 @@ public class FindTransactionByIDIT extends BaseIntegrationTestIT {
                 .type(FinancialTransactionType.INCOME)
                 .description(description)
                 .build());
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
     }
 
 }

@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -19,29 +19,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
 
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private final String deleteCategoryUrl = "/api/categories/{id}";
     @Autowired
     private FinancialTransactionCategoryRepository categoryRepository;
-
     @Autowired
-    private UserRepository userRepository;
-
+    private AuthRepository userRepository;
     @Autowired
-    private UserService userService;
-
-    private static final String AUTHORIZATION = "Authorization";
-
-    private static final String BEARER = "Bearer ";
-
-    private final Long nonExistentCategoryId = 999L;
-
-    private final String deleteCategoryUrl = "/api/categories/{id}";
+    private AuthService authService;
 
     @Test
     @DisplayName("Should delete category when user is owner and category exists")
     void shouldDeleteCategoryWhenExists() throws Exception {
-        User testUser = createTestUser();
-        String token = userService.createAccessToken(testUser);
-        FinancialTransactionCategory testCategory = createFinancialTransactionCategory(testUser);
+        User user = userRepository.save(TestUtils.createUserForTest());
+
+        String token = authService.createAccessToken(user);
+
+        FinancialTransactionCategory testCategory = createFinancialTransactionCategory(user);
         Long testCategoryId = testCategory.getId();
 
         mockMvc.perform(delete(deleteCategoryUrl, testCategoryId)
@@ -55,9 +50,11 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category ID is non-existent")
     void shouldNotDeleteCategoryWhenNotExists() throws Exception {
-        User testUser = createTestUser();
-        String token = userService.createAccessToken(testUser);
+        User user = userRepository.save(TestUtils.createUserForTest());
 
+        String token = authService.createAccessToken(user);
+
+        final Long nonExistentCategoryId = 999L;
         mockMvc.perform(delete(deleteCategoryUrl, nonExistentCategoryId)
                         .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -67,10 +64,12 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     @Test
     @DisplayName("Should not delete category when category belongs to another user")
     void shouldNotDeleteCategoryWhenBelongsToAnotherUser() throws Exception {
-        User testUser = createTestUser();
-        User otherUser = createTestUser();
-        String token = userService.createAccessToken(testUser);
-        FinancialTransactionCategory otherCategory = createFinancialTransactionCategory(otherUser);
+        User user1 = userRepository.save(TestUtils.createUserForTest());
+
+        User user2 = userRepository.save(TestUtils.createUserForTest());
+
+        String token = authService.createAccessToken(user1);
+        FinancialTransactionCategory otherCategory = createFinancialTransactionCategory(user2);
         Long otherCategoryId = otherCategory.getId();
 
         mockMvc.perform(delete(deleteCategoryUrl, otherCategoryId)
@@ -79,17 +78,6 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
                 .andExpect(status().isNotFound());
 
         assertThat(categoryRepository.existsById(otherCategoryId)).isTrue();
-    }
-
-    private User createTestUser() {
-        final User user = User.builder()
-                .userName("Test_Name")
-                .email("Email@mail.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(user);
     }
 
     private FinancialTransactionCategory createFinancialTransactionCategory(User user) {

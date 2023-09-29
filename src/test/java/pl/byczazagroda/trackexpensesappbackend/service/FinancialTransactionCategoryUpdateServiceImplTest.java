@@ -6,16 +6,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryUpdateDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.AppRuntimeException;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.mapper.FinancialTransactionCategoryModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionCategory;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto.FinancialTransactionCategoryDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto.FinancialTransactionCategoryUpdateDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.impl.FinancialTransactionCategoryServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.model.FinancialTransactionCategory;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class FinancialTransactionCategoryUpdateServiceImplTest {
+class FinancialTransactionCategoryUpdateServiceImplTest {
 
     private static final long VALID_ID = 1L;
 
@@ -65,7 +66,7 @@ public class FinancialTransactionCategoryUpdateServiceImplTest {
     private FinancialTransactionCategoryServiceImpl service;
 
     @Mock
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Test
     @DisplayName("update the FT category and return the category object if the ID is correct")
@@ -76,7 +77,8 @@ public class FinancialTransactionCategoryUpdateServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
         FinancialTransactionCategoryDTO dto
                 = service.updateFinancialTransactionCategory(VALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO);
-        assertEquals(dto, VALID_CATEGORY_DTO);
+
+        assertEquals(VALID_CATEGORY_DTO, dto);
     }
 
     @Test
@@ -87,6 +89,7 @@ public class FinancialTransactionCategoryUpdateServiceImplTest {
                 AppRuntimeException.class,
                 () -> service.updateFinancialTransactionCategory(INVALID_ID, USER_ID_1L, VALID_UPDATE_CATEGORY_DTO)
         );
+
         assertEquals(ErrorCode.FTC001.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(repository, never()).save(any());
     }

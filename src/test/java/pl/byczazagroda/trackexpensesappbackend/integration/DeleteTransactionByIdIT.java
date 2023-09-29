@@ -10,15 +10,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransaction;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.model.Wallet;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserService;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthService;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.model.Wallet;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,10 +34,10 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @BeforeEach
     void clearDatabase() {
@@ -50,11 +50,13 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccessfully() throws Exception {
         // given
-        User user = createTestUser();
-        String accessToken = userService.createAccessToken(user);
+        User user = userRepository.save(TestUtils.createUserForTest());
 
-        Wallet wallet = createTestWallet(user);
-        FinancialTransaction ft = createTestFinancialTransaction(wallet, "Test Transaction");
+        String accessToken = authService.createAccessToken(user);
+
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
+
+        FinancialTransaction ft = createTestFinancialTransaction(wallet, "description example");
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -74,9 +76,9 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
     @Test
     void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
         // given
-        User user = createTestUser();
-        String accessToken = userService.createAccessToken(user);
-        Wallet wallet = createTestWallet(user);
+        User user = userRepository.save(TestUtils.createUserForTest());
+        String accessToken = authService.createAccessToken(user);
+        Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -100,22 +102,4 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
                         .build());
     }
 
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .userName("userone")
-                .email("Email@wp.pl")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-        return userRepository.save(userOne);
-    }
-
-    private Wallet createTestWallet(User user) {
-        final Wallet testWallet = Wallet.builder()
-                .user(user)
-                .creationDate(Instant.now())
-                .name("TestWallet")
-                .build();
-        return walletRepository.save(testWallet);
-    }
 }

@@ -20,14 +20,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
-import pl.byczazagroda.trackexpensesappbackend.dto.AuthAccessTokenDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.AuthLoginDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.service.UserServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.auth.AuthController;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthAccessTokenDTO;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.AuthLoginDTO;
+import pl.byczazagroda.trackexpensesappbackend.auth.impl.AuthServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = AuthController.class,
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
-                {UserServiceImpl.class, ErrorStrategy.class, WebSecurityConfig.class}))
+                {AuthServiceImpl.class, ErrorStrategy.class, WebSecurityConfig.class}))
 @ActiveProfiles("test")
 class UserLoginTest {
 
@@ -64,7 +65,7 @@ class UserLoginTest {
     private static final String TEST_USERNAME = "TestUser";
 
     @MockBean
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -91,8 +92,8 @@ class UserLoginTest {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token " +
-            "and refresh token")
+    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token "
+            + "and refresh token")
     @Test
     void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsTrue_thenShouldReturnOnlyAccessTokenAndRefreshToken()
             throws Exception {
@@ -171,11 +172,12 @@ class UserLoginTest {
         final String invalidAccessToken = authAccessTokenDTO.accessToken() + "bbb";
 
         assertThrows(SignatureVerificationException.class,
-                ()-> decodedJWT
+                () -> decodedJWT
                 .verify(invalidAccessToken));
     }
 
     private String hashPassword(String password) {
         return passwordEncoder.encode(password);
     }
+
 }

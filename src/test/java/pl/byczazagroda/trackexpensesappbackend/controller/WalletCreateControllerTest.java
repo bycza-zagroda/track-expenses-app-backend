@@ -13,15 +13,16 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.byczazagroda.trackexpensesappbackend.config.WebSecurityConfig;
-import pl.byczazagroda.trackexpensesappbackend.dto.UserDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.dto.WalletDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorStrategy;
-import pl.byczazagroda.trackexpensesappbackend.mapper.WalletModelMapper;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.service.WalletService;
-import pl.byczazagroda.trackexpensesappbackend.service.WalletServiceImpl;
+import pl.byczazagroda.trackexpensesappbackend.auth.WebSecurityConfig;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.dto.UserDTO;
+import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorStrategy;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.UserStatus;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletService;
+import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 
 import java.time.Instant;
 import java.util.Objects;

@@ -10,15 +10,16 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.byczazagroda.trackexpensesappbackend.BaseIntegrationTestIT;
-import pl.byczazagroda.trackexpensesappbackend.dto.FinancialTransactionCategoryCreateDTO;
-import pl.byczazagroda.trackexpensesappbackend.exception.ErrorCode;
-import pl.byczazagroda.trackexpensesappbackend.model.FinancialTransactionType;
-import pl.byczazagroda.trackexpensesappbackend.model.User;
-import pl.byczazagroda.trackexpensesappbackend.model.UserStatus;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionCategoryRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.FinancialTransactionRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.UserRepository;
-import pl.byczazagroda.trackexpensesappbackend.repository.WalletRepository;
+import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.FinancialTransactionCategoryRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransactioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
+import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
+import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
+
 
 class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
 
@@ -34,7 +35,7 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     private WalletRepository walletRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthRepository userRepository;
 
 
     @BeforeEach
@@ -49,7 +50,8 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
     @Test
     void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
     ) throws Exception {
-        User user = createTestUser();
+        User user = userRepository.save(TestUtils.createUserForTest());
+
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("Category",
                 FinancialTransactionType.INCOME);
@@ -159,18 +161,6 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                         MockMvcResultMatchers.jsonPath("$.statusCode")
                                 .value(ErrorCode.TEA003.getBusinessStatusCode())
                 );
-    }
-
-    private User createTestUser() {
-        final User userOne = User.builder()
-                .id(1L)
-                .userName("UserOne")
-                .email("user@server.domain.com")
-                .password("Password1@")
-                .userStatus(UserStatus.VERIFIED)
-                .build();
-
-        return userRepository.save(userOne);
     }
 
 }
