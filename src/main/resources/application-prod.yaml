@@ -13,4 +13,4 @@ spring:
     change-log: db/dbchangelog-prod.yaml
 
 server:
-  port: 9090
+  port: 8080

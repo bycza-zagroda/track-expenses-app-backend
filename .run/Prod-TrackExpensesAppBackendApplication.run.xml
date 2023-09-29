@@ -6,6 +6,9 @@
       <env name="DB_SERVER" value="localhost" />
       <env name="DB_USER" value="root" />
       <env name="DB_NAME" value="trackexpensesapp" />
+      <env name="JWT_SECRET" value="secret" />
+      <env name="JWT_EXP" value="604800000" />
+      <env name="JWT_REFRESH_EXP" value="31536000000" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="pl.byczazagroda.trackexpensesappbackend.TrackExpensesAppBackendApplication" />
     <module name="track-expenses-app-backend" />
