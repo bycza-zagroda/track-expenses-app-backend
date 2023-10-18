@@ -35,6 +35,7 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
 
     @BeforeEach
     public void setup() {
+        userRepository.deleteAll();
         User user = userRepository.save(TestUtils.createUserForTest());
 
         validAccessToken = authService.createAccessToken(user);
