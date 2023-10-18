@@ -32,6 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService {
 
+    public static final String WALLET_WITH_ID_DOES_NOT_EXIST = "Wallet with id: %d does not exist";
     private final WalletRepository walletRepository;
     private final WalletModelMapper walletModelMapper;
     private final AuthRepository userRepository;
@@ -53,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> new AppRuntimeException(
                         ErrorCode.W003,
-                        String.format("Wallet with id: %d does not exist", id)));
+                        String.format(WALLET_WITH_ID_DOES_NOT_EXIST, id)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,
@@ -78,7 +79,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new AppRuntimeException(
                         ErrorCode.W003,
-                        String.format("Wallet with id: %d does not exist", walletId)));
+                        String.format(WALLET_WITH_ID_DOES_NOT_EXIST, walletId)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,
@@ -93,7 +94,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() ->  new AppRuntimeException(
                             ErrorCode.W003,
-                            String.format("Wallet with id: %d does not exist", walletId)));
+                            String.format(WALLET_WITH_ID_DOES_NOT_EXIST, walletId)));
         if (!wallet.getUser().getId().equals(userId)) {
             throw new AppRuntimeException(
                     ErrorCode.W005,

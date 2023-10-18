@@ -89,6 +89,7 @@ class FinancialTransactionServiceImplTest {
     void testCreateFinancialTransaction_WhenTransactionTypeDoesNotMatchCategoryType_ThenThrowAppRunTimeException() {
         //given
         User user = TestUtils.createUserForTest();
+        Long userId = user.getId();
 
         FinancialTransactionCreateDTO ftCreateDTO = createFinancialTransactionCreateDTO();
         Wallet wallet = TestUtils.createWalletForTest(user);
@@ -105,7 +106,7 @@ class FinancialTransactionServiceImplTest {
         //when & then
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
-                () -> financialTransactionService.createFinancialTransaction(ftCreateDTO, user.getId()));
+                () -> financialTransactionService.createFinancialTransaction(ftCreateDTO, userId));
         assertEquals(ErrorCode.FT002.getBusinessStatusCode(), exception.getBusinessStatusCode());
     }
 
@@ -118,7 +119,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
     void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException() {
         //given
-        User user = TestUtils.createUserForTest();
+        Long userId = TestUtils.createUserForTest().getId();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.empty());
@@ -126,7 +127,7 @@ class FinancialTransactionServiceImplTest {
         //when & then
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
-                () -> financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, user.getId())
+                () -> financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, userId)
         );
         assertEquals(ErrorCode.W003.getBusinessStatusCode(), exception.getBusinessStatusCode());
         verify(walletRepository, never()).save(any());
@@ -212,7 +213,7 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("do not update financial transaction without valid id and throw AppRuntimeException")
     void shouldThrowExceptionWhenUpdatingFinancialTransactionWithInvalidId() {
         //given
-        User user = TestUtils.createUserForTest();
+        Long userId = TestUtils.createUserForTest().getId();
 
         FinancialTransactionUpdateDTO updateDTO = createFinancialTransactionUpdateDTO();
         when(financialTransactionRepository.findByIdAndWalletUserId(any(), any())).thenReturn(Optional.empty());
@@ -220,7 +221,7 @@ class FinancialTransactionServiceImplTest {
         //when & then
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,
-                () -> financialTransactionService.updateFinancialTransaction(ID_1L, updateDTO, user.getId())
+                () -> financialTransactionService.updateFinancialTransaction(ID_1L, updateDTO, userId)
         );
 
         assertEquals(ErrorCode.FT001.getBusinessStatusCode(), exception.getBusinessStatusCode());
@@ -322,14 +323,14 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when financial transaction id doesn't exist should not return transaction")
     void shouldNotReturnFinancialTransactionById_WhenIdNotExist() {
         //given
-        User user = TestUtils.createUserForTest();
+        Long userId = TestUtils.createUserForTest().getId();
 
         //when
         when(financialTransactionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         //then
         assertThatExceptionOfType(AppRuntimeException.class).isThrownBy(
-                        () -> financialTransactionService.findFinancialTransactionForUser(ID_10L, user.getId()))
+                        () -> financialTransactionService.findFinancialTransactionForUser(ID_10L, userId))
                 .withMessage(ErrorCode.FT001.getBusinessMessage());
     }
 
@@ -361,13 +362,13 @@ class FinancialTransactionServiceImplTest {
     @DisplayName("when deleting financial transaction that does not exist should throw an exception")
     void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
         //given
-        User user = TestUtils.createUserForTest();
+        Long userId = TestUtils.createUserForTest().getId();
 
         //when
         when(financialTransactionRepository.existsById(ID_1L)).thenReturn(false);
 
         //then
-        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L, user.getId()));
+        Assertions.assertThrows(AppRuntimeException.class, () -> financialTransactionService.deleteTransactionById(ID_1L, userId));
     }
 
     private FinancialTransaction createEntityFinancialTransaction(Long financialTransactionId) {

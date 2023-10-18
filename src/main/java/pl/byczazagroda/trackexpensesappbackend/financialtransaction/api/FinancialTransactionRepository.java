@@ -20,6 +20,6 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
     Optional<FinancialTransaction> findByIdAndWalletUserId(Long id, Long userId);
 
-    Boolean existsByIdAndWalletUserId(Long financialTransactionId, Long userId);
+    boolean existsByIdAndWalletUserId(Long financialTransactionId, Long userId);
 
 }

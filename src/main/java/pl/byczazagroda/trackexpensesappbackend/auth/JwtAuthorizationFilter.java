@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -43,12 +44,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String userId = decodedJWT.getSubject();
 
                 Claim authoritiesClaim = decodedJWT.getClaim("authorities");
-                List<GrantedAuthority> authorities;
+                List<SimpleGrantedAuthority> authorities;
 
                 if (authoritiesClaim != null) {
                     authorities = authoritiesClaim.asList(String.class).stream()
                             .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+                            .toList();
                 } else {
                     authorities = new ArrayList<>();
                 }
