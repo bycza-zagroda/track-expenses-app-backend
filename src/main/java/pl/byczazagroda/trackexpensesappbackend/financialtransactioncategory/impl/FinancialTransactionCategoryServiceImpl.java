@@ -29,6 +29,8 @@ import java.util.List;
 @Validated
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
 
+    public static final String CATEGORY_WITH_ID_NOT_FOUND_FOR_USER = "Financial transaction category with id: %d not found for user ";
+
     private final FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     private final FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
@@ -61,7 +63,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository
                 .findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
+                        String.format(CATEGORY_WITH_ID_NOT_FOUND_FOR_USER, categoryId)));
 
         BigInteger numberOfFinancialTransactions =
                 financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(categoryId);
@@ -96,7 +98,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         } else {
             throw new AppRuntimeException(
                     ErrorCode.FTC001,
-                    String.format("Financial transaction category with id: %d not found for user ", categoryId));
+                    String.format(CATEGORY_WITH_ID_NOT_FOUND_FOR_USER, categoryId));
         }
     }
 
@@ -106,7 +108,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
         FinancialTransactionCategory financialTransactionCategory
                 = financialTransactionCategoryRepository.findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
-                        String.format("Financial transaction category with id: %d not found for user ", categoryId)));
+                        String.format(CATEGORY_WITH_ID_NOT_FOUND_FOR_USER, categoryId)));
 
         User user = getUserByUserId(userId);
 
