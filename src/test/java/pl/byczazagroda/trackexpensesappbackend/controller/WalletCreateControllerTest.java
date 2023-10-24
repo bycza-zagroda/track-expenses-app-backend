@@ -48,7 +48,7 @@ class WalletCreateControllerTest {
 
     public static final String TOO_LONG_NAME_MORE_THAN_20_LETTERS = "Too long name - more than 20 letters.";
 
-    public static final String WALLET_NAME = "test";
+    public static final String WALLET_NAME = "test wallet name";
 
     @MockBean
     private WalletService walletService;
