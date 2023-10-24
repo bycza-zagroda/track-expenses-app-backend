@@ -48,6 +48,8 @@ class WalletCreateControllerTest {
 
     public static final String TOO_LONG_NAME_MORE_THAN_20_LETTERS = "Too long name - more than 20 letters.";
 
+    public static final String WALLET_NAME = "test";
+
     @MockBean
     private WalletService walletService;
 
@@ -127,6 +129,24 @@ class WalletCreateControllerTest {
 
         // then
         resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("when create wallet correctly should return response status created")
+    void shouldReturnResponseStatusCreated_WhenCreateWalletCorrectly() throws Exception {
+        // given
+        WalletCreateDTO createDTO = new WalletCreateDTO(WALLET_NAME);
+        given(walletService.createWallet(createDTO, USER_ID_1L))
+                .willReturn(new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/wallets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(createDTO)))
+                .with(SecurityMockMvcRequestPostProcessors.user(String.valueOf(USER_ID_1L))));
+
+        // then
+        resultActions.andExpect(status().isCreated());
     }
 
     private UserDTO createTestUserDTO() {
