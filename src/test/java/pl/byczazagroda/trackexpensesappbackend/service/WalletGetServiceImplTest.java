@@ -70,8 +70,8 @@ class WalletGetServiceImplTest {
     private WalletModelMapper walletModelMapper;
 
     @Test
-    @DisplayName("when wallet id doesn't exist should not return wallet")
-    void shouldNotReturnWalletById_WhenWalletIdNotExist() {
+    @DisplayName("Should not return a wallet if the wallet ID is not found during update")
+    void updateWallet_WalletIdNotFound_ThrowAppRuntimeException() {
         // given
         Long userId = 1L;
         given(walletRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
@@ -84,8 +84,8 @@ class WalletGetServiceImplTest {
     }
 
     @Test
-    @DisplayName("when finding with proper wallet id should successfully find wallet")
-    void shouldSuccessfullyFindWallet_WhenFindingWithProperWalletId() {
+    @DisplayName("Should find and return a wallet with the proper ID")
+    void findById_ValidWalletId_ReturnsWalletDTO() {
         //given
         Wallet wallet = Wallet.builder()
                 .id(WALLET_ID_1L)
@@ -108,8 +108,8 @@ class WalletGetServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet by id not found should not return wallet")
-    void shouldNotReturnWallet_WhenWalletByIdNotFound() {
+    @DisplayName("Should not return a wallet if the wallet ID is not found")
+    void findById_WalletIdNotFound_ThrowAppRuntimeException() {
         //given
 
         //when
@@ -122,8 +122,8 @@ class WalletGetServiceImplTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by name should return all wallets contains this name pattern")
-    void shouldReturnAllWalletsContainsNamePattern_WhenFindingWalletByName() {
+    @DisplayName("Should return all wallets containing the specified name pattern")
+    void findAllByNameIgnoreCase_NamePatternProvided_ReturnsFilteredWallets() {
         // given
         User user = createTestUser();
         String walletNameSearched = "Family";

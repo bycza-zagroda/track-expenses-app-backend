@@ -69,8 +69,8 @@ class WalletUpdateControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("when update wallet data are correct should return response status OK")
-    void shouldReturnResponseStatusOK_WhenUpdateWalletDataAreCorrect() throws Exception {
+    @DisplayName("Should return OK status when updating wallet with correct data")
+    void updateWallet_ValidData_ShouldReturnStatusOk() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -89,8 +89,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name is empty should return response status bad request")
-    void shouldReturnResponseStatusBadRequest_WhenWalletNameIsEmpty() throws Exception {
+    @DisplayName("Should return OK status and correct response body when wallet name is changed")
+    void updateWallet_NameChanged_ShouldReturnStatusOkAndCorrectResponseBody() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(EMPTY_NAME);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -107,8 +107,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name is changed return response status OK and correct response body")
-    void shouldReturnStatusOKAndCorrectResponseBody_WhenWalletNameIsChanged() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with empty name")
+    void updateWallet_EmptyName_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -127,8 +127,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name is too long should return response status bad request")
-    void shouldReturnResponseStatusBadRequest_WhenWalletNameIsTooLong() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with name too long")
+    void updateWallet_NameTooLong_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -145,8 +145,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name contains illegal letters should return response status bad request")
-    void shouldReturnResponseStatusBadRequest_WhenWalletNameContainsIllegalLetters() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with name containing illegal characters")
+    void updateWallet_IllegalCharactersInName_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(INVALID_NAME);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -163,8 +163,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet id is null should return response status server error")
-    void shouldReturnResponseStatusServerError_WhenWalletIdIsNull() throws Exception {
+    @DisplayName("Should return server error status when updating wallet with null ID")
+    void updateWallet_NullId_ShouldReturnStatusServerError() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(INVALID_NAME);
         given(walletService.updateWallet(null, updDTO, USER_ID_1L))
@@ -189,8 +189,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet id is zero should return response status bad request")
-    void shouldReturnResponseStatusBadRequest_WhenWalletIdIsZero() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with ID zero")
+    void updateWallet_ZeroId_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
 //        given(walletService.updateWallet(WALLET_ID_0L, updDTO, USER_ID_1L))
@@ -215,8 +215,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet id is negative should return response status bad request")
-    void shouldReturnResponseStatusBadRequestWhenWalletIdIsNegative() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with negative ID")
+    void updateWallet_NegativeId_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(NAME_1);
         given(walletService.updateWallet(-WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -241,8 +241,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name is empty should return response status bad request")
-    void shouldReturnResponseStatusBadRequestWhenWalletNameIsEmpty() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with empty name")
+    void updateWallet_EmptyNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(EMPTY_NAME);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -267,8 +267,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name is too long should return response status bad request")
-    void shouldReturnResponseStatusBadRequestWhenWalletNameIsTooLong() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with excessively long name")
+    void updateWallet_ExcessivelyLongNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(TOO_LONG_NAME_MORE_THAN_20_LETTERS);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))
@@ -293,8 +293,8 @@ class WalletUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("when wallet name contains illegal letters should return response status bad request")
-    void shouldReturnResponseStatusBadRequestWhenWalletNameContainsIllegalLetters() throws Exception {
+    @DisplayName("Should return bad request status when updating wallet with name containing illegal characters")
+    void updateWallet_IllegalCharactersInNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         WalletUpdateDTO updDTO = new WalletUpdateDTO(INVALID_NAME);
         given(walletService.updateWallet(WALLET_ID_1L, updDTO, USER_ID_1L))

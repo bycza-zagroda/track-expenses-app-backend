@@ -43,8 +43,8 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("should get all wallets for user which has these wallets")
-    void shouldGetAllWalletsAccordingToUserCredentials() throws Exception {
+    @DisplayName("Should retrieve a list of wallets belonging to the authenticated user")
+    void retrieveAllWallets_AuthenticatedUser_ShouldReturnListOfUserWallets() throws Exception {
         //given
         List<Wallet> savedWallets = createListTestWallets();
         String accessToken = authService.createAccessToken(savedWallets.get(0).getUser());
@@ -67,8 +67,8 @@ class GetAllWalletsIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("should get empty wallet list for user who doesn't have wallet")
-    void shouldGetEmptyWalletListForUserWhoDoesNotHaveWallet() throws Exception {
+    @DisplayName("Should return an empty list of wallets for users without any wallets")
+    void retrieveAllWallets_NoWalletsForUser_ShouldReturnEmptyList() throws Exception {
         //given
         List<User> listTestUsers = createListTestUsers();
         String accessToken = authService.createAccessToken(listTestUsers.get(2));

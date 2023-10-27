@@ -61,9 +61,9 @@ public class FinancialTransactionCategoryServiceImplTest {
     @Mock
     private AuthRepository userRepository;
 
-    @DisplayName("create financial transaction category when valid parameters are provided")
+    @DisplayName("Should create a financial transaction category when valid parameters are provided")
     @Test
-    void testCreateTransactionCategory_whenValidParametersProvided_thenReturnFinancialTransactionCategoryDTO() {
+    void createFinancialTransactionCategory_ValidParameters_ShouldReturnFTCDTO() {
         //given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
                 new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME, CATEGORY_TYPE);
@@ -90,8 +90,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("when finding financial transaction categories should successfully return categoryDTOs list")
-    void testReadTransactionCategories_whenExecutingFindAll_thenReturnTransactionCategoriesDTOList() {
+    @DisplayName("Should return a list of financial transaction categories when queried")
+    void getFinancialTransactionCategories_WhenQueried_ShouldReturnListOfDTOs() {
         //given
         User user = TestUtils.createUserForTest();
         final int categoryCounter = 3;
@@ -124,8 +124,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("when financial transaction category exists should delete it successfully")
-    void shouldSuccessfullyDeleteFinancialTransactionCategory_WhenGivenCategoryExists() {
+    @DisplayName("Should delete the financial transaction category when it exists")
+    void deleteFinancialTransactionCategory_ExistingCategory_ShouldDeleteSuccessfully() {
         //when
         when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(true);
         financialTransactionCategoryService.deleteFinancialTransactionCategory(FINANCIAL_TRANSACTION_CATEGORY_ID_1L,
@@ -136,8 +136,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("when financial transaction category doesn't exist should throw an exception")
-    void shouldFailToDeleteFinancialTransactionCategory_WhenIdNotExists() {
+    @DisplayName("Should throw an exception when trying to delete a non-existent financial transaction category")
+    void deleteFinancialTransactionCategory_NonExistentCategory_ShouldThrowException() {
         //when
         when(financialTransactionCategoryRepository.existsByIdAndUserId(anyLong(), anyLong())).thenReturn(false);
 
@@ -148,9 +148,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("when finding with proper financial transaction category id "
-            + "should successfully find financial transaction category and number of financial transaction")
-    void shouldSuccessfullyFindFinancialTransactionCategory_WhenFindingWithProperFinancialTransactionCategoryId() {
+    @DisplayName("Should retrieve financial transaction category and its transactions count for a valid ID")
+    void findCategoryForUser_ValidCategoryId_ShouldReturnCategoryAndTransactionsCount() {
         //given
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(
                 FINANCIAL_TRANSACTION_CATEGORY_NAME_EXAMPLE_NAME,
@@ -185,8 +184,8 @@ public class FinancialTransactionCategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("when financial transaction category doesn't exist should throw an exception")
-    void shouldFailToReadFinancialTransactionCategoryById_WhenIdDoNotExists() {
+    @DisplayName("Should throw an exception when trying to retrieve a non-existent financial transaction category")
+    void findCategoryForUser_NonExistentCategoryId_ShouldThrowException() {
         //when
         when(financialTransactionCategoryRepository
                 .findByIdAndUserId(anyLong(), anyLong()))

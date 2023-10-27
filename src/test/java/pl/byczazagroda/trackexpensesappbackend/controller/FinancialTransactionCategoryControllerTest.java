@@ -54,9 +54,9 @@ class FinancialTransactionCategoryControllerTest {
 
     @Test
     @WithMockUser(username = "1")
-    @DisplayName("when getting all financial transaction categories "
-            + "should return financial transaction category DTOs list and response status OK")
-    void shouldResponseStatusOKAndFinancialTransactionCategoryDTOsList() throws Exception {
+    @DisplayName("Should return financial transaction categories with status OK")
+    void getFinancialTransactionCategories_AllCategoriesExist_ShouldReturnCategoryDTOsListAndStatusOk()
+            throws Exception {
 
         // given
         final int transactionCounter = 4;

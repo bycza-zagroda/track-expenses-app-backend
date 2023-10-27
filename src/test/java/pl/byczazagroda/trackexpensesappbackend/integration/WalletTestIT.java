@@ -32,8 +32,8 @@ class WalletTestIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("It should create wallet")
-    void shouldCreateWallet() throws Exception {
+    @DisplayName("Should successfully create a wallet for a user")
+    void createWallet_ValidData_ShouldSaveWalletSuccessfully() throws Exception {
         User user = createTestUser();
         WalletCreateDTO walletCreateDTO =
                 new WalletCreateDTO("Test name");

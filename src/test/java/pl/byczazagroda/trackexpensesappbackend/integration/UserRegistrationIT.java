@@ -37,9 +37,9 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("When a new user is registered, it should save user and return CREATED status")
+    @DisplayName("Should register and save new user, returning CREATED status")
     @Test
-    void testRegisterUser_whenNewUserIsAdded_thenShouldCreateUserAndReturn201Status() throws Exception {
+    void registerUser_ValidNewUser_ShouldSaveAndReturnCreatedStatus() throws Exception {
 
         mockMvc.perform(post(REGISTER_USER_URL)
                         .contentType("application/json")
@@ -53,9 +53,9 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
         assertNotEquals(REGISTER_DTO.password(), user.getPassword());
     }
 
-    @DisplayName("When trying to register a user that already exists, it should return BAD_REQUEST")
+    @DisplayName("Should return 'Bad Request' status when trying to register an already existing user")
     @Test
-    void testRegisterUser_whenUserAlreadyExists_thenShouldReturnErrorResponse() throws Exception {
+    void registerUser_AlreadyExistingUser_ShouldReturnBadRequestStatus() throws Exception {
         final User existingUser = User.builder()
                 .email("user@server.com")
                 .userName("User_Bolek")
@@ -71,18 +71,18 @@ class UserRegistrationIT extends BaseIntegrationTestIT {
                 .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("When registering a user with a password that's too short, it should return BAD_REQUEST")
+    @DisplayName("Should return 'Bad Request' status when registering user with a too short password")
     @Test
-    void testRegisterUser_whenPasswordIsTooShort_thenShouldReturnErrorResponse() throws Exception {
+    void registerUser_TooShortPassword_ShouldReturnBadRequestStatus() throws Exception {
         mockMvc.perform(post(REGISTER_USER_URL)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(REGISTER_DTO_TOO_SHORT_PASSWORD)))
                 .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("When registering a user with an invalid email, it should return BAD_REQUEST")
+    @DisplayName("Should return 'Bad Request' status when registering user with an invalid email")
     @Test
-    void testRegisterUser_whenEmailIsInvalid_thenShouldReturnErrorResponse() throws Exception {
+    void registerUser_InvalidEmail_ShouldReturnBadRequestStatus() throws Exception {
         mockMvc.perform(post(REGISTER_USER_URL)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(REGISTER_DTO_INVALID_EMAIL)))

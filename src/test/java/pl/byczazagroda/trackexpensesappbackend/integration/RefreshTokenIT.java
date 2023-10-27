@@ -43,9 +43,9 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
         validRefreshToken = refreshTokenCookie.getValue();
     }
 
-    @DisplayName("When request contains valid access_token and refresh_token, should return 200 OK and update refresh_token cookie")
+    @DisplayName("Should refresh tokens when both access and refresh tokens are valid")
     @Test
-    void testRefreshToken_whenAccessTokenAndRefreshTokenValid_thenShouldReturnOkAndUpdateRefreshToken() throws Exception {
+    void refreshTokens_ValidTokensGiven_ShouldUpdateRefreshTokenCookie() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .cookie(new Cookie("refresh_token", validRefreshToken))
                         .header("Authorization", "Bearer " + validAccessToken))
@@ -53,26 +53,26 @@ class RefreshTokenIT extends BaseIntegrationTestIT {
                 .andExpect(cookie().exists("refresh_token"));
     }
 
-    @DisplayName("When request does not contain refresh_token cookie, should return 500 isInternalServerError")
+    @DisplayName("Should return 'Internal Server Error' status when refresh token is missing")
     @Test
-    void testRefreshToken_whenNoRefreshTokenCookie_thenShouldReturnBadRequest() throws Exception {
+    void refreshTokens_NoRefreshTokenGiven_ShouldReturnStatusInternalServerError() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .header("Authorization", "Bearer " + validAccessToken))
                 .andExpect(status().isInternalServerError());
     }
 
-    @DisplayName("When request contains invalid access_token, should return 403 Forbidden")
+    @DisplayName("Should return 'Forbidden' status when access token is invalid")
     @Test
-    void testRefreshToken_whenAccessTokenInvalid_thenShouldReturnBadRequest() throws Exception {
+    void refreshTokens_InvalidAccessTokenGiven_ShouldReturnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .cookie(new Cookie("refresh_token", validRefreshToken))
                         .header("Authorization", "Bearer " + invalidAccessToken))
                 .andExpect(status().isForbidden());
     }
 
-    @DisplayName("When request contains invalid refresh_token cookie, should return 403 Forbidden")
+    @DisplayName("Should return 'Forbidden' status when refresh token is invalid")
     @Test
-    void testRefreshToken_whenRefreshTokenInvalid_thenShouldReturnBadRequest() throws Exception {
+    void refreshTokens_InvalidRefreshTokenGiven_ShouldReturnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
                         .cookie(new Cookie("refresh_token", invalidRefreshToken))
                         .header("Authorization", "Bearer " + validAccessToken))

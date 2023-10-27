@@ -68,8 +68,8 @@ class WalletCreateServiceImplTest {
     private WalletModelMapper walletModelMapper;
 
     @Test
-    @DisplayName("when wallet data are correct should create wallet successfully")
-    void shouldCreateWalletSuccessfully_WhenWalletDataAreCorrect() {
+    @DisplayName("Should create a wallet successfully with valid data")
+    void createWallet_ValidData_ReturnsWalletDTO() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -95,8 +95,8 @@ class WalletCreateServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet name is empty should not create wallet")
-    void shouldNotCreateWallet_WhenWalletNameIsEmpty() {
+    @DisplayName("Should not create a wallet with an empty name")
+    void createWallet_EmptyName_ThrowConstraintViolationException() {
         //given
         User user = TestUtils.createUserForTest();
         Long userId = user.getId();
@@ -117,8 +117,8 @@ class WalletCreateServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet name is blank should not create wallet")
-    void shouldNotCreateWallet_WhenWalletNameIsBlank() {
+    @DisplayName("Should not create a wallet with a blank name")
+    void createWallet_BlankName_ThrowConstraintViolationException() {
         //given
         User user = TestUtils.createUserForTest();
         Long userId = user.getId();
@@ -139,8 +139,8 @@ class WalletCreateServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet name is null should not create wallet")
-    void shouldNotCreateWallet_WhenWalletNameIsNull() {
+    @DisplayName("Should not create a wallet with a null name")
+    void createWallet_NullName_ThrowConstraintViolationException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
         WalletCreateDTO walletCreateDTO = new WalletCreateDTO(null);
@@ -152,8 +152,8 @@ class WalletCreateServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet name is too long should not create wallet")
-    void shouldNotCreateWallet_WhenWalletNameIsTooLong() {
+    @DisplayName("Should not create a wallet with a too long name")
+    void createWallet_TooLongName_ThrowConstraintViolationException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
 
@@ -166,8 +166,8 @@ class WalletCreateServiceImplTest {
     }
 
     @Test
-    @DisplayName("when wallet name contains illegal letters should not create wallet")
-    void shouldNotCreateWallet_WhenWalletNameContainsIllegalLetters() {
+    @DisplayName("Should not create a wallet with illegal characters in the name")
+    void createWallet_IllegalNameCharacters_ThrowConstraintViolationException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
         WalletCreateDTO walletCreateDTO = new WalletCreateDTO(INVALID_WALLET_NAME);

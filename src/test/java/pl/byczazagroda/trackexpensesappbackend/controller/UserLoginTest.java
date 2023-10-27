@@ -79,9 +79,9 @@ class UserLoginTest {
 
     }
 
-    @DisplayName("When user credentials are valid and remember_me option is disabled, should return only access_token")
+    @DisplayName("Should return only access token for valid credentials without remember_me")
     @Test
-    void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsFalse_thenShouldReturnOnlyAccessToken()
+    void loginUser_ValidCredentialsAndNoRememberMe_ShouldReturnAccessToken()
             throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, false);
         mockMvc.perform(post(LOGIN_URL)
@@ -92,10 +92,9 @@ class UserLoginTest {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("When user credentials are valid and remember_me option is enabled, should return access_token "
-            + "and refresh token")
+    @DisplayName("Should return access and refresh tokens for valid credentials with remember_me")
     @Test
-    void testLoginUser_whenUserCredentialsAreOkAndIsRememberMeIsTrue_thenShouldReturnOnlyAccessTokenAndRefreshToken()
+    void loginUser_ValidCredentialsAndRememberMe_ShouldReturnAccessTokenAndRefreshToken()
             throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, true);
         mockMvc.perform(post(LOGIN_URL)
@@ -106,9 +105,9 @@ class UserLoginTest {
                 .andExpect(cookie().exists("refresh_token"));
     }
 
-    @DisplayName("When user credentials are invalid, should return an 400 error response")
+    @DisplayName("Should return 400 error for invalid credentials")
     @Test
-    void testLoginUser_whenUserCredentialsAreBad_thenShouldReturnBadRequestStatus() throws Exception {
+    void loginUser_InvalidCredentials_ShouldReturnBadRequestStatus() throws Exception {
         AuthLoginDTO loginDTO = new AuthLoginDTO(TEST_EMAIL, "wrongpasswordAAAAA123/)>", false);
         mockMvc.perform(post(LOGIN_URL)
                         .contentType("application/json")
@@ -117,9 +116,9 @@ class UserLoginTest {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("When user credentials are invalid, should return an 401 error response")
+    @DisplayName("Should return 401 error when user is not signed up")
     @Test
-    void testLoginUser_whenUserIsNotSignUp_thenShouldReturnUnauthorizedStatus() throws Exception {
+    void loginUser_UserNotRegistered_ShouldReturnStatusUnauthorized() throws Exception {
         AuthLoginDTO loginDTO =
                 new AuthLoginDTO("email@emila.com", "passwordAAAAA123@", false);
         mockMvc.perform(post(LOGIN_URL)
@@ -129,9 +128,9 @@ class UserLoginTest {
                 .andExpect(cookie().doesNotExist("refresh_token"));
     }
 
-    @DisplayName("Should return valid token when user credential are valid")
+    @DisplayName("Should return valid token for valid user credentials")
     @Test
-    void testShouldReturnValidToken_WhenUserCredentialsAreValid() throws Exception {
+    void generateToken_ValidUserCredentials_ShouldReturnValidToken() throws Exception {
         AuthLoginDTO loginDTO =
                 new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, false);
         MvcResult result = mockMvc.perform(post(LOGIN_URL)
@@ -152,9 +151,9 @@ class UserLoginTest {
         assertThat(TEST_EMAIL).isEqualTo(decodedJWT.getClaim("email").asString());
     }
 
-    @DisplayName("Should return not valid and throw exception when user credentials are ok and created token is modified")
+    @DisplayName("Should throw an exception for a modified token with valid credentials")
     @Test
-    void testShouldThrowExceptionToken_WhenUserCredentialsAreOk_AndCreatedTokenIsModified() throws Exception {
+    void verifyToken_ValidCredentialsButModifiedToken_ShouldThrowException() throws Exception {
         AuthLoginDTO loginDTO =
                 new AuthLoginDTO(TEST_EMAIL, TEST_PASSWORD, false);
         MvcResult result = mockMvc.perform(post(LOGIN_URL)

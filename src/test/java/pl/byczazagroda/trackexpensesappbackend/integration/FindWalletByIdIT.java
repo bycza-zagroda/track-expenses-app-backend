@@ -36,9 +36,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("It should return wallet DTO by given id")
+    @DisplayName("Should retrieve the correct wallet when provided with a valid ID")
     @Test
-    void testFindWalletByIdAPI_whenWalletIdIsCorrect_thenReturnWalletDTO() throws Exception {
+    void retrieveWallet_ValidIdGiven_ShouldReturnCorrespondingWallet() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
@@ -55,9 +55,9 @@ class FindWalletByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("It should return status Not Found when it cannot find by given id")
+    @DisplayName("Should return 'Not Found' status when trying to retrieve a wallet with a non-existent ID")
     @Test
-    void testFindWalletByIdAPI_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
+    void retrieveWallet_NonExistentIdGiven_ShouldReturnStatusNotFound() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
 

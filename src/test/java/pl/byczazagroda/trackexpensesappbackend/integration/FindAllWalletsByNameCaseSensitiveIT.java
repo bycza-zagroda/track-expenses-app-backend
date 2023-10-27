@@ -49,10 +49,9 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Find all Wallets with corresponding search name, ignoring case")
+    @DisplayName("Should retrieve all wallets matching the provided name, irrespective of case")
     @Test
-    void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameIsProvided_thenShouldReturnAllWalletsWithSearchNameIgnoringCase()
-            throws Exception {
+    void retrieveAllWallets_MatchingNameGiven_ShouldReturnCorrespondingWallets() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
 
@@ -77,9 +76,9 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[3].name").value(wallet4.getName()));
     }
 
-    @DisplayName("When search name is too long then empty array and error - bad request should be returned")
+    @DisplayName("Should return 'Bad Request' status when search name is excessively long")
     @Test
-    void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameTooLong_thenShouldReturnTEA003Error() throws Exception {
+    void retrieveAllWallets_ExcessivelyLongNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
@@ -94,9 +93,9 @@ class FindAllWalletsByNameCaseSensitiveIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("When search name does not exist should return null array")
+    @DisplayName("Should return an empty result when the provided search name has no matches in the database")
     @Test
-    void testFindAllWalletsByNameIgnoringCaseAPI_whenSearchNameDoesNotExistInDB_thenShouldReturnNullArray() throws Exception {
+    void retrieveAllWallets_NonMatchingNameGiven_ShouldReturnEmptyArray() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
