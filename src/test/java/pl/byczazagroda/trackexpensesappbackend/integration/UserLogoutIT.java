@@ -22,9 +22,9 @@ class UserLogoutIT extends BaseIntegrationTestIT {
     private AuthRepository userRepository;
 
 
-    @DisplayName("When request user logout, should return 200 OK and remove refresh_token cookie")
+    @DisplayName("Should remove refresh token on user logout and return OK status")
     @Test
-    void testRemoveRefreshToken_whenUserLogout_thenShouldReturnOkAndRemoveRefreshTokenFromCookie() throws Exception {
+    void logout_ValidUser_ShouldRemoveRefreshTokenAndReturnOkStatus() throws Exception {
 
         User user = userRepository.save(TestUtils.createUserForTest());
 
@@ -38,9 +38,9 @@ class UserLogoutIT extends BaseIntegrationTestIT {
                 .andExpect(cookie().maxAge("refresh_token", 0));
     }
 
-    @DisplayName("When request user logout without earlier login, should return 401 Unauthorized status")
+    @DisplayName("Should return 'Unauthorized' status when a non-authenticated user tries to logout")
     @Test
-    void testLogout_shouldReturnUnauthorizedWhenUserIsNotAuthenticated() throws Exception {
+    void logout_NonAuthenticatedUser_ShouldReturnUnauthorizedStatus() throws Exception {
         mockMvc.perform(post("/api/auth/logout"))
                 .andExpect(status().isUnauthorized());
 

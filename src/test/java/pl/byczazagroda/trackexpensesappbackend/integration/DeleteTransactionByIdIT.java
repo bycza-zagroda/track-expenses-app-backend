@@ -46,9 +46,9 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Should delete transaction when ID is correct")
+    @DisplayName("Should successfully delete the transaction given a valid ID")
     @Test
-    void testDeleteFinancialTransactionById_whenDeletedFinancialTransactionWithExistingId_thenReturnDeletedSuccessfully() throws Exception {
+    void deleteFinancialTransaction_ValidIdGiven_ShouldDeleteSuccessfully() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
@@ -72,9 +72,9 @@ class DeleteTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
-    @DisplayName("Should return is Not Found error when ID does not exist in a database")
+    @DisplayName("Should return 'Not Found' status when trying to delete a transaction with a non-existent ID")
     @Test
-    void testDeleteFinancialTransactionById_whenFinancialTransactionIdIsIncorrect_thenShouldReturnNotFoundError() throws Exception {
+    void deleteFinancialTransaction_NonExistentIdGiven_ShouldReturnStatusNotFound() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);

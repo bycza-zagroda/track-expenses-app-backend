@@ -69,8 +69,8 @@ class FinancialTransactionCategoryUpdateServiceImplTest {
     private AuthRepository userRepository;
 
     @Test
-    @DisplayName("update the FT category and return the category object if the ID is correct")
-    void testUpdateFTCategoryById_WhenIdIsCorrect_ThenReturnCategoryEntity() {
+    @DisplayName("Should return the updated FT category if the ID is correct")
+    void updateFTCategory_ValidId_ReturnsCategoryEntity() {
         when(repository.findByIdAndUserId(VALID_ID, USER_ID_1L)).thenReturn(Optional.of(VALID_CATEGORY));
         when(mapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(any()))
                 .thenReturn(VALID_CATEGORY_DTO);
@@ -82,8 +82,8 @@ class FinancialTransactionCategoryUpdateServiceImplTest {
     }
 
     @Test
-    @DisplayName("do not update FT Category if id is incorrect then throw AppRuntimeException and doesnt update entity")
-    void testUpdateFTCategoryById_WhenIdIsIncorrect_ThenThrowError() {
+    @DisplayName("Should not update FT Category if ID is incorrect and throw an exception")
+    void updateFTCategory_InvalidId_ThrowAppRuntimeException() {
         when(repository.findByIdAndUserId(INVALID_ID, USER_ID_1L)).thenReturn(empty());
         AppRuntimeException exception = assertThrows(
                 AppRuntimeException.class,

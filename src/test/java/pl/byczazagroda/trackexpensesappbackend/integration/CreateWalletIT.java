@@ -37,9 +37,9 @@ class CreateWalletIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("It should create a new wallet and return wallet DTO")
+    @DisplayName("Should create a new wallet and return the corresponding wallet DTO")
     @Test
-    void testCreateWallet_thenReturnWalletDTO() throws Exception {
+    void createWallet_ValidDataGiven_ShouldReturnWalletDTO() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
@@ -60,9 +60,9 @@ class CreateWalletIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("It should return HTTP 400 with detailed error message when creating wallet with invalid name")
+    @DisplayName("Should return bad request status and detailed error message when creating a wallet with an invalid name")
     @Test
-    void testCreateWallet_withInvalidName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
+    void createWallet_InvalidNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
@@ -83,9 +83,9 @@ class CreateWalletIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
-    @DisplayName("It should return HTTP 400 with detailed error message when creating wallet with too long name")
+    @DisplayName("Should return bad request status and detailed error message when creating a wallet with a name exceeding allowed length")
     @Test
-    void testCreateWallet_withTooLongName_thenReturnBadRequestWithDetailedErrorMessage() throws Exception {
+    void createWallet_TooLongNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);

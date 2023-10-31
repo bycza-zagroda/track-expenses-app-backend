@@ -30,8 +30,8 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     private AuthService authService;
 
     @Test
-    @DisplayName("Should delete category when user is owner and category exists")
-    void shouldDeleteCategoryWhenExists() throws Exception {
+    @DisplayName("Should successfully delete the category when the user is its owner and the category exists")
+    void deleteCategory_UserIsOwnerAndCategoryExists_ShouldDeleteSuccessfully() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String token = authService.createAccessToken(user);
@@ -48,8 +48,8 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("Should not delete category when category ID is non-existent")
-    void shouldNotDeleteCategoryWhenNotExists() throws Exception {
+    @DisplayName("Should not delete the category when the provided category ID does not exist")
+    void deleteCategory_NonExistentCategoryIdGiven_ShouldReturnStatusNotFound() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String token = authService.createAccessToken(user);
@@ -62,8 +62,8 @@ class DeleteFinancialCategoryIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("Should not delete category when category belongs to another user")
-    void shouldNotDeleteCategoryWhenBelongsToAnotherUser() throws Exception {
+    @DisplayName("Should not delete the category when it belongs to a different user")
+    void deleteCategory_CategoryBelongsToAnotherUser_ShouldReturnStatusNotFound() throws Exception {
         User user1 = userRepository.save(TestUtils.createUserForTest());
 
         User user2 = userRepository.save(TestUtils.createUserForTest());

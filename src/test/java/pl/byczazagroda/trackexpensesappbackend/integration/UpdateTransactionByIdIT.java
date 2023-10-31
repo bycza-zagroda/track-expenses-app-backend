@@ -56,10 +56,9 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Update financial transaction with new data provided in DTO when ID found in database")
+    @DisplayName( "Should update existing transaction with provided DTO when ID is found in database")
     @Test
-    void updateExistingFinancialTransaction_whenDataProvidedInDTOAndIdIsFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId()
-            throws Exception {
+    void updateTransaction_ValidDTOAndIdGiven_ShouldUpdateTransaction() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
@@ -96,9 +95,9 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("Update financial transaction with new data provided in DTO when categoryId and description are null")
+    @DisplayName("Should update existing transaction with provided DTO having null category and description when ID is found")
     @Test
-    void updateExistingFinancialTransactionWithNullCategoryAndDescriptionIdInDTO_whenIdFoundInDB_thenUpdateExistingFinancialTransactionWithRespectiveId() throws Exception {
+    void updateTransaction_NullCategoryAndDescriptionInDTOAndValidIdGiven_ShouldUpdateTransaction() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);
@@ -137,9 +136,9 @@ class UpdateTransactionByIdIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("Return isNotFound status when ID not found in database")
+    @DisplayName("Should return 'Not Found' status when trying to update transaction with an ID that doesn't exist")
     @Test
-    void testUpdateTransactionById_whenIdIsNotFoundInDB_thenReturnIsNotFound() throws Exception {
+    void updateTransaction_InvalidIdGiven_ShouldReturnStatusNotFound() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);

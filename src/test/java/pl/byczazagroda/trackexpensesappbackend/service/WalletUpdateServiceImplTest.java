@@ -60,8 +60,8 @@ class WalletUpdateServiceImplTest {
     private WalletModelMapper walletModelMapper;
 
     @Test
-    @DisplayName("when finding wallet by id should update wallet")
-    void shouldUpdateWallet_whenFindWalletById() {
+    @DisplayName("Should update the wallet when a valid wallet ID is provided")
+    void updateWallet_ValidWalletId_UpdatesAndReturnsWalletDTO() {
         // given
         User user = createTestUser();
 

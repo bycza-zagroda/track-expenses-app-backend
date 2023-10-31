@@ -37,9 +37,9 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("It should return updated wallet DTO when ID is correct")
+    @DisplayName("Should update wallet with provided data when ID is found in database")
     @Test
-    void testUpdateWallet_whenWalletIdIsCorrect_thenReturnUpdatedWalletDTO() throws Exception {
+    void updateWallet_ValidIdGiven_ShouldUpdateWallet() throws Exception {
         //given
         User user = userRepository.save(TestUtils.createUserForTest());
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
@@ -62,9 +62,9 @@ class UpdateWalletIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, walletRepository.count());
     }
 
-    @DisplayName("It should return AppRuntimeException with message WALLET_NOT_FOUND when ID is incorrect")
+    @DisplayName("Should return 'Not Found' status when trying to update wallet with an ID that doesn't exist")
     @Test
-    void testUpdateWallet_whenWalletIdIsIncorrect_thenReturnErrorResponse() throws Exception {
+    void updateWallet_InvalidIdGiven_ShouldReturnStatusNotFound() throws Exception {
         //given
         User user = userRepository.save(TestUtils.createUserForTest());
         final long walletId = 3L;

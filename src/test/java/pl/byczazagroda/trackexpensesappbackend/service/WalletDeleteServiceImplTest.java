@@ -61,8 +61,8 @@ class WalletDeleteServiceImplTest {
     private WalletServiceImpl walletService;
 
     @Test
-    @DisplayName("when wallet with id does not exist should not delete wallet")
-    void shouldNotDeleteWallet_WhenWalletWithIdDoesNotExist() {
+    @DisplayName("Should not delete a wallet if the wallet ID is not found")
+    void deleteWalletById_WalletIdNotFound_ThrowAppRuntimeException() {
         //given
         User user = TestUtils.createUserForTest(1L);
 

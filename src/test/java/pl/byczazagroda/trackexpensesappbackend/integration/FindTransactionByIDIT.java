@@ -45,10 +45,9 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Should return proper financial transaction when search Id exist in database")
+    @DisplayName( "Should retrieve the correct financial transaction when provided with a valid ID")
     @Test
-    void testGetFinancialTransactionById_whenFindingTransactionWithExistingId_thenReturnFinancialTransactionWithCorrespondingId()
-            throws Exception {
+    void retrieveTransaction_ValidIdGiven_ShouldReturnCorrespondingTransaction() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         FinancialTransaction testFinancialTransaction = createTestFinancialTransaction(wallet, "description example");
@@ -68,9 +67,9 @@ class FindTransactionByIDIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
-    @DisplayName("Should return status NOT_FOUND when search Id does not exist in database")
+    @DisplayName("Should return 'Not Found' status when trying to retrieve a financial transaction with a non-existent ID")
     @Test
-    void testGetFinancialTransactionById_whenSearchIdDoesNotExistInDatabase_thenReturnErrorNotFound() throws Exception {
+    void retrieveTransaction_NonExistentIdGiven_ShouldReturnStatusNotFound() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
         String accessToken = authService.createAccessToken(user);

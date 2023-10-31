@@ -85,8 +85,8 @@ class FinancialTransactionServiceImplTest {
 
 
     @Test
-    @DisplayName("When financial transaction type and financial transaction category type are different throw AppRuntimeException")
-    void testCreateFinancialTransaction_WhenTransactionTypeDoesNotMatchCategoryType_ThenThrowAppRunTimeException() {
+    @DisplayName("Should throw an exception when transaction type doesn't match category type")
+    void createFinancialTransaction_TypeMismatchCategory_ThrowAppRuntimeException() {
         //given
         User user = TestUtils.createUserForTest();
         Long userId = user.getId();
@@ -116,8 +116,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("do not create financial transaction without an existing wallet and throw AppRuntimeException")
-    void testCreateFinancialTransaction_WhenWalletNotFound_ThenThrowWalletException() {
+    @DisplayName("Should not create a financial transaction without an existing wallet and throw an exception")
+    void createFinancialTransaction_WalletNotFound_ThrowWalletException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
 
@@ -134,8 +134,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("create financial transaction when valid parameters are given")
-    void testCreateFinancialTransaction_withValidParameters_returnsFinancialTransactionDTO() {
+    @DisplayName("Should create a financial transaction with valid parameters")
+    void createFinancialTransaction_ValidParameters_ReturnsFinancialTransactionDTO() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -169,8 +169,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("create financial transaction with empty description")
-    void testCreateFinancialTransaction_WhenDescriptionIsEmpty_ThenCreateFinancialTransaction() {
+    @DisplayName("Should create a financial transaction with an empty description")
+    void createFinancialTransaction_EmptyDescription_ReturnsFinancialTransaction() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -210,8 +210,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("do not update financial transaction without valid id and throw AppRuntimeException")
-    void shouldThrowExceptionWhenUpdatingFinancialTransactionWithInvalidId() {
+    @DisplayName("Should throw an exception when updating a financial transaction with an invalid ID")
+    void updateFinancialTransaction_InvalidId_ThrowAppRuntimeException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
 
@@ -231,8 +231,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("update financial transaction with valid parameters")
-    void shouldUpdateFinancialTransactionWhenValidParametersAreGiven() {
+    @DisplayName("Should update the financial transaction with valid parameters")
+    void updateFinancialTransaction_ValidParameters_ReturnsUpdatedTransaction() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -273,8 +273,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("when finding with proper wallet transaction id should successfully find transactions")
-    void shouldSuccessfullyFindFinancialTransactions_WhenWalletIdIsGiven() {
+    @DisplayName("Should return transactions when provided with a valid wallet ID")
+    void findFinancialTransactions_ValidWalletId_ReturnsTransactionsList() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -320,8 +320,8 @@ class FinancialTransactionServiceImplTest {
 
 
     @Test
-    @DisplayName("when financial transaction id doesn't exist should not return transaction")
-    void shouldNotReturnFinancialTransactionById_WhenIdNotExist() {
+    @DisplayName("Should not return a transaction if the transaction ID is not found")
+    void findFinancialTransaction_InvalidId_NotReturnTransaction() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
 
@@ -336,8 +336,8 @@ class FinancialTransactionServiceImplTest {
 
 
     @Test
-    @DisplayName("when finding with proper financial transaction id should successfully find transaction")
-    void shouldSuccessfullyFindFinancialTransaction_WhenFindingWithProperTransactionId() {
+    @DisplayName("Should return the transaction when provided with a valid transaction ID")
+    void findFinancialTransaction_ValidTransactionId_ReturnsTransaction() {
         //given
         User user = TestUtils.createUserForTest();
 
@@ -359,8 +359,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("when deleting financial transaction that does not exist should throw an exception")
-    void ShouldThrowAnException_WhenGivenTransactionDoesNotExist() {
+    @DisplayName("Should throw an exception when deleting a non-existing financial transaction")
+    void deleteTransactionById_InvalidId_ThrowAppRuntimeException() {
         //given
         Long userId = TestUtils.createUserForTest().getId();
 

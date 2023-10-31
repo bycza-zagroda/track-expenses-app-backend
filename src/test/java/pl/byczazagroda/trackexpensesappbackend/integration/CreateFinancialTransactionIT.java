@@ -59,10 +59,9 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Should successfully create financial transaction")
+    @DisplayName("Should successfully create a financial transaction and save to database with valid data provided")
     @Test
-    void testCreateFinancialTransaction_whenProvidedCorrectData_thenShouldSaveFinancialTransactionInDatabase()
-            throws Exception {
+    void createTransaction_ValidDataGiven_ShouldSaveToDatabase() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
@@ -96,9 +95,9 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionRepository.count());
     }
 
-    @DisplayName("Should return Wallet Not Found message when creating financial transaction wallet Id that doesnt exist in database")
+    @DisplayName("Should return not found status when creating transaction with a wallet ID not present in database")
     @Test
-    void testCreateFinancialTransaction_whenCreatingFinancialTransactionIdWalletNotFound_thenReturnIsNotFoundAndErrorMessage()
+    void createTransaction_NonExistentWalletIdGiven_ShouldReturnStatusNotFound()
             throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
@@ -130,9 +129,9 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
-    @DisplayName("Should return bad request and validation failed error when creating financial transaction with amount exceeding limit")
+    @DisplayName("Should return bad request status when creating transaction with an amount exceeding the allowed limit")
     @Test
-    void testCreateFinancialTransaction_whenAmountExceedsLimit_thenReturnBadRequestAndErrorValidationFailed() throws Exception {
+    void createTransaction_AmountExceedingLimitGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 
@@ -165,9 +164,9 @@ class CreateFinancialTransactionIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, financialTransactionRepository.count());
     }
 
-    @DisplayName("When financial transaction type does not match with category type should throw exception")
+    @DisplayName("Should return bad request status when transaction type does not match the associated category type")
     @Test
-    void testCreateFinancialTransaction_whenFinancialTransactionTypeNotMatchWithCategoryType_thenThrowException() throws Exception {
+    void createTransaction_MismatchedCategoryTypeGiven_ShouldReturnStatusBadRequest() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
 

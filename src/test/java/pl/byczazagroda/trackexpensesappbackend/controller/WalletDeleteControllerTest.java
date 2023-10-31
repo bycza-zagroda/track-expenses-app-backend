@@ -60,8 +60,8 @@ class WalletDeleteControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("when delete wallet correctly should return response status OK")
-    void shouldReturnResponseStatusOK_WhenDeleteWalletCorrectly() throws Exception {
+    @DisplayName("Should return status OK when wallet is deleted correctly")
+    void deleteWallet_CorrectDeletion_ShouldReturnStatusOk() throws Exception {
         //given
         User user = TestUtils.createUserForTest();
         //when
@@ -79,8 +79,8 @@ class WalletDeleteControllerTest {
 
 
     @Test
-    @DisplayName("when wallet id is zero should return response status no content")
-    void shouldReturnResponseStatusNoContent_WhenWalletIdIsZero() throws Exception {
+    @DisplayName("Should return no content status when wallet ID is zero")
+    void deleteWallet_WalletIdIsZero_ShouldReturnStatusNoContent() throws Exception {
         //given
         User user = TestUtils.createUserForTest();
         WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, NAME_1, DATE_NOW, user.getId());

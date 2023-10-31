@@ -35,9 +35,9 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         financialTransactionCategoryRepository.deleteAll();
     }
 
-    @DisplayName("When search category by id should return proper financial transaction category")
+    @DisplayName("Should retrieve the correct financial transaction category when provided with a valid ID")
     @Test
-    void testGetFinancialTransactionCategory_whenProperId_shouldReturnFinancialTransactionCategory()
+    void retrieveCategory_ValidIdGiven_ShouldReturnCorrespondingCategory()
             throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory fTCategory = testFinancialTransactionCategory(user);
@@ -53,9 +53,9 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
     }
 
-    @DisplayName("Should return message financial transaction category not found and HttpStatus Not Found")
+    @DisplayName("Should return 'Not Found' status when trying to retrieve a financial transaction category with a non-existent ID")
     @Test
-    void testGetFinancialTransactionCategory_whenIdIsNotExists_shouldReturnErrorCodeAndStatus404()
+    void retrieveCategory_NonExistentIdGiven_ShouldReturnStatusNotFound()
             throws Exception {
         final Long nonExistentCategoryId = 999L;
         User user = userRepository.save(TestUtils.createUserForTest());
@@ -65,9 +65,9 @@ class FindFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 .andReturn();
     }
 
-    @DisplayName("Should return list of financial transaction categories")
+    @DisplayName("Should retrieve a list of all financial transaction categories")
     @Test
-    void testGetFinancialTransactionCategories() throws Exception {
+    void retrieveAllCategories_ShouldReturnListOfAllCategories() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
         FinancialTransactionCategory ftc1 = testFinancialTransactionCategory(user);
         FinancialTransactionCategory ftc2 = testFinancialTransactionCategory(user);

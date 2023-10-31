@@ -80,8 +80,8 @@ class WalletGetControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("when finding wallet list return empty list and response status OK")
-    void shouldResponseStatusOKAndReturnEmptyList_whenUserHasNoWallets() throws Exception {
+    @DisplayName("Should return empty list and status OK when user has no wallets")
+    void findAllWallets_NoWalletsExist_ShouldReturnEmptyListAndStatusOk() throws Exception {
         // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/wallets")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,8 +98,8 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding all wallets should return wallets list and response status OK")
-    void shouldResponseStatusOKAndAllWalletsList_whenUserHasWallets() throws Exception {
+    @DisplayName("Should return all wallets list and status OK")
+    void findAllWallets_WalletsExist_ShouldReturnWalletsListAndStatusOk() throws Exception {
         // given
         List<WalletDTO> listDTO = createListOfWalletsDTO();
         given(walletService.getWallets(USER_ID_1L))
@@ -125,8 +125,8 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by id should return wallet and response status OK")
-    void shouldReturnResponseStatusOKAndWallet_WhenFindWalletById() throws Exception {
+    @DisplayName("Should return wallet and status OK when finding by ID")
+    void findWalletById_WalletExists_ShouldReturnWalletAndStatusOk() throws Exception {
         // given
         WalletDTO wallet = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
 
@@ -143,8 +143,8 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by id does not exist should return response status not found")
-    void shouldReturnResponseStatusNotFound_WhenWalletByIdDoesNotExist() throws Exception {
+    @DisplayName("Should return not found status when wallet ID does not exist")
+    void findWalletById_WalletDoesNotExist_ShouldReturnStatusNotFound() throws Exception {
         // given
         WalletDTO wallet = new WalletDTO(WALLET_ID_1L, "", DATE_NOW, USER_ID_1L);
         doThrow(new AppRuntimeException(ErrorCode.W003, ""))
@@ -160,8 +160,8 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by id zero should return response status no content")
-    void shouldReturnResponseStatusNoContent_WhenFindWalletByIdZero() throws Exception {
+    @DisplayName("Should return no content status when wallet ID is zero")
+    void findWalletById_WalletIdIsZero_ShouldReturnStatusNoContent() throws Exception {
         //given
         WalletDTO walletDTO = new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_NOW, USER_ID_1L);
         doThrow(ConstraintViolationException.class)
@@ -177,8 +177,8 @@ class WalletGetControllerTest {
     }
 
     @Test
-    @DisplayName("when finding wallet by name should return wallets and response status OK")
-    void shouldReturnResponseStatusOKAndWallets_WhenFindWalletByName() throws Exception {
+    @DisplayName("Should return wallets and status OK when finding by name")
+    void findWalletsByName_WalletsExist_ShouldReturnWalletsListAndStatusOk() throws Exception {
         // given
         String walletNameSearched = WALLET_NAME;
         List<WalletDTO> listOfWalletsDTO = createListOfWalletsDTO();

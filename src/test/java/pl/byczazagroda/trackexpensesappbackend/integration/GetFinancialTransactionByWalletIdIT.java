@@ -49,8 +49,8 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("when wallet id is correct returns List of financial transactions DTO related to wallet")
-    void givenValidWalletId_whenGetFinancialTransactionsByWalletId_thenCorrectResponse() throws Exception {
+    @DisplayName("Should retrieve a list of financial transactions associated with a valid wallet ID")
+    void retrieveTransactions_ValidWalletIdGiven_ShouldReturnListOfTransactions() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         Wallet wallet = walletRepository.save(TestUtils.createWalletForTest(user));
@@ -79,8 +79,8 @@ class GetFinancialTransactionByWalletIdIT extends BaseIntegrationTestIT {
     }
 
     @Test
-    @DisplayName("when wallet id is incorrect returns error response dto and has 404 status code")
-    void givenInvalidWalletId_whenGetFinancialTransactionsByWalletId_thenNotFoundStatusCode() throws Exception {
+    @DisplayName( "Should return 'Not Found' status when trying to retrieve financial transactions with a non-existent wallet ID")
+    void retrieveTransactions_NonExistentWalletIdGiven_ShouldReturnStatusNotFound() throws Exception {
         // given
         User user = userRepository.save(TestUtils.createUserForTest());
         String accessToken = authService.createAccessToken(user);

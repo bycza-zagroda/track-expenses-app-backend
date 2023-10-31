@@ -46,9 +46,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Should update FT category when user is owner and category exists")
+    @DisplayName("Should update financial transaction category when user is the owner")
     @Test
-    void testUpdateFTCategory_whenUserIsOwnerCategory_thenShouldReturnStatusOK() throws Exception {
+    void updateFTCategory_UserIsOwner_ShouldUpdateAndReturnOK() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -72,9 +72,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 jsonPath("$.userId").value(user.getId()));
     }
 
-    @DisplayName("Should not update FT category when category name length > 30")
+    @DisplayName("Should return 'Internal Server Error' status when category name exceeds allowed length")
     @Test
-    void testUpdateFTCategoryFailure_whenCategoryNameIsTooLong_thenReturnBadRequest() throws Exception {
+    void updateFTCategory_CategoryNameTooLong_ShouldReturnStatusInternalServerError() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -98,9 +98,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode()));
     }
 
-    @DisplayName("Should not update FT category when category name is empty")
+    @DisplayName("Should return 'Bad Request' status when category name is empty")
     @Test
-    void testUpdateFTCategoryFailure_whenCategoryNameIsEmpty_thenReturnBadRequest() throws Exception {
+    void updateFTCategory_EmptyCategoryNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -123,9 +123,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
     }
 
-    @DisplayName("Should not update FT category when category name contains invalid characters")
+    @DisplayName("Should return 'Internal Server Error' status when category name has invalid characters")
     @Test
-    void testUpdateFTCategoryFailure_whenCategoryNameContainsInvalidCharacters_thenReturnBadRequest() throws Exception {
+    void updateFTCategory_InvalidCharsInCategoryName_ShouldReturnStatusInternalServerError() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -148,9 +148,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 jsonPath("$.statusCode").value(ErrorCode.TEA004.getBusinessStatusCode()));
     }
 
-    @DisplayName("Should not update FT category when category type is invalid")
+    @DisplayName("Should return 'Bad Request' status when category type is invalid")
     @Test
-    void testUpdateFTCategoryFailure_whenCategoryTypeIsInvalid_thenReturnBadRequest() throws Exception {
+    void updateFTCategory_InvalidCategoryTypeGiven_ShouldReturnStatusBadRequest() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -172,9 +172,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 jsonPath("$.statusCode").value(ErrorCode.TEA003.getBusinessStatusCode()));
     }
 
-    @DisplayName("Should not update FT category when category doesn't exists")
+    @DisplayName("Should return 'Not Found' status when trying to update a non-existent category")
     @Test
-    void testUpdateFTCategory_whenCategoryNotExists_thenReturnIsNotFound() throws Exception {
+    void updateFTCategory_CategoryNotExists_ShouldReturnStatusNotFound() throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         String accessToken = authService.createAccessToken(user);
@@ -193,9 +193,9 @@ class UpdateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         resultActions.andExpect(status().isNotFound());
     }
 
-    @DisplayName("Should not update FT category when user is not owner")
+    @DisplayName("Should return 'Not Found' status when user isn't the owner of the category")
     @Test
-    void testUpdateFTCategory_whenUserIsNotOwner_thenReturnIsNotFound() throws Exception {
+    void updateFTCategory_UserNotOwner_ShouldReturnStatusNotFound() throws Exception {
         User user1 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user1@server.com"));
         User user2 = userRepository.save(TestUtils.createUserWithEmailForTest(null, "user2@server.com"));
 

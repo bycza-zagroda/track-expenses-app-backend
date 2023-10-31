@@ -46,10 +46,10 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         userRepository.deleteAll();
     }
 
-    @DisplayName("Should return ResponseStatus IsCreated when create financial transaction category")
+    @DisplayName("Should create financial transaction category and return status isCreated when valid data is provided")
     @Test
-    void testCreateFinancialTransactionCategory_whenValidDataProvided_thenShouldCreateCategory(
-    ) throws Exception {
+    void createCategory_ValidDataGiven_ShouldReturnStatusIsCreated()
+            throws Exception {
         User user = userRepository.save(TestUtils.createUserForTest());
 
         var financialTransactionCategoryCreateDTO
@@ -70,9 +70,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(1, financialTransactionCategoryRepository.count());
     }
 
-    @DisplayName("Should return ResponseStatus BadRequest when name length is greater than 30")
+    @DisplayName("Should return bad request status when creating category with name longer than 30 characters")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameExceeds30Characters_thenShouldReturnBadRequest()
+    void createCategory_NameExceedingMaxLengthGiven_ShouldReturnStatusBadRequest()
             throws Exception {
         var financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("ThisIsVeryLongNameForCategoryMoreThan30Characters",
@@ -95,9 +95,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
         Assertions.assertEquals(0, financialTransactionCategoryRepository.count());
     }
 
-    @DisplayName("Should return ResponseStatus BadRequest when name is empty")
+    @DisplayName("Should return bad request status when creating category with empty name")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameIsEmpty_thenShouldReturnBadRequest() throws Exception {
+    void createCategory_EmptyNameGiven_ShouldReturnStatusBadRequest() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO("",
                 FinancialTransactionType.INCOME);
 
@@ -117,10 +117,10 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 );
     }
 
-    @DisplayName("Should return ResponseStatus BadRequest when name contains invalid characters")
+    @DisplayName("Should return bad request status when creating category with name containing illegal characters")
     @Test
-    void testCreateFinancialTransactionCategory_whenNameContainsInvalidCharacters_thenShouldReturnBadRequest(
-    ) throws Exception {
+    void createCategory_IllegalCharactersInNameGiven_ShouldReturnStatusBadRequest()
+            throws Exception {
         var categoryNameForWrongPathTest = "`-'+=|\\/?,.<>%&(){}[];:" + "\"";
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 categoryNameForWrongPathTest,
@@ -141,9 +141,9 @@ class CreateFinancialTransactionCategoryIT extends BaseIntegrationTestIT {
                 );
     }
 
-    @DisplayName("Should return ResponseStatus BadRequest when type is empty")
+    @DisplayName("Should return bad request status when creating category without specifying a type")
     @Test
-    void testCreateFinancialTransactionCategory_whenTypeIsEmpty_thenShouldReturnBadRequest() throws Exception {
+    void createCategory_NullTypeGiven_ShouldReturnStatusBadRequest() throws Exception {
         var financialTransactionCategoryCreateDTO = new FinancialTransactionCategoryCreateDTO(
                 "Category",
                 null);

@@ -61,18 +61,18 @@ import static org.mockito.Mockito.when;
         Mockito.reset(userRepository);
     }
 
-    @DisplayName("A valid password should return a hash of the correct length")
+    @DisplayName("Hashing a valid password should produce a result of correct length")
     @Test
-      void testHashPassword_whenPasswordIsValid_thenReturnHashed() {
+      void hash_ValidPassword_ShouldReturnCorrectLengthHash() {
         String password = "Password123!";
         String hashedPassword = userService.hashPassword(password);
 
       assertEquals(60, hashedPassword.length());
     }
 
-    @DisplayName("When password is too short, an AppRuntimeException (U004) should be thrown")
+    @DisplayName("Hashing a too short password should throw U004 AppRuntimeException")
     @Test
-      void testHashPassword_whenPasswordIsTooShort_thenThrowException() {
+      void hash_TooShortPassword_ShouldThrowU004Exception() {
         String shortPassword = "123";
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.hashPassword(shortPassword));
@@ -80,9 +80,9 @@ import static org.mockito.Mockito.when;
       assertEquals(ErrorCode.U004.getBusinessMessage(), exception.getMessage());
     }
 
-    @DisplayName("When registering a new user, no exception should be thrown and the user should be saved")
+    @DisplayName("Registering a new user should not throw any exceptions and the user should be saved")
     @Test
-      void testRegisterUser_whenNewUser_thenSaveUser() {
+      void register_NewUser_ShouldSaveWithoutExceptions() {
         when(userRepository
                 .existsByEmail(anyString()))
                 .thenReturn(false);
@@ -98,9 +98,9 @@ import static org.mockito.Mockito.when;
         assertNotEquals(REGISTER_DTO.password(), user.getPassword());
     }
 
-    @DisplayName("When registering a user with existing email, an AppRuntimeException (U001) should be thrown")
+    @DisplayName("Registering a user with an existing email should throw U001 AppRuntimeException")
     @Test
-      void testRegisterUser_whenEmailExists_thenThrowException() {
+      void register_ExistingEmail_ShouldThrowU001Exception() {
         when(userRepository
                 .existsByEmail(REGISTER_DTO.email()))
                 .thenReturn(true);
@@ -111,9 +111,9 @@ import static org.mockito.Mockito.when;
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @DisplayName("When registering a user with invalid email, an AppRuntimeException (U002) should be thrown")
+    @DisplayName("Registering a user with an invalid email should throw U002 AppRuntimeException")
     @Test
-      void testRegisterUser_whenEmailIsInvalid_thenThrowException() {
+      void register_InvalidEmail_ShouldThrowU002Exception() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_INVALID_EMAIL));
 
@@ -121,9 +121,9 @@ import static org.mockito.Mockito.when;
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @DisplayName("When registering a user with too short password, an AppRuntimeException (U004) should be thrown")
+    @DisplayName("Registering a user with a too short password should throw U004 AppRuntimeException")
     @Test
-      void testRegisterUser_whenPasswordIsTooShort_thenThrowException() {
+      void register_TooShortPassword_ShouldThrowU004Exception() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_TOO_SHORT_PASSWORD));
 
@@ -131,18 +131,18 @@ import static org.mockito.Mockito.when;
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @DisplayName("When password is too long, an AppRuntimeException (U006) should be thrown")
+    @DisplayName("Hashing a too long password should throw U007 AppRuntimeException")
     @Test
-      void testHashPasswordWhenPasswordIsTooLongThenThrowException() {
+      void hash_TooLongPassword_ShouldThrowU007Exception() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.hashPassword(tooLongPassword));
 
       assertEquals(ErrorCode.U007.getBusinessMessage(), exception.getMessage());
     }
 
-    @DisplayName("When registering a user with too long password, an AppRuntimeException (U006) should be thrown")
+    @DisplayName("Registering a user with a too long password should throw U007 AppRuntimeException")
     @Test
-      void testRegisterUserWhenPasswordIsTooLongThenThrowException() {
+      void register_TooLongPassword_ShouldThrowU007Exception() {
         AppRuntimeException exception = assertThrows(AppRuntimeException.class,
                 () -> userService.registerUser(REGISTER_DTO_TOO_LONG_PASSWORD));
 
