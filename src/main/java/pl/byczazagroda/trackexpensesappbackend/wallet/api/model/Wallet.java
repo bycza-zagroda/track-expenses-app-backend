@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
 import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,14 @@ public class Wallet implements Serializable {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
+
+    public BigDecimal calculateCurrentBalance() {
+        return financialTransactionList.stream()
+                .map(transaction -> transaction.getType() == FinancialTransactionType.INCOME
+                        ? transaction.getAmount()
+                        : transaction.getAmount().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     public Wallet(String name, User user) {
         this.name = name;
