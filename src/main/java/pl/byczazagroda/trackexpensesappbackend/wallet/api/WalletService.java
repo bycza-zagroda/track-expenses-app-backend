@@ -3,6 +3,7 @@ package pl.byczazagroda.trackexpensesappbackend.wallet.api;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletUpdateDTO;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Validated
@@ -28,4 +30,7 @@ public interface WalletService {
     WalletDTO findById(@Min(1) @NotNull Long walletId, Long userId);
 
     List<WalletDTO> findAllByNameIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name, Long userId);
+
+    BigDecimal calculateCurrentBalance(List<FinancialTransactionDTO> transactions);
+
 }

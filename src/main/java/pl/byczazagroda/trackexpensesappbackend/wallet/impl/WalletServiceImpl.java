@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
 import pl.byczazagroda.trackexpensesappbackend.auth.usermodel.User;
@@ -23,6 +25,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -118,6 +121,15 @@ public class WalletServiceImpl implements WalletService {
                     String.format("WALLETS_LIST_LIKE_%s_NOT_FOUND_EXC_MS", name));
         }
         return listOfWalletDTO;
+    }
+
+    @Override
+    public BigDecimal calculateCurrentBalance(List<FinancialTransactionDTO> transactions) {
+        return transactions.stream()
+                .map(transaction -> transaction.type() == FinancialTransactionType.INCOME
+                        ? transaction.amount()
+                        : transaction.amount().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private User getUserByUserId(Long userId) {
