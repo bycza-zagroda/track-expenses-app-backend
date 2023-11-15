@@ -10,6 +10,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
@@ -24,6 +29,7 @@ import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +74,12 @@ class WalletGetServiceImplTest {
 
     @MockBean
     private WalletModelMapper walletModelMapper;
+
+    @MockBean
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
+
+    @MockBean
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Test
     @DisplayName("Should not return a wallet if the wallet ID is not found during update")
