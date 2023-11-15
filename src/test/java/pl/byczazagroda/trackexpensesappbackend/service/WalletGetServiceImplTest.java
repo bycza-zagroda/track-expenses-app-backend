@@ -166,6 +166,90 @@ class WalletGetServiceImplTest {
         assertThat(fundedWallets, hasSize(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, walletNameSearched).size()));
     }
 
+    @Test
+    @DisplayName("Should correctly calculate the balance of wallets when retrieving them")
+    void getWallets_CalculatesBalancesCorrectly() {
+        // given
+        Long userId = 1L;
+        User user = new User();
+        Wallet wallet1 = new Wallet("Wallet 1", user);
+        wallet1.setId(1L);
+        Wallet wallet2 = new Wallet("Wallet 2", user);
+        wallet2.setId(2L);
+
+        List<FinancialTransaction> transactionsForWallet1 = createTestTransactionsForWallet(wallet1);
+        List<FinancialTransaction> transactionsForWallet2 = createTestTransactionsForWallet(wallet2);
+
+        mockTransactionMapping(transactionsForWallet1, financialTransactionModelMapper);
+        mockTransactionMapping(transactionsForWallet2, financialTransactionModelMapper);
+
+        when(walletRepository.findAllByUserIdOrderByNameAsc(userId))
+                .thenReturn(Arrays.asList(wallet1, wallet2));
+        when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(
+                wallet1.getId())).thenReturn(transactionsForWallet1);
+        when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(
+                wallet2.getId())).thenReturn(transactionsForWallet2);
+
+        // when
+        List<WalletDTO> result = walletService.getWallets(userId);
+
+        // then
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(new BigDecimal("50.00"), result.get(0).balance()); // for wallet 1
+        Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet 2
+    }
+
+    private List<FinancialTransaction> createTestTransactionsForWallet(Wallet wallet) {
+        FinancialTransaction incomeTransaction1 = FinancialTransaction.builder()
+                .id(1L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.INCOME)
+                .amount(new BigDecimal("100.00"))
+                .date(Instant.now())
+                .description("Test Income 1")
+                .build();
+
+        FinancialTransaction incomeTransaction2 = FinancialTransaction.builder()
+                .id(3L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.INCOME)
+                .amount(new BigDecimal("100.00"))
+                .date(Instant.now())
+                .description("Test Income 2")
+                .build();
+
+        FinancialTransaction expenseTransaction = FinancialTransaction.builder()
+                .id(2L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.EXPENSE)
+                .amount(new BigDecimal("50.00"))
+                .date(Instant.now())
+                .description("Test Expense")
+                .build();
+
+        return wallet.getId() == 1L
+                ? Arrays.asList(incomeTransaction1, expenseTransaction) // Wallet 1: 100 - 50 = 50
+                : Arrays.asList(incomeTransaction1, incomeTransaction2); // Wallet 2: 100 + 100 = 200
+    }
+
+    private void mockTransactionMapping(List<FinancialTransaction> transactions,
+                                        FinancialTransactionModelMapper mapper) {
+        transactions.forEach(transaction -> {
+            Long categoryId = transaction.getFinancialTransactionCategory() != null ? transaction
+                    .getFinancialTransactionCategory().getId() : null;
+            FinancialTransactionDTO dto = new FinancialTransactionDTO(
+                    transaction.getId(),
+                    transaction.getAmount(),
+                    transaction.getDescription(),
+                    transaction.getType(),
+                    transaction.getDate(),
+                    categoryId
+            );
+            when(mapper
+                    .mapFinancialTransactionEntityToFinancialTransactionDTO(transaction)).thenReturn(dto);
+        });
+    }
+
     private List<Wallet> createListOfWalletsByName(User user, String... names) {
         return Arrays.stream(names).map(name -> new Wallet(name, user)).toList();
     }
