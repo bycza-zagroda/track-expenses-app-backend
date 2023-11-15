@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletCreateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
@@ -51,6 +53,12 @@ class WalletCreateServiceImplTest {
     private static final String TOO_LONG_NAME_MORE = "Too long name - more than 20 letters.";
 
     private static final Instant DATE_NOW = Instant.now();
+
+    @MockBean
+    private FinancialTransactionRepository financialTransactionRepository;
+
+    @MockBean
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
 
     @MockBean
     private ErrorStrategy errorStrategy;

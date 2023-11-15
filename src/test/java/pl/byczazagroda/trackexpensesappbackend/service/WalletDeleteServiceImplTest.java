@@ -10,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
 import pl.byczazagroda.trackexpensesappbackend.TestUtils;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.AppRuntimeException;
 import pl.byczazagroda.trackexpensesappbackend.general.exception.ErrorCode;
@@ -44,6 +46,12 @@ class WalletDeleteServiceImplTest {
 
     private static final Instant DATE_NOW = Instant.now();
     private static final Long USER_ID_1L = 1L;
+
+    @MockBean
+    private FinancialTransactionRepository financialTransactionRepository;
+
+    @MockBean
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
 
     @MockBean
     private ErrorStrategy errorStrategy;

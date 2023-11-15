@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
 import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
 import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletModelMapper;
@@ -25,7 +27,13 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Stream.of;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-public class WalletUpdateBalanceTest {
+public class WalletCalculateBalanceTest {
+
+    @Mock
+    private FinancialTransactionModelMapper modelMapper;
+
+    @Mock
+    private FinancialTransactionRepository transactionRepository;
 
     @Mock
     private WalletRepository walletRepository;
@@ -41,7 +49,8 @@ public class WalletUpdateBalanceTest {
     @BeforeEach
     void setUp() {
         openMocks(this);
-        walletService = new WalletServiceImpl(walletRepository, walletModelMapper, authRepository);
+        walletService = new WalletServiceImpl(walletRepository, walletModelMapper,
+                authRepository, transactionRepository, modelMapper );
     }
 
     @ParameterizedTest
