@@ -34,11 +34,14 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -167,6 +170,37 @@ class WalletGetServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should correctly calculate the balance of the wallet when retrieving it")
+    void findById_CalculatesBalanceCorrectly() {
+        // given
+        Long walletId = 1L;
+        Long userId = 1L;
+        User testUser = createTestUser();
+        Wallet wallet = createTestWallet(walletId,testUser);
+        List<FinancialTransaction> transactions = createTestTransactionsForWallet(wallet);
+
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(walletId, userId))
+                .thenReturn(transactions);
+
+        mockTransactionMapping(transactions, financialTransactionModelMapper);
+
+        // when
+        WalletDTO result = walletService.findById(walletId, userId);
+
+        // then
+        BigDecimal expectedBalance = walletService.calculateCurrentBalance(
+                transactions.stream()
+                        .map(financialTransactionModelMapper
+                                ::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                        .collect(Collectors.toList())
+        );
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedBalance, result.balance());
+    }
+
+    @Test
     @DisplayName("Should correctly calculate the balance of wallets when retrieving them")
     void getWallets_CalculatesBalancesCorrectly() {
         // given
@@ -197,6 +231,12 @@ class WalletGetServiceImplTest {
         Assertions.assertEquals(2, result.size());
         Assertions.assertEquals(new BigDecimal("50.00"), result.get(0).balance()); // for wallet 1
         Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet 2
+    }
+
+    private Wallet createTestWallet(Long walletId, User user) {
+        Wallet wallet = new Wallet("Test Wallet", user);
+        wallet.setId(walletId);
+        return wallet;
     }
 
     private List<FinancialTransaction> createTestTransactionsForWallet(Wallet wallet) {
