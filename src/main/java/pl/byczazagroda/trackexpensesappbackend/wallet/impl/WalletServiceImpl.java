@@ -40,10 +40,15 @@ import java.util.stream.Collectors;
 public class WalletServiceImpl implements WalletService {
 
     public static final String WALLET_WITH_ID_DOES_NOT_EXIST = "Wallet with id: %d does not exist";
+
     private final WalletRepository walletRepository;
+
     private final WalletModelMapper walletModelMapper;
+
     private final AuthRepository userRepository;
+
     private final FinancialTransactionRepository transactionRepository;
+
     private final FinancialTransactionModelMapper transactionModelMapper;
 
     @Override
@@ -80,7 +85,6 @@ public class WalletServiceImpl implements WalletService {
         BigDecimal balance = calculateCurrentBalance(transactionDTOs);
 
         return new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(), wallet.getUser().getId(), balance);
-
     }
 
     @Override
@@ -93,6 +97,7 @@ public class WalletServiceImpl implements WalletService {
                             .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                             .collect(Collectors.toList());
                     BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
                     return new WalletDTO(wallet.getId(), wallet.getName(),
                             wallet.getCreationDate(), wallet.getUser().getId(), balance);
                 })
@@ -132,25 +137,28 @@ public class WalletServiceImpl implements WalletService {
                 .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
                 .collect(Collectors.toList());
         BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
         return new WalletDTO(wallet.getId(), wallet.getName(),
                 wallet.getCreationDate(), wallet.getUser().getId(), balance);
     }
 
-
     @Override
-    public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank() @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name, Long userId) {
-        List<WalletDTO> listOfWalletDTO;
-        try {
-            listOfWalletDTO = walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, name)
-                    .stream()
-                    .map(walletModelMapper::mapWalletEntityToWalletDTO)
-                    .toList();
-        } catch (RuntimeException e) {
-            throw new AppRuntimeException(
-                    ErrorCode.W004,
-                    String.format("WALLETS_LIST_LIKE_%s_NOT_FOUND_EXC_MS", name));
-        }
-        return listOfWalletDTO;
+    public List<WalletDTO> findAllByNameIgnoreCase(@NotBlank @Length(max = 20) @Pattern(regexp = "[\\w ]+") String name,
+                                                   Long userId) {
+        return walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, name)
+                .stream()
+                .map(wallet -> {
+                    List<FinancialTransaction> transactions = transactionRepository
+                            .findAllByWalletIdAndWalletUserIdOrderByDateDesc(wallet.getId(), userId);
+                    List<FinancialTransactionDTO> transactionDTOs = transactions.stream()
+                            .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                            .collect(Collectors.toList());
+                    BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
+                    return new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(),
+                            wallet.getUser().getId(), balance);
+                })
+                .toList();
     }
 
     @Override

@@ -233,6 +233,42 @@ class WalletGetServiceImplTest {
         Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet 2
     }
 
+    @Test
+    @DisplayName("Should find all wallets by name ignoring case and calculate their balances")
+    void findAllByNameIgnoreCase_CalculatesBalancesCorrectly() {
+        // given
+        String searchName = "test";
+        Long userId = 1L;
+        User user = new User();
+        Wallet wallet1 = new Wallet("test wallet 1", user);
+        wallet1.setId(1L);
+        Wallet wallet2 = new Wallet("test wallet 2", user);
+        wallet2.setId(2L);
+
+        List<FinancialTransaction> transactionsForWallet1 = createTestTransactionsForWallet(wallet1);
+        List<FinancialTransaction> transactionsForWallet2 = createTestTransactionsForWallet(wallet2);
+
+        mockTransactionMapping(transactionsForWallet1, financialTransactionModelMapper);
+        mockTransactionMapping(transactionsForWallet2, financialTransactionModelMapper);
+
+        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, searchName))
+                .thenReturn(Arrays.asList(wallet1, wallet2));
+        when(financialTransactionRepository
+                .findAllByWalletIdAndWalletUserIdOrderByDateDesc(wallet1.getId(), userId))
+                .thenReturn(transactionsForWallet1);
+        when(financialTransactionRepository
+                .findAllByWalletIdAndWalletUserIdOrderByDateDesc(wallet2.getId(), userId))
+                .thenReturn(transactionsForWallet2);
+
+        // when
+        List<WalletDTO> result = walletService.findAllByNameIgnoreCase(searchName, userId);
+
+        // then
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(new BigDecimal("50.00"), result.get(0).balance()); // for wallet1
+        Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet2
+    }
+
     private Wallet createTestWallet(Long walletId, User user) {
         Wallet wallet = new Wallet("Test Wallet", user);
         wallet.setId(walletId);
@@ -303,4 +339,5 @@ class WalletGetServiceImplTest {
                 .userStatus(UserStatus.VERIFIED)
                 .build();
     }
+
 }
