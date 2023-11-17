@@ -10,6 +10,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.validation.annotation.Validated;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionModelMapper;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.FinancialTransactionRepository;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.dto.FinancialTransactionDTO;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransaction;
+import pl.byczazagroda.trackexpensesappbackend.financialtransaction.api.model.FinancialTransactionType;
 import pl.byczazagroda.trackexpensesappbackend.wallet.WalletController;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletUpdateDTO;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.dto.WalletDTO;
@@ -24,15 +29,19 @@ import pl.byczazagroda.trackexpensesappbackend.auth.api.AuthRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.api.WalletRepository;
 import pl.byczazagroda.trackexpensesappbackend.wallet.impl.WalletServiceImpl;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +77,12 @@ class WalletGetServiceImplTest {
 
     @MockBean
     private WalletModelMapper walletModelMapper;
+
+    @MockBean
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
+
+    @MockBean
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Test
     @DisplayName("Should not return a wallet if the wallet ID is not found during update")
@@ -154,6 +169,163 @@ class WalletGetServiceImplTest {
         assertThat(fundedWallets, hasSize(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, walletNameSearched).size()));
     }
 
+    @Test
+    @DisplayName("Should correctly calculate the balance of the wallet when retrieving it")
+    void findById_CalculatesBalanceCorrectly() {
+        // given
+        Long walletId = 1L;
+        Long userId = 1L;
+        User testUser = createTestUser();
+        Wallet wallet = createTestWallet(walletId,testUser);
+        List<FinancialTransaction> transactions = createTestTransactionsForWallet(wallet);
+
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(walletId, userId))
+                .thenReturn(transactions);
+
+        mockTransactionMapping(transactions, financialTransactionModelMapper);
+
+        // when
+        WalletDTO result = walletService.findById(walletId, userId);
+
+        // then
+        BigDecimal expectedBalance = walletService.calculateCurrentBalance(
+                transactions.stream()
+                        .map(financialTransactionModelMapper
+                                ::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                        .collect(Collectors.toList())
+        );
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedBalance, result.balance());
+    }
+
+    @Test
+    @DisplayName("Should correctly calculate the balance of wallets when retrieving them")
+    void getWallets_CalculatesBalancesCorrectly() {
+        // given
+        Long userId = 1L;
+        User user = new User();
+        Wallet wallet1 = new Wallet("Wallet 1", user);
+        wallet1.setId(1L);
+        Wallet wallet2 = new Wallet("Wallet 2", user);
+        wallet2.setId(2L);
+
+        List<FinancialTransaction> transactionsForWallet1 = createTestTransactionsForWallet(wallet1);
+        List<FinancialTransaction> transactionsForWallet2 = createTestTransactionsForWallet(wallet2);
+
+        mockTransactionMapping(transactionsForWallet1, financialTransactionModelMapper);
+        mockTransactionMapping(transactionsForWallet2, financialTransactionModelMapper);
+
+        when(walletRepository.findAllByUserIdOrderByNameAsc(userId))
+                .thenReturn(Arrays.asList(wallet1, wallet2));
+        when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(
+                wallet1.getId())).thenReturn(transactionsForWallet1);
+        when(financialTransactionRepository.findAllByWalletIdOrderByDateDesc(
+                wallet2.getId())).thenReturn(transactionsForWallet2);
+
+        // when
+        List<WalletDTO> result = walletService.getWallets(userId);
+
+        // then
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(new BigDecimal("50.00"), result.get(0).balance()); // for wallet 1
+        Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet 2
+    }
+
+    @Test
+    @DisplayName("Should find all wallets by name ignoring case and calculate their balances")
+    void findAllByNameIgnoreCase_CalculatesBalancesCorrectly() {
+        // given
+        String searchName = "test";
+        Long userId = 1L;
+        User user = new User();
+        Wallet wallet1 = new Wallet("test wallet 1", user);
+        wallet1.setId(1L);
+        Wallet wallet2 = new Wallet("test wallet 2", user);
+        wallet2.setId(2L);
+
+        List<FinancialTransaction> transactionsForWallet1 = createTestTransactionsForWallet(wallet1);
+        List<FinancialTransaction> transactionsForWallet2 = createTestTransactionsForWallet(wallet2);
+
+        mockTransactionMapping(transactionsForWallet1, financialTransactionModelMapper);
+        mockTransactionMapping(transactionsForWallet2, financialTransactionModelMapper);
+
+        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, searchName))
+                .thenReturn(Arrays.asList(wallet1, wallet2));
+        when(financialTransactionRepository
+                .findAllByWalletIdAndWalletUserIdOrderByDateDesc(wallet1.getId(), userId))
+                .thenReturn(transactionsForWallet1);
+        when(financialTransactionRepository
+                .findAllByWalletIdAndWalletUserIdOrderByDateDesc(wallet2.getId(), userId))
+                .thenReturn(transactionsForWallet2);
+
+        // when
+        List<WalletDTO> result = walletService.findAllByNameIgnoreCase(searchName, userId);
+
+        // then
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(new BigDecimal("50.00"), result.get(0).balance()); // for wallet1
+        Assertions.assertEquals(new BigDecimal("200.00"), result.get(1).balance()); // for wallet2
+    }
+
+    private Wallet createTestWallet(Long walletId, User user) {
+        Wallet wallet = new Wallet("Test Wallet", user);
+        wallet.setId(walletId);
+        return wallet;
+    }
+
+    private List<FinancialTransaction> createTestTransactionsForWallet(Wallet wallet) {
+        FinancialTransaction incomeTransaction1 = FinancialTransaction.builder()
+                .id(1L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.INCOME)
+                .amount(new BigDecimal("100.00"))
+                .date(Instant.now())
+                .description("Test Income 1")
+                .build();
+
+        FinancialTransaction incomeTransaction2 = FinancialTransaction.builder()
+                .id(3L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.INCOME)
+                .amount(new BigDecimal("100.00"))
+                .date(Instant.now())
+                .description("Test Income 2")
+                .build();
+
+        FinancialTransaction expenseTransaction = FinancialTransaction.builder()
+                .id(2L)
+                .wallet(wallet)
+                .type(FinancialTransactionType.EXPENSE)
+                .amount(new BigDecimal("50.00"))
+                .date(Instant.now())
+                .description("Test Expense")
+                .build();
+
+        return wallet.getId() == 1L
+                ? Arrays.asList(incomeTransaction1, expenseTransaction) // Wallet 1: 100 - 50 = 50
+                : Arrays.asList(incomeTransaction1, incomeTransaction2); // Wallet 2: 100 + 100 = 200
+    }
+
+    private void mockTransactionMapping(List<FinancialTransaction> transactions,
+                                        FinancialTransactionModelMapper mapper) {
+        transactions.forEach(transaction -> {
+            Long categoryId = transaction.getFinancialTransactionCategory() != null ? transaction
+                    .getFinancialTransactionCategory().getId() : null;
+            FinancialTransactionDTO dto = new FinancialTransactionDTO(
+                    transaction.getId(),
+                    transaction.getAmount(),
+                    transaction.getDescription(),
+                    transaction.getType(),
+                    transaction.getDate(),
+                    categoryId
+            );
+            when(mapper
+                    .mapFinancialTransactionEntityToFinancialTransactionDTO(transaction)).thenReturn(dto);
+        });
+    }
+
     private List<Wallet> createListOfWalletsByName(User user, String... names) {
         return Arrays.stream(names).map(name -> new Wallet(name, user)).toList();
     }
@@ -167,4 +339,5 @@ class WalletGetServiceImplTest {
                 .userStatus(UserStatus.VERIFIED)
                 .build();
     }
+
 }
